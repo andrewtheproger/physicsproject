@@ -5,6 +5,7 @@ from config import SQLALCHEMY_DATABASE_URI
 from config import SQLALCHEMY_MIGRATE_REPO
 from flask_jsonschema_validator import JSONSchemaValidator
 import jsonschema
+import json
 
 
 def to_model_list(tasks):
@@ -21,7 +22,14 @@ def to_model(task):
 def from_model(model):
     get_or_none = lambda x: model[x] if x in model.keys() else None
 
-    return Tasks(number=get_or_none('number'))
+    return Task(number=get_or_none('number'))
+
+
+def does_task_exists(number):
+    q = db.session.query(Task).filter_by(number=number)
+    res = db.session.query(q.exists()).scalar()
+
+    return res
 
 
 app = Flask(__name__)
@@ -34,12 +42,15 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 
-class Tasks(db.Model):
+class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     number = db.Column(db.String(16))
 
     def __repr__(self):
-        return '<User %r>' % self.number
+        return json.dumps({
+            'id': self.id,
+            'number': self.number,
+        })
 
 
 @app.route('/api/health', methods=['GET'])
@@ -49,13 +60,13 @@ def health():
 
 @app.route('/api/tasks', methods=['GET'])
 def get_tasks():
-    tasks = Tasks.query.all()
+    tasks = db.session.query(Task).all()
     return jsonify(to_model_list(tasks))
 
 
 @app.route('/api/tasks/<int:task_id>', methods=['GET'])
 def get_task(task_id):
-    task = Tasks.query.get(task_id)
+    task = db.session.query(Task).get(task_id)
     if not task:
         abort(404)
     return jsonify(to_model(task))
@@ -66,17 +77,26 @@ def get_task(task_id):
 def add_task():
     body = request.json
 
-    print(type(body))
-
     task = from_model(body)
+    task.id = None
+
+    if does_task_exists(task.number):
+        abort(409)
 
     db.session.add(task)
     db.session.commit()
 
-    return jsonify({})
+    return jsonify({'id': task.id})
 
 
-@app.errorhandler( jsonschema.ValidationError )
+@app.route('/api/tasks/<int:task_id>', methods=['DELETE'])
+def delete_task(task_id):
+    db.session.query(Task).filter(Task.id == task_id).delete(synchronize_session=False)
+    db.session.commit()
+    return jsonify({'id': task_id})
+
+
+@app.errorhandler(jsonschema.ValidationError)
 def on_validation_error( e ):
     return Response(f'There was a validation error: {str(e)}', 400)
 
