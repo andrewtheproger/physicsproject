@@ -1,12 +1,13 @@
 FROM python:3
 
-RUN pip install flask flask_sqlalchemy flask_migrate flask-jsonschema-validator
 RUN mkdir -p /app
 
 WORKDIR /app
 COPY . /app
 
-ENV FLASK_APP server.py
+RUN pip install -r requirements.txt
+
+ENV FLASK_APP server/server.py
 
 RUN flask db init && \
     flask db migrate && \
