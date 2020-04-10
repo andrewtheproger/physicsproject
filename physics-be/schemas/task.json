@@ -2,6 +2,9 @@
   "upsert": {
     "type": "object",
     "properties": {
+      "id": {
+        "type": "integer"
+      },
       "number": {
         "type": "string",
         "minLength": 3,
