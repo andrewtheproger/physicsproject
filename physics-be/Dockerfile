@@ -1,6 +1,6 @@
 FROM python:3
 
-RUN pip install flask flask_sqlalchemy flask_migrate
+RUN pip install flask flask_sqlalchemy flask_migrate flask-jsonschema-validator
 RUN mkdir -p /app
 
 WORKDIR /app

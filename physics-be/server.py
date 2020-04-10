@@ -1,8 +1,10 @@
-from flask import Flask, jsonify, abort
+from flask import Flask, jsonify, abort, request, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from config import SQLALCHEMY_DATABASE_URI
 from config import SQLALCHEMY_MIGRATE_REPO
+from flask_jsonschema_validator import JSONSchemaValidator
+import jsonschema
 
 
 def to_model_list(tasks):
@@ -15,7 +17,15 @@ def to_model(task):
         'number': task.number
     }
 
+
+def from_model(model):
+    get_or_none = lambda x: model[x] if x in model.keys() else None
+
+    return Tasks(number=get_or_none('number'))
+
+
 app = Flask(__name__)
+JSONSchemaValidator(app=app, root="schemas")
 
 app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_MIGRATE_REPO"] = SQLALCHEMY_MIGRATE_REPO
@@ -25,7 +35,7 @@ migrate = Migrate(app, db)
 
 
 class Tasks(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
+    id = db.Column(db.Integer, primary_key=True)
     number = db.Column(db.String(16))
 
     def __repr__(self):
@@ -49,6 +59,26 @@ def get_task(task_id):
     if not task:
         abort(404)
     return jsonify(to_model(task))
+
+
+@app.route('/api/tasks', methods=['POST'])
+@app.validate('task', 'add')
+def add_task():
+    body = request.json
+
+    print(type(body))
+
+    task = from_model(body)
+
+    db.session.add(task)
+    db.session.commit()
+
+    return jsonify({})
+
+
+@app.errorhandler( jsonschema.ValidationError )
+def on_validation_error( e ):
+    return Response(f'There was a validation error: {str(e)}', 400)
 
 
 if __name__ == '__main__':

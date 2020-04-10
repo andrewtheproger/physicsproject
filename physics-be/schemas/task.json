@@ -1,0 +1,15 @@
+{
+  "add": {
+    "type": "object",
+    "properties": {
+      "number": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 16
+      }
+    },
+    "required": [
+      "number"
+    ]
+  }
+}
