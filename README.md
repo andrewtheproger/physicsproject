@@ -38,6 +38,9 @@ docker build -t las/3800-be .
 ```
 
 ### Run docker image
+
+Interface `0.0.0.0` is required due to Flask server stuff. If the interface will be mismatched you will not be able to communicate with container (it will looks like 404).
+
 ```
 docker run -p 0.0.0.0:5000:5000 las/3800-be
 ```
