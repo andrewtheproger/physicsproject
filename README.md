@@ -49,7 +49,7 @@ To run it locally enter
 cd ./physics-be
 
 pip install -r /physics-be/requirements.txt
-$env:FLASK_APP = 'server.py'
+$env:FLASK_APP = 'server/server.py'
 
 flask db init
 flask db migrate
@@ -61,7 +61,7 @@ flask run --host 0.0.0.0 --port 5000
 ### Run locally on Linux
 
 - Install requirements from `/physics-be/requirements.txt` using your distributive approach
-- Set `FLASK_APP` environment variable equals to path to the `physics-be/server.py` file
+- Set `FLASK_APP` environment variable equals to path to the `physics-be/server/server.py` file
 - Run
 ```
 cd ./physics-be
