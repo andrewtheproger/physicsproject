@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
+import json
 
 db = SQLAlchemy()
-
 
 
 class Task(db.Model):

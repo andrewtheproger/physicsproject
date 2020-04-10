@@ -4,6 +4,7 @@ from flask import Flask, jsonify, abort, request, Response
 from flask_migrate import Migrate
 from config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO
 from flask_jsonschema_validator import JSONSchemaValidator
+
 from models import db, Task
 import helpers
 
@@ -40,17 +41,25 @@ def get_task(task_id):
 
 
 @app.route('/api/tasks', methods=['POST'])
-@app.validate('task', 'add')
-def add_task():
+@app.validate('task', 'upsert')
+def upsert_task():
     body = request.json
-
     task = helpers.from_model(body)
-    task.id = None
+    should_insert = task.id is None
 
-    if helpers.does_task_exists(db.session, task.number):
-        abort(409)
+    if should_insert:
+        if helpers.does_task_exists(db.session, task.number):
+            abort(409)
 
-    db.session.add(task)
+        db.session.add(task)
+    else:
+        db_task = db.session.query(Task).filter_by(id=task.id).first()
+
+        if db_task is None:
+            abort(404)
+
+        db_task.number = task.number
+
     db.session.commit()
 
     return jsonify({'id': task.id})
@@ -66,7 +75,7 @@ def delete_task(task_id):
 
 @app.errorhandler(jsonschema.ValidationError)
 def on_validation_error(e):
-    return Response(f'There was a validation error: {str(e)}', 400)
+    return Response(f'There was a request body validation error: {str(e)}', 400)
 
 
 if __name__ == '__main__':

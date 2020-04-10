@@ -14,7 +14,8 @@ def to_model(task):
 
 def from_model(model):
     get_or_none = lambda x: model[x] if x in model.keys() else None
-    return Task(number=get_or_none('number'))
+    return Task(id=get_or_none('id'),
+                number=get_or_none('number'))
 
 
 def does_task_exists(session, number):
