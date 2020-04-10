@@ -24,20 +24,35 @@ yarn run lint
 
 The backend exists in the `/physics-be` directory.
 
-### Windows
+### tl;dr
+
+```
+docker run -p 0.0.0.0:5000:5000 las/3800-be
+curl http://127.0.0.1:5000/api/health
+```
+
+### Run locally on Windows
 
 To run it locally enter
 ```
 pip install -r /physics-be/requirements.txt
-flask run
+flask run --host 0.0.0.0 --port 5000
 ```
 
-### Linux
+### Run locally on Linux
 
 Install requirements from `/physics-be/requirements.txt` using your distributive approach then run
 ```
-flask run
+flask run --host 0.0.0.0 --port 5000
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Build docker image
+
+```
+docker build -t las/3800-be .
+```
+
+### Run docker image
+```
+docker run -p 0.0.0.0:5000:5000 las/3800-be
+```
