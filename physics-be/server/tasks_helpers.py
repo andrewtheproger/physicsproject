@@ -1,4 +1,5 @@
 from models import Task
+import hints_helpers
 
 
 def to_models_list(tasks):
@@ -8,7 +9,8 @@ def to_models_list(tasks):
 def to_model(task):
     return {
         'id': task.id,
-        'number': task.number
+        'number': task.number,
+        'hints': hints_helpers.to_models_list(task.hints)
     }
 
 
