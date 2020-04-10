@@ -1,23 +1,42 @@
 # physics
 
-## Project setup
+## Frontend
+
+The frontend exists in the `/physics-fe` directory.
+
+To run it locally enter
 ```
 yarn install
-```
-
-### Compiles and hot-reloads for development
-```
 yarn run serve
 ```
 
-### Compiles and minifies for production
+To compile and minify for production enter
 ```
 yarn run build
 ```
 
-### Lints and fixes files
+To allow lints and fixes enter
 ```
 yarn run lint
+```
+
+## Backend
+
+The backend exists in the `/physics-be` directory.
+
+### Windows
+
+To run it locally enter
+```
+pip install -r /physics-be/requirements.txt
+flask run
+```
+
+### Linux
+
+Install requirements from `/physics-be/requirements.txt` using your distributive approach then run
+```
+flask run
 ```
 
 ### Customize configuration
