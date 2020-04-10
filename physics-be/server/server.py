@@ -5,8 +5,8 @@ from flask_migrate import Migrate
 from config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO
 from flask_jsonschema_validator import JSONSchemaValidator
 
-from models import db, Task, Hint
-import tasks_helpers, hints_helpers
+from models import db, Task, Hint, Suggestion
+import tasks_helpers, hints_helpers, suggestions_helpers
 
 app = Flask(__name__)
 JSONSchemaValidator(app=app, root="schemas")
@@ -123,6 +123,45 @@ def delete_hint(task_id, hint_id):
     db.session.commit()
 
     return jsonify({'id': hint_id})
+
+
+# suggestions
+
+@app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/suggestions', methods=['GET'])
+def get_suggestions(task_id, hint_id):
+    tasks = db.session.query(Suggestion).filter_by(hint_id=hint_id).all()
+
+    return jsonify(suggestions_helpers.to_models_list(tasks))
+
+
+@app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/suggestions', methods=['POST'])
+@app.validate('suggestion', 'upsert')
+def upsert_suggestion(task_id, hint_id):
+    body = request.json
+    suggestion = suggestions_helpers.from_model(body, hint_id)
+    should_insert = suggestion.id is None
+
+    if should_insert:
+        db.session.add(suggestion)
+    else:
+        db_suggestion = db.session.query(Suggestion).filter_by(id=suggestion.id).first()
+
+        if db_suggestion is None:
+            abort(404)
+
+        db_suggestion.hint_id = suggestion.hint_id
+
+    db.session.commit()
+
+    return jsonify({'id': suggestion.id})
+
+
+@app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/suggestions/<int:suggestion_id>', methods=['DELETE'])
+def delete_suggestion(task_id, hint_id, suggestion_id):
+    db.session.query(Suggestion).filter(Suggestion.id == suggestion_id).delete(synchronize_session=False)
+    db.session.commit()
+
+    return jsonify({'id': suggestion_id})
 
 
 if __name__ == '__main__':
