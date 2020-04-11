@@ -29,7 +29,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"id\": 1,\n\t\"number\": \"2.15\",\n\t\"body\": {\n\t\t\"latex\": \"long latex\",\n\t\t\"image_hrefs\": [\"href1\", \"href2\"]\n\t}\n}",
+					"raw": "{\n\t\"number\": \"2.15\",\n\t\"body\": {\n\t\t\"latex\": \"long latex\",\n\t\t\"image_hrefs\": [\"href1\", \"href2\"]\n\t}\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -176,7 +176,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\t\"id\": 1,\r\n\t\"body\": {\r\n\t\t\"latex\": \"latex here\",\r\n\t\t\"image_hrefs\": [ \"href12\", \"href13\" ]\r\n\t}\r\n}",
+					"raw": "{\r\n\t\"body\": {\r\n\t\t\"latex\": \"latex here\",\r\n\t\t\"image_hrefs\": [ \"href12\", \"href13\" ]\r\n\t},\r\n\t\"status\": \"pending\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -242,7 +242,7 @@
 			"response": []
 		},
 		{
-			"name": "Enable hint",
+			"name": "Approve hint",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -257,7 +257,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{prefix}}/tasks/1/hints/1/enable",
+					"raw": "{{prefix}}/tasks/1/hints/1/approve",
 					"host": [
 						"{{prefix}}"
 					],
@@ -266,14 +266,14 @@
 						"1",
 						"hints",
 						"1",
-						"enable"
+						"approve"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Disable hint",
+			"name": "Decline hint",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -288,7 +288,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{prefix}}/tasks/1/hints/1/disable",
+					"raw": "{{prefix}}/tasks/1/hints/1/decline",
 					"host": [
 						"{{prefix}}"
 					],
@@ -297,7 +297,7 @@
 						"1",
 						"hints",
 						"1",
-						"disable"
+						"decline"
 					]
 				}
 			},
