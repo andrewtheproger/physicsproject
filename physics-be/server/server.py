@@ -37,8 +37,13 @@ def on_validation_error(e):
 
 @app.route('/api/tasks', methods=['GET'])
 def get_tasks():
-    tasks = db.session.query(Task).all()
+    filter_number = request.args.get('filter_by_number')
 
+    if not filter_number:
+        tasks = db.session.query(Task).all()
+        return jsonify(tasks_helpers.to_models_list(tasks))
+
+    tasks = db.session.query(Task).filter_by(number=filter_number).all()
     return jsonify(tasks_helpers.to_models_list(tasks))
 
 

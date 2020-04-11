@@ -64,7 +64,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{prefix}}/tasks?page=0&count=10&order=number",
+					"raw": "{{prefix}}/tasks?page=0&count=10&order=number&filter_by_number=2.1",
 					"host": [
 						"{{prefix}}"
 					],
@@ -83,6 +83,10 @@
 						{
 							"key": "order",
 							"value": "number"
+						},
+						{
+							"key": "filter_by_number",
+							"value": "2.1"
 						}
 					]
 				}
