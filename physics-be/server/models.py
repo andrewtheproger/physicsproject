@@ -32,7 +32,7 @@ class Hint(db.Model):
     task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
     latex = db.Column(db.String(4096))
     image_hrefs_json = db.Column(db.String(4096))
-    suggestions = db.relationship('Suggestion', backref='hint', lazy='dynamic')
+    is_enabled = db.Column(db.Boolean)
 
     def __repr__(self):
         return json.dumps({
@@ -41,17 +41,6 @@ class Hint(db.Model):
             'updated_date': self.updated_date,
             'task_id': self.task_id,
             'latex': self.latex,
-            'image_hrefs_json': self.image_hrefs_json,
-            'suggestions': self.suggestions
-        })
-
-
-class Suggestion(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    hint_id = db.Column(db.Integer, db.ForeignKey('hint.id'))
-
-    def __repr__(self):
-        return json.dumps({
-            'id': self.id,
-            'hint_id': self.hint_id,
+            'is_enabled': self.is_enabled,
+            'image_hrefs_json': self.image_hrefs_json
         })

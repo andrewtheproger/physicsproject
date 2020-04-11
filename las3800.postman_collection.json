@@ -29,7 +29,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"number\": \"2.15\"\n}",
+					"raw": "{\n\t\"id\": 1,\n\t\"number\": \"2.15\",\n\t\"body\": {\n\t\t\"latex\": \"long latex\",\n\t\t\"image_hrefs\": [\"href1\", \"href2\"]\n\t}\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -44,7 +44,8 @@
 					"path": [
 						"tasks"
 					]
-				}
+				},
+				"description": "Insert if no id is provided, update otherwise."
 			},
 			"response": []
 		},
@@ -64,7 +65,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{prefix}}/tasks?page=0&count=10&order=number&filter_by_number=2.1",
+					"raw": "{{prefix}}/tasks?page=0&count=10&order=number",
 					"host": [
 						"{{prefix}}"
 					],
@@ -86,10 +87,12 @@
 						},
 						{
 							"key": "filter_by_number",
-							"value": "2.1"
+							"value": "2.25",
+							"disabled": true
 						}
 					]
-				}
+				},
+				"description": "A filter can be applied"
 			},
 			"response": []
 		},
@@ -173,7 +176,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\r\n}",
+					"raw": "{\r\n\t\"id\": 1,\r\n\t\"body\": {\r\n\t\t\"latex\": \"latex here\",\r\n\t\t\"image_hrefs\": [ \"href12\", \"href13\" ]\r\n\t}\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -190,7 +193,8 @@
 						"1",
 						"hints"
 					]
-				}
+				},
+				"description": "Insert if no id is provided, update otherwise."
 			},
 			"response": []
 		},
@@ -238,6 +242,68 @@
 			"response": []
 		},
 		{
+			"name": "Enable hint",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{prefix}}/tasks/1/hints/1/enable",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"tasks",
+						"1",
+						"hints",
+						"1",
+						"enable"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Disable hint",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{prefix}}/tasks/1/hints/1/disable",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"tasks",
+						"1",
+						"hints",
+						"1",
+						"disable"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Delete hint",
 			"request": {
 				"auth": {
@@ -261,189 +327,6 @@
 						"tasks",
 						"1",
 						"hints",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Suggest hint change",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{user_bearer}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{prefix}}/tasks/1/hints/1/suggestions",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"tasks",
-						"1",
-						"hints",
-						"1",
-						"suggestions"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get suggested hint changes by hint id",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{user_bearer}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{prefix}}/tasks/1/hints/1/suggestions",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"tasks",
-						"1",
-						"hints",
-						"1",
-						"suggestions"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Approve suggested hint change",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{admin_bearer}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "{{prefix}}/tasks/1/hints/1/suggestions/1/approve",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"tasks",
-						"1",
-						"hints",
-						"1",
-						"suggestions",
-						"1",
-						"approve"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Decline suggested hint change",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{admin_bearer}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "{{prefix}}/tasks/1/hints/1/suggestions/1/decline",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"tasks",
-						"1",
-						"hints",
-						"1",
-						"suggestions",
-						"1",
-						"decline"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete suggested hint change",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{admin_bearer}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{prefix}}/tasks/1/hints/1/suggestions/1",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"tasks",
-						"1",
-						"hints",
-						"1",
-						"suggestions",
 						"1"
 					]
 				}

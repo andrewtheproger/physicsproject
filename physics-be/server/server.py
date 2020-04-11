@@ -6,8 +6,8 @@ from flask_migrate import Migrate
 from config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO
 from flask_jsonschema_validator import JSONSchemaValidator
 
-from models import db, Task, Hint, Suggestion
-import tasks_helpers, hints_helpers, suggestions_helpers
+from models import db, Task, Hint
+import tasks_helpers, hints_helpers
 
 app = Flask(__name__)
 JSONSchemaValidator(app=app, root="schemas")
@@ -106,8 +106,22 @@ def delete_task(task_id):
 
 # hints
 
+@app.route('/api/tasks/<int:task_id>/hints', methods=['GET'])
+def get_hints(task_id):
+    tasks = db.session.query(Hint).filter_by(task_id=task_id).all()
 
-@app.route('/api/tasks/<int:task_id>/hints/', methods=['POST'])
+    return jsonify(hints_helpers.to_models_list(tasks))
+
+
+@app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>', methods=['DELETE'])
+def delete_hint(task_id, hint_id):
+    db.session.query(Hint).filter(Hint.id == hint_id).delete(synchronize_session=False)
+    db.session.commit()
+
+    return jsonify({'id': hint_id})
+
+
+@app.route('/api/tasks/<int:task_id>/hints', methods=['POST'])
 @app.validate('hint', 'upsert')
 def upsert_hint(task_id):
     body = request.json
@@ -119,6 +133,7 @@ def upsert_hint(task_id):
     if should_insert:
         hint.created_date = now
         hint.updated_date = now
+        hint.is_enabled = False
 
         db.session.add(hint)
     else:
@@ -138,63 +153,44 @@ def upsert_hint(task_id):
         if hint.image_hrefs_json:
             db_hint.image_hrefs_json = hint.image_hrefs_json
 
+        if hint.is_enabled:
+            db_hint.is_enabled = hint.is_enabled
+
     db.session.commit()
 
     return jsonify({'id': hint.id})
 
 
-@app.route('/api/tasks/<int:task_id>/hints', methods=['GET'])
-def get_hints(task_id):
-    tasks = db.session.query(Hint).filter_by(task_id=task_id).all()
+@app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/enable', methods=['POST'])
+def enable_hint(task_id, hint_id):
+    now = int(time.time() * 1000)  # ms
+    db_hint = db.session.query(Hint).filter_by(id=hint_id, is_enabled=False).first()
 
-    return jsonify(hints_helpers.to_models_list(tasks))
+    if db_hint is None:
+        abort(404)
 
+    db_hint.updated_date = now
+    db_hint.is_enabled = True
 
-@app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>', methods=['DELETE'])
-def delete_hint(task_id, hint_id):
-    db.session.query(Hint).filter(Hint.id == hint_id).delete(synchronize_session=False)
     db.session.commit()
 
     return jsonify({'id': hint_id})
 
 
-# suggestions
+@app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/disable', methods=['POST'])
+def disable_hint(task_id, hint_id):
+    now = int(time.time() * 1000)  # ms
+    db_hint = db.session.query(Hint).filter_by(id=hint_id, is_enabled=True).first()
 
-@app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/suggestions', methods=['GET'])
-def get_suggestions(task_id, hint_id):
-    tasks = db.session.query(Suggestion).filter_by(hint_id=hint_id).all()
+    if db_hint is None:
+        abort(404)
 
-    return jsonify(suggestions_helpers.to_models_list(tasks))
-
-
-@app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/suggestions', methods=['POST'])
-@app.validate('suggestion', 'upsert')
-def upsert_suggestion(task_id, hint_id):
-    body = request.json
-    suggestion = suggestions_helpers.from_model(body, hint_id)
-    should_insert = suggestion.id is None
-
-    if should_insert:
-        db.session.add(suggestion)
-    else:
-        db_suggestion = db.session.query(Suggestion).filter_by(id=suggestion.id).first()
-
-        if db_suggestion is None:
-            abort(404)
-
-        db_suggestion.hint_id = suggestion.hint_id
+    db_hint.updated_date = now
+    db_hint.is_enabled = False
 
     db.session.commit()
 
-    return jsonify({'id': suggestion.id})
-
-
-@app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/suggestions/<int:suggestion_id>', methods=['DELETE'])
-def delete_suggestion(task_id, hint_id, suggestion_id):
-    db.session.query(Suggestion).filter(Suggestion.id == suggestion_id).delete(synchronize_session=False)
-    db.session.commit()
-
-    return jsonify({'id': suggestion_id})
+    return jsonify({'id': hint_id})
 
 
 if __name__ == '__main__':
