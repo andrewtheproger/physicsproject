@@ -3,9 +3,19 @@
     "type": "object",
     "properties": {
       "id": {
-        "type": "integer"
+        "type": "integer",
+        "readonly": "True"
+      },
+      "created_date": {
+        "type": "integer",
+        "readonly": "True"
+      },
+      "updated_date": {
+        "type": "integer",
+        "readonly": "True"
       }
     },
+    "additionalProperties": false,
     "required": [
     ]
   }

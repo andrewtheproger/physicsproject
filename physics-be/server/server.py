@@ -1,4 +1,5 @@
 import jsonschema
+import time
 
 from flask import Flask, jsonify, abort, request, Response
 from flask_migrate import Migrate
@@ -63,10 +64,14 @@ def upsert_task():
     body = request.json
     task = tasks_helpers.from_model(body)
     should_insert = task.id is None
+    now = int(time.time() * 1000)  # ms
 
     if should_insert:
         if tasks_helpers.does_task_exists(db.session, task.number):
             abort(409)
+
+        task.created_date = now
+        task.updated_date = now
 
         db.session.add(task)
     else:
@@ -75,7 +80,16 @@ def upsert_task():
         if db_task is None:
             abort(404)
 
-        db_task.number = task.number
+        db_task.updated_date = now
+
+        if task.number:
+            db_task.number = task.number
+
+        if task.latex:
+            db_task.latex = task.latex
+
+        if task.image_hrefs_json:
+            db_task.image_hrefs_json = task.image_hrefs_json
 
     db.session.commit()
 
