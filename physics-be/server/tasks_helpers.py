@@ -25,12 +25,12 @@ def from_model(model):
     get_or_none = lambda item, key: item[key] if key in item.keys() else None
 
     id = get_or_none(model, 'id')
+    created_date = get_or_none(model, 'created_date')
+    updated_date = get_or_none(model, 'updated_date')
     number = get_or_none(model, 'number')
     body = get_or_none(model, 'body')
     latex = get_or_none(body, 'latex')
     hrefs = get_or_none(body, 'image_hrefs')
-    created_date = get_or_none(body, 'created_date')
-    updated_date = get_or_none(body, 'updated_date')
 
     return Task(id=id,
                 created_date=created_date,

@@ -114,7 +114,12 @@ def upsert_hint(task_id):
     hint = hints_helpers.from_model(body, task_id)
     should_insert = hint.id is None
 
+    now = int(time.time() * 1000)  # ms
+
     if should_insert:
+        hint.created_date = now
+        hint.updated_date = now
+
         db.session.add(hint)
     else:
         db_hint = db.session.query(Hint).filter_by(id=hint.id).first()
@@ -122,7 +127,16 @@ def upsert_hint(task_id):
         if db_hint is None:
             abort(404)
 
-        db_hint.task_id = hint.task_id
+        db_hint.updated_date = now
+
+        if hint.task_id:
+            db_hint.task_id = hint.task_id
+
+        if hint.latex:
+            db_hint.latex = hint.latex
+
+        if hint.image_hrefs_json:
+            db_hint.image_hrefs_json = hint.image_hrefs_json
 
     db.session.commit()
 

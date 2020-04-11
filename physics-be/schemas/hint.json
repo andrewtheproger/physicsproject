@@ -13,10 +13,31 @@
       "updated_date": {
         "type": "integer",
         "readonly": "True"
+      },
+      "body": {
+        "type": "object",
+        "properties": {
+          "latex": {
+            "type": "string",
+            "maxLength": 4096
+          },
+          "image_hrefs": {
+            "type": "array",
+            "items":{
+              "type": "string"
+            },
+            "uniqueItems": true
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "latex"
+        ]
       }
     },
     "additionalProperties": false,
     "required": [
+      "body"
     ]
   }
 }
