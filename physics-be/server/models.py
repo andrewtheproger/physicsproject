@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 import json
+import enum
 
 db = SQLAlchemy()
 
@@ -25,6 +26,12 @@ class Task(db.Model):
         })
 
 
+class HintStatus(enum.Enum):
+    pending = "pending"
+    approved = "approved"
+    declined = "declined"
+
+
 class Hint(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_date = db.Column(db.BigInteger)
@@ -32,7 +39,7 @@ class Hint(db.Model):
     task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
     latex = db.Column(db.String(4096))
     image_hrefs_json = db.Column(db.String(4096))
-    is_enabled = db.Column(db.Boolean)
+    status = db.Column(db.Enum(HintStatus))
 
     def __repr__(self):
         return json.dumps({
@@ -41,6 +48,6 @@ class Hint(db.Model):
             'updated_date': self.updated_date,
             'task_id': self.task_id,
             'latex': self.latex,
-            'is_enabled': self.is_enabled,
+            'status': self.status,
             'image_hrefs_json': self.image_hrefs_json
         })

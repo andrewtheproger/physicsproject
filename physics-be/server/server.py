@@ -3,10 +3,11 @@ import time
 
 from flask import Flask, jsonify, abort, request, Response
 from flask_migrate import Migrate
+from sqlalchemy import and_, or_
 from config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO
 from flask_jsonschema_validator import JSONSchemaValidator
 
-from models import db, Task, Hint
+from models import db, Task, Hint, HintStatus
 import tasks_helpers, hints_helpers
 
 app = Flask(__name__)
@@ -40,11 +41,11 @@ def on_validation_error(e):
 def get_tasks():
     filter_number = request.args.get('filter_by_number')
 
-    if not filter_number:
-        tasks = db.session.query(Task).all()
+    if filter_number:
+        tasks = db.session.query(Task).filter_by(number=filter_number).all()
         return jsonify(tasks_helpers.to_models_list(tasks))
 
-    tasks = db.session.query(Task).filter_by(number=filter_number).all()
+    tasks = db.session.query(Task).all()
     return jsonify(tasks_helpers.to_models_list(tasks))
 
 
@@ -106,6 +107,7 @@ def delete_task(task_id):
 
 # hints
 
+
 @app.route('/api/tasks/<int:task_id>/hints', methods=['GET'])
 def get_hints(task_id):
     tasks = db.session.query(Hint).filter_by(task_id=task_id).all()
@@ -133,7 +135,7 @@ def upsert_hint(task_id):
     if should_insert:
         hint.created_date = now
         hint.updated_date = now
-        hint.is_enabled = False
+        hint.status = HintStatus.pending
 
         db.session.add(hint)
     else:
@@ -153,40 +155,40 @@ def upsert_hint(task_id):
         if hint.image_hrefs_json:
             db_hint.image_hrefs_json = hint.image_hrefs_json
 
-        if hint.is_enabled:
-            db_hint.is_enabled = hint.is_enabled
+        if hint.status:
+            db_hint.status = hint.status
 
     db.session.commit()
 
     return jsonify({'id': hint.id})
 
 
-@app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/enable', methods=['POST'])
+@app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/approve', methods=['POST'])
 def enable_hint(task_id, hint_id):
     now = int(time.time() * 1000)  # ms
-    db_hint = db.session.query(Hint).filter_by(id=hint_id, is_enabled=False).first()
+    db_hint = db.session.query(Hint).filter(Hint.id == hint_id).filter(Hint.status != HintStatus.approved).first()
 
     if db_hint is None:
         abort(404)
 
     db_hint.updated_date = now
-    db_hint.is_enabled = True
+    db_hint.status = HintStatus.approved
 
     db.session.commit()
 
     return jsonify({'id': hint_id})
 
 
-@app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/disable', methods=['POST'])
+@app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/decline', methods=['POST'])
 def disable_hint(task_id, hint_id):
     now = int(time.time() * 1000)  # ms
-    db_hint = db.session.query(Hint).filter_by(id=hint_id, is_enabled=True).first()
+    db_hint = db.session.query(Hint).filter(Hint.id == hint_id).filter(Hint.status != HintStatus.declined).first()
 
     if db_hint is None:
         abort(404)
 
     db_hint.updated_date = now
-    db_hint.is_enabled = False
+    db_hint.status = HintStatus.declined
 
     db.session.commit()
 

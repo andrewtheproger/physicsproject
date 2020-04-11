@@ -12,7 +12,7 @@ def to_model(hint):
         'created_date': hint.created_date,
         'updated_date': hint.updated_date,
         'task_id': hint.task_id,
-        'is_enabled': hint.is_enabled,
+        'status': hint.status.value,
         'body': {
             'latex': hint.latex,
             'image_hrefs': json.loads(hint.image_hrefs_json)
@@ -26,7 +26,7 @@ def from_model(model, task_id):
     id = get_or_none(model, 'id')
     created_date = get_or_none(model, 'created_date')
     updated_date = get_or_none(model, 'updated_date')
-    is_enabled = get_or_none(model, 'is_enabled')
+    status = get_or_none(model, 'status')
     body = get_or_none(model, 'body')
     latex = get_or_none(body, 'latex')
     hrefs = get_or_none(body, 'image_hrefs')
@@ -35,6 +35,6 @@ def from_model(model, task_id):
                 created_date=created_date,
                 updated_date=updated_date,
                 task_id=task_id,
-                is_enabled=is_enabled,
+                status=status,
                 latex=latex,
                 image_hrefs_json=json.dumps(hrefs))
