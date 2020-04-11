@@ -1,0 +1,3 @@
+server/server.db
+migrations
+__pycache__

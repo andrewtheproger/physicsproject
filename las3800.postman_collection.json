@@ -1,0 +1,473 @@
+{
+	"info": {
+		"_postman_id": "cb699722-99dd-4ec1-868b-9bd6e35c7590",
+		"name": "las3800",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Upsert task",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"number\": \"2.15\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{prefix}}/tasks",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"tasks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get tasks",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user_bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{prefix}}/tasks?page=0&count=10&order=number",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"tasks"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "count",
+							"value": "10"
+						},
+						{
+							"key": "order",
+							"value": "number"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get task by id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user_bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{prefix}}/tasks/1",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"tasks",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete task by id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{prefix}}/tasks/1",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"tasks",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upsert hint",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user_bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{prefix}}/tasks/1/hints",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"tasks",
+						"1",
+						"hints"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get hints by task id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user_bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{prefix}}/tasks/1/hints?page=0&count=10&order=date",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"tasks",
+						"1",
+						"hints"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "count",
+							"value": "10"
+						},
+						{
+							"key": "order",
+							"value": "date"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete hint",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{prefix}}/tasks/1/hints/1",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"tasks",
+						"1",
+						"hints",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Suggest hint change",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user_bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{prefix}}/tasks/1/hints/1/suggestions",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"tasks",
+						"1",
+						"hints",
+						"1",
+						"suggestions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get suggested hint changes by hint id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user_bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{prefix}}/tasks/1/hints/1/suggestions",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"tasks",
+						"1",
+						"hints",
+						"1",
+						"suggestions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Approve suggested hint change",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{prefix}}/tasks/1/hints/1/suggestions/1/approve",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"tasks",
+						"1",
+						"hints",
+						"1",
+						"suggestions",
+						"1",
+						"approve"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Decline suggested hint change",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{prefix}}/tasks/1/hints/1/suggestions/1/decline",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"tasks",
+						"1",
+						"hints",
+						"1",
+						"suggestions",
+						"1",
+						"decline"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete suggested hint change",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{prefix}}/tasks/1/hints/1/suggestions/1",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"tasks",
+						"1",
+						"hints",
+						"1",
+						"suggestions",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "1974af80-2702-452e-a159-3cb68517e8be",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "8a09e81a-91f0-4c1c-84ec-3dd7e038711d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
