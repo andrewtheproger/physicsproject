@@ -1,14 +1,30 @@
 <template>
   <div id="app">
     <header>
-      <router-link to="/">Home</router-link>
-      <router-link to="/about">About</router-link>
+      <div class="container">
+        <div>
+          <router-link to="/">Главная</router-link>
+        </div>
+        <div>
+          <router-link to="/about">О проекте</router-link>
+        </div>
+      </div>
     </header>
     <router-view />
   </div>
 </template>
 
 <style lang="scss">
+.container {
+  display: flex;
+  div {
+    flex: 1;
+    border: 1px solid lightgray;
+    text-align: center;
+    height: 50px;
+    font-size: 32px;
+  }
+}
 body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -25,14 +41,12 @@ body {
 }
 
 header {
-  padding: 30px;
-
   a {
     font-weight: bold;
     color: #2c3e50;
 
     &.router-link-exact-active {
-      color: #42b983;
+      color: #7e9ef5;
     }
   }
 }
