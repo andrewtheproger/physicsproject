@@ -3,10 +3,45 @@
     "type": "object",
     "properties": {
       "id": {
-        "type": "integer"
+        "type": "integer",
+        "readonly": "True"
+      },
+      "created_date": {
+        "type": "integer",
+        "readonly": "True"
+      },
+      "updated_date": {
+        "type": "integer",
+        "readonly": "True"
+      },
+      "status": {
+        "type": "string",
+        "enum": ["pending", "approved", "declined"]
+      },
+      "body": {
+        "type": "object",
+        "properties": {
+          "latex": {
+            "type": "string",
+            "maxLength": 4096
+          },
+          "image_hrefs": {
+            "type": "array",
+            "items":{
+              "type": "string"
+            },
+            "uniqueItems": true
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "latex"
+        ]
       }
     },
+    "additionalProperties": false,
     "required": [
+      "body"
     ]
   }
 }

@@ -1,12 +1,14 @@
 import jsonschema
+import time
 
 from flask import Flask, jsonify, abort, request, Response
 from flask_migrate import Migrate
+from sqlalchemy import and_, or_
 from config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO
 from flask_jsonschema_validator import JSONSchemaValidator
 
-from models import db, Task, Hint, Suggestion
-import tasks_helpers, hints_helpers, suggestions_helpers
+from models import db, Task, Hint, HintStatus
+import tasks_helpers, hints_helpers
 
 app = Flask(__name__)
 JSONSchemaValidator(app=app, root="schemas")
@@ -37,8 +39,13 @@ def on_validation_error(e):
 
 @app.route('/api/tasks', methods=['GET'])
 def get_tasks():
-    tasks = db.session.query(Task).all()
+    filter_number = request.args.get('filter_by_number')
 
+    if filter_number:
+        tasks = db.session.query(Task).filter_by(number=filter_number).all()
+        return jsonify(tasks_helpers.to_models_list(tasks))
+
+    tasks = db.session.query(Task).all()
     return jsonify(tasks_helpers.to_models_list(tasks))
 
 
@@ -58,10 +65,14 @@ def upsert_task():
     body = request.json
     task = tasks_helpers.from_model(body)
     should_insert = task.id is None
+    now = int(time.time() * 1000)  # ms
 
     if should_insert:
         if tasks_helpers.does_task_exists(db.session, task.number):
             abort(409)
+
+        task.created_date = now
+        task.updated_date = now
 
         db.session.add(task)
     else:
@@ -70,7 +81,16 @@ def upsert_task():
         if db_task is None:
             abort(404)
 
-        db_task.number = task.number
+        db_task.updated_date = now
+
+        if task.number:
+            db_task.number = task.number
+
+        if task.latex:
+            db_task.latex = task.latex
+
+        if task.image_hrefs_json:
+            db_task.image_hrefs_json = task.image_hrefs_json
 
     db.session.commit()
 
@@ -88,28 +108,6 @@ def delete_task(task_id):
 # hints
 
 
-@app.route('/api/tasks/<int:task_id>/hints/', methods=['POST'])
-@app.validate('hint', 'upsert')
-def upsert_hint(task_id):
-    body = request.json
-    hint = hints_helpers.from_model(body, task_id)
-    should_insert = hint.id is None
-
-    if should_insert:
-        db.session.add(hint)
-    else:
-        db_hint = db.session.query(Hint).filter_by(id=hint.id).first()
-
-        if db_hint is None:
-            abort(404)
-
-        db_hint.task_id = hint.task_id
-
-    db.session.commit()
-
-    return jsonify({'id': hint.id})
-
-
 @app.route('/api/tasks/<int:task_id>/hints', methods=['GET'])
 def get_hints(task_id):
     tasks = db.session.query(Hint).filter_by(task_id=task_id).all()
@@ -125,43 +123,76 @@ def delete_hint(task_id, hint_id):
     return jsonify({'id': hint_id})
 
 
-# suggestions
-
-@app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/suggestions', methods=['GET'])
-def get_suggestions(task_id, hint_id):
-    tasks = db.session.query(Suggestion).filter_by(hint_id=hint_id).all()
-
-    return jsonify(suggestions_helpers.to_models_list(tasks))
-
-
-@app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/suggestions', methods=['POST'])
-@app.validate('suggestion', 'upsert')
-def upsert_suggestion(task_id, hint_id):
+@app.route('/api/tasks/<int:task_id>/hints', methods=['POST'])
+@app.validate('hint', 'upsert')
+def upsert_hint(task_id):
     body = request.json
-    suggestion = suggestions_helpers.from_model(body, hint_id)
-    should_insert = suggestion.id is None
+    hint = hints_helpers.from_model(body, task_id)
+    should_insert = hint.id is None
+
+    now = int(time.time() * 1000)  # ms
 
     if should_insert:
-        db.session.add(suggestion)
-    else:
-        db_suggestion = db.session.query(Suggestion).filter_by(id=suggestion.id).first()
+        hint.created_date = now
+        hint.updated_date = now
+        hint.status = HintStatus.pending
 
-        if db_suggestion is None:
+        db.session.add(hint)
+    else:
+        db_hint = db.session.query(Hint).filter_by(id=hint.id).first()
+
+        if db_hint is None:
             abort(404)
 
-        db_suggestion.hint_id = suggestion.hint_id
+        db_hint.updated_date = now
+
+        if hint.task_id:
+            db_hint.task_id = hint.task_id
+
+        if hint.latex:
+            db_hint.latex = hint.latex
+
+        if hint.image_hrefs_json:
+            db_hint.image_hrefs_json = hint.image_hrefs_json
+
+        if hint.status:
+            db_hint.status = hint.status
 
     db.session.commit()
 
-    return jsonify({'id': suggestion.id})
+    return jsonify({'id': hint.id})
 
 
-@app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/suggestions/<int:suggestion_id>', methods=['DELETE'])
-def delete_suggestion(task_id, hint_id, suggestion_id):
-    db.session.query(Suggestion).filter(Suggestion.id == suggestion_id).delete(synchronize_session=False)
+@app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/approve', methods=['POST'])
+def enable_hint(task_id, hint_id):
+    now = int(time.time() * 1000)  # ms
+    db_hint = db.session.query(Hint).filter(Hint.id == hint_id).filter(Hint.status != HintStatus.approved).first()
+
+    if db_hint is None:
+        abort(404)
+
+    db_hint.updated_date = now
+    db_hint.status = HintStatus.approved
+
     db.session.commit()
 
-    return jsonify({'id': suggestion_id})
+    return jsonify({'id': hint_id})
+
+
+@app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/decline', methods=['POST'])
+def disable_hint(task_id, hint_id):
+    now = int(time.time() * 1000)  # ms
+    db_hint = db.session.query(Hint).filter(Hint.id == hint_id).filter(Hint.status != HintStatus.declined).first()
+
+    if db_hint is None:
+        abort(404)
+
+    db_hint.updated_date = now
+    db_hint.status = HintStatus.declined
+
+    db.session.commit()
+
+    return jsonify({'id': hint_id})
 
 
 if __name__ == '__main__':
