@@ -10,9 +10,40 @@
         </div>
       </div>
     </header>
+    <span>Api is {{isApiOk ? '' : 'not'}} working</span>
     <router-view />
   </div>
 </template>
+
+<script>
+import axios from "axios";
+import config from "@/config/api"
+export default {
+  name: "App",
+  data(){
+      return {
+          isApiOk: null
+      }
+  },
+  methods: {
+    checkApiOk() {
+      axios({
+        url: config.apiPrefix + "/health",
+        method: "GET"})
+      .then(result => {
+        this.isApiOk = result.data.status === "ok";
+      }, error => {
+        console.log(error);
+
+        this.isApiOk = false;
+      });
+    }
+  },
+  mounted() { 
+    this.checkApiOk()
+  }
+}
+</script>
 
 <style lang="scss">
 .container {
