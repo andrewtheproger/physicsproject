@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from sqlalchemy import and_, or_
 from config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO
 from flask_jsonschema_validator import JSONSchemaValidator
+from flask_cors import CORS
 
 from models import db, Task, Hint, HintStatus
 import tasks_helpers, hints_helpers
@@ -18,6 +19,7 @@ app.config["SQLALCHEMY_MIGRATE_REPO"] = SQLALCHEMY_MIGRATE_REPO
 
 db.init_app(app)
 migrate = Migrate(app, db)
+CORS(app, resources={r"/api/*": {"origins": "*", "methods": "*", "allow_headers": "*", "max_age": 86400}})
 
 
 # todo: extract to controller files
