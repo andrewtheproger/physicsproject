@@ -51,8 +51,8 @@ To run it locally enter
 ```
 cd ./physics-be
 
-pip install -r /physics-be/requirements.txt
-$env:FLASK_APP = 'server/server.py'
+pip install -r requirements.txt
+$env:FLASK_APP = 'server/server.py'  # powershell only
 
 flask db init
 flask db migrate
