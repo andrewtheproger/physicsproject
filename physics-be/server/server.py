@@ -102,7 +102,12 @@ def upsert_task():
 
 @app.route('/api/tasks/<int:task_id>', methods=['DELETE'])
 def delete_task(task_id):
-    db.session.query(Task).filter(Task.id == task_id).delete(synchronize_session=False)
+    task = db.session.query(Task).filter(Task.id == task_id).first()
+
+    if not task:
+        abort(404)
+
+    db.session.delete(task)
     db.session.commit()
 
     return jsonify({'id': task_id})
