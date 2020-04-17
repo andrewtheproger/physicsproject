@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "cb699722-99dd-4ec1-868b-9bd6e35c7590",
+		"_postman_id": "91e277f9-9d77-4978-8644-9b67df8f844a",
 		"name": "las3800",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -65,7 +65,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{prefix}}/tasks?page=0&count=10&order=number",
+					"raw": "{{prefix}}/tasks?page=0&count=10&order=number&filter_by_number=2.25",
 					"host": [
 						"{{prefix}}"
 					],
@@ -87,8 +87,7 @@
 						},
 						{
 							"key": "filter_by_number",
-							"value": "2.25",
-							"disabled": true
+							"value": "2.25"
 						}
 					]
 				},
