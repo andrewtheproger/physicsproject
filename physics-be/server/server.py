@@ -4,12 +4,13 @@ import time
 from flask import Flask, jsonify, abort, request, Response
 from flask_migrate import Migrate
 from sqlalchemy import and_, or_
-from config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO
 from flask_jsonschema_validator import JSONSchemaValidator
 from flask_cors import CORS
 
-from models import db, Task, Hint, HintStatus
-import tasks_helpers, hints_helpers
+from .models import db, Task, Hint, HintStatus
+from .config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO
+from . import tasks_helpers
+from . import hints_helpers
 
 app = Flask(__name__)
 JSONSchemaValidator(app=app, root="schemas")
