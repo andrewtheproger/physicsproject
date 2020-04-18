@@ -1,15 +1,13 @@
 <template>
-  <div>
-
+  <div class = "main">
+    
   </div>
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
 export default {
   name: "HelloWorld",
-  
   computed: mapGetters(["getShowing"]),
-
   data() {
     return {
       url: "http://127.0.0.1:5000/api/",
@@ -27,4 +25,6 @@ export default {
   },
 };
 </script>
-<style lang="scss"></style>
+<style lang="scss">
+
+</style>

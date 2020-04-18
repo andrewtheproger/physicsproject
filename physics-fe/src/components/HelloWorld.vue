@@ -55,7 +55,6 @@ export default {
     ...mapActions(["getTaskByNum"]),
     getTask() {
       this.getTaskByNum(this.num);
-      console.log(this.getShowing);
     },
   },
 };

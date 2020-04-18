@@ -1,9 +1,14 @@
 <template>
   <div id="app">
     <header>
-      <div class = "header">
-        <div class="title">
-          <router-link to="/">3800 онлайн</router-link>
+      <div class="header">
+        <div class = "containersec">
+          <div class="title">
+            <router-link to="/">3800 онлайн</router-link>
+          </div>
+          <div class="authorization">
+            <router-link to="/reg">{{user === undefined ? "Войти" : "Личный кабинет"}}</router-link>
+          </div>
         </div>
         <div class="container">
           <div>
@@ -26,7 +31,9 @@ export default {
   name: "App",
   data() {
     return {
+      user: "admin",
       isApiOk: null,
+      
     };
   },
   methods: {
@@ -53,9 +60,23 @@ export default {
 </script>
 
 <style lang="scss">
+.containersec {
+  flex-direction: row;
+  display: flex;
+}
+.autorization {
+  flex: 1;
+  text-align: center;
+}
 .header {
   display: flex;
   flex-direction: column;
+  border: 1px solid lightgray;
+  text-align: center;
+  div {
+    display: flex;
+    flex-direction: row;
+  }
 }
 .container {
   flex: 1;
@@ -69,10 +90,9 @@ export default {
   }
 }
 .title {
-  flex: 1;
-  border: 1px solid lightgray;
+  flex: 9;
   text-align: center;
-  height: 25px;
+  height: 40px;
   font-size: 32px;
   color: white;
 }

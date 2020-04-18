@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HelloWorld user = "user" />
+    <HelloWorld v-bind:user="user" />
   </div>
 </template>
 
@@ -9,8 +9,14 @@ import HelloWorld from "@/components/HelloWorld.vue";
 
 export default {
   name: "Home",
+  data() {
+    return {
+      user: "admin",
+      
+    };
+  },
   components: {
-    HelloWorld
-  }
+    HelloWorld,
+  },
 };
 </script>
