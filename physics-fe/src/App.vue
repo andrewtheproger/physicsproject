@@ -1,11 +1,17 @@
 <template>
   <div id="app">
     <header>
-        <md-tabs md-sync-route> <!-- todo: fix transition -->
+        <md-tabs md-sync-route>
           <md-tab id="tab-home" md-label="3800" to="/search" exact></md-tab>
           <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>
           <md-tab id="tab-registration" md-icon="face" to="/user" exact></md-tab>
         </md-tabs>
+
+        <div>
+          <ul class="ph-warnings">
+            <li :class="this.isApiOk ? 'ph-hidden' : ''">Что-то не работает, мы уже чиним.</li>
+          </ul>
+        </div>
     </header>
 
     <router-view />
@@ -50,29 +56,17 @@ export default {
 
 <style lang="scss">
 
-div.md-tabs.md-theme-default {
-  .md-tabs-navigation {
-    background-color: #555;
-
-    .md-button .md-icon {
-      color: #ccc;
-    }
-
-    .md-button.md-active .md-icon {
-      color: white;
-    }
-
-    .md-button {
-      color: #ccc;
-    }
-  }
-
-  .md-tabs-indicator {
-    background-color: #ccf;
-  }
+.ph-hidden {
+  display: none;
 }
 
-header {
+.ph-warnings {
+  list-style: none;
+
+  color: #fa5;
+}
+
+div.md-tabs.md-theme-default {
   .md-tabs {
     width: 100%;
   }
@@ -83,11 +77,34 @@ header {
 
   font-size: 150%;
 
-  .md-tabs-navigation a:last-of-type {
+  .md-tabs-navigation {
+    a:last-of-type {
       margin-left: auto;
+    }
+
+    background-color: #555;
+
+    .md-button {
+      color: #ccc;
+
+      .md-icon {
+        color: #ccc;
+      }
+    }
+
+    .md-button.md-active {
+      color: white;
+
+      .md-icon {
+        color: white;
+      }
+    }
+  }
+
+  .md-tabs-indicator {
+    background-color: #ccf;
   }
 }
-
 
 .title {
   flex: 9;
