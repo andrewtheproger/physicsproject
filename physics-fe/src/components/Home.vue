@@ -1,6 +1,5 @@
 <template>
-  <div class="hello">
-
+  <div>
     <form class="search-form" v-on:submit.prevent="submit">
         <md-field>
           <label>2.15...</label>
@@ -14,45 +13,9 @@
 
     <ul class="ph-tasks">
       <li v-for="task in this.tasks" :key="task.id">
-        <h3>3800.{{ task.number }}</h3>
-
-        <div v-for="formula in task.body.latex.split('\n')" :key="formula">
-          <vue-mathjax :formula="formula"></vue-mathjax>
-        </div>
-
-        <ul class="ph-task-images">
-          <li>
-            <md-content v-for="href in task.body.image_hrefs" :key="href">
-              <img :src="href" alt="Task image" />
-            </md-content>
-          </li>
-        </ul>
-
-        <div v-if="task.hints.length">
-          <h4>Идея решения</h4>
-
-          <ul class="ph-tasks-hints">
-            <li v-for="hint in task.hints" :key="hint.id">
-              <div v-for="formula in hint.body.latex.split('\n')" :key="formula">
-                <vue-mathjax :formula="formula"></vue-mathjax>
-              </div>
-
-              <ul class="ph-tasks-hints-images">
-                <li>
-                  <md-content v-for="href in hint.body.image_hrefs" :key="href">
-                    <img :src="href" alt="Task image" />
-                  </md-content>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-        <div v-else>
-          Подсказок к решению пока нет.
-        </div>
+        <Task :task="task" />
       </li>
     </ul>
-
   </div>
 </template>
 
@@ -60,9 +23,13 @@
 /* eslint-disable */
 import config from '../config/api'
 import axios from "axios";
+import Task from "./Task"
 
 export default {
-  name: "HelloWorld",
+  name: "Home",
+  components: {
+    Task
+  },
 
   data() {
     return {
@@ -114,30 +81,7 @@ export default {
   }
 }
 
-.ph-tasks-hints,
 .ph-tasks {
-  color: white;
-
   list-style: none;
-
-  h3 {
-    text-decoration: underline;
-  }
-
-  .ph-tasks-hints-images,
-  .ph-task-images {
-    list-style: none;
-    padding-left: 0;
-
-    .md-content {
-      width: 200px;
-      height: 160px;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-
-      margin: 0.5em;
-    }
-  }
 }
 </style>

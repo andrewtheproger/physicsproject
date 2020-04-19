@@ -106,13 +106,6 @@ div.md-tabs.md-theme-default {
   }
 }
 
-.title {
-  flex: 9;
-  text-align: center;
-  height: 40px;
-  font-size: 32px;
-  color: white;
-}
 body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -128,16 +121,5 @@ body {
   right: 0;
   bottom: 0;
   left: 0;
-}
-
-header {
-  a {
-    font-weight: bold;
-    color: white;
-
-    &.router-link-exact-active {
-      color: white;
-    }
-  }
 }
 </style>
