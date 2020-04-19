@@ -2,7 +2,10 @@
   <div>
     <form class="ph-search-form" v-on:submit.prevent="submit">
         <md-field>
-          <label>{{numberExample}}</label>
+          <transition name="slide-fade" mode="out-in">
+            <label :key="numberExample">{{numberExample}}</label>
+          </transition>
+          
           <md-input v-model="number" :disabled="this.sending"></md-input>
         </md-field>
         
@@ -94,6 +97,25 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+
+.slide-fade-leave-active {
+  transition: all .3s ease;
+}
+
+.slide-fade-enter {
+  transform: translateY(10px);
+  opacity: 0;
+}
+
+.slide-fade-leave-to {
+  transform: translateY(-10px);
+  opacity: 0; 
+}
+
 .ph-nothing-found {
   margin: 1em;
   color: white;
