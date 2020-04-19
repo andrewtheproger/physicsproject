@@ -85,6 +85,7 @@ export default {
         },
         error => {
           console.log(error);
+          this.tasks = []
         }
       );
     },
