@@ -6,7 +6,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 export default {
-  name: "HelloWorld",
+  name: "Main",
   computed: mapGetters(["getShowing"]),
   data() {
     return {
