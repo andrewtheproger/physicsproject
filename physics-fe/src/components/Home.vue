@@ -42,8 +42,14 @@ export default {
     async submit() { this.getTaskByNumber(this.number) },
 
     async getTaskByNumber(number) {
+      let url = config.apiPrefix + "/tasks"
+
+      if (number) {
+        url += "?filter_by_number=" + number
+      }
+
       await axios({
-        url: config.apiPrefix + "/tasks",
+        url: url,
         method: "GET",
       }).then(
         result => {
@@ -77,6 +83,10 @@ export default {
     label {
       padding-left: 1em;
       color: #555;
+    }
+
+    input.md-input {
+      -webkit-text-fill-color: white;
     }
   }
 }
