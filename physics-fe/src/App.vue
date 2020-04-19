@@ -1,25 +1,13 @@
 <template>
   <div id="app">
     <header>
-      <div class="header">
-        <div class = "containersec">
-          <div class="title">
-            <router-link to="/">3800 онлайн</router-link>
-          </div>
-          <div class="authorization">
-            <router-link to="/reg">{{user === undefined ? "Войти" : "Личный кабинет"}}</router-link>
-          </div>
-        </div>
-        <div class="container">
-          <div>
-            <router-link to="/search">Главная</router-link>
-          </div>
-          <div>
-            <router-link to="/about">О проекте</router-link>
-          </div>
-        </div>
-      </div>
+        <md-tabs md-sync-route> <!-- todo: fix transition -->
+          <md-tab id="tab-home" md-label="3800" to="/search" exact></md-tab>
+          <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>
+          <md-tab id="tab-registration" md-icon="face" to="/reg" exact></md-tab>
+        </md-tabs>
     </header>
+
     <router-view />
   </div>
 </template>
@@ -27,27 +15,28 @@
 <script>
 import axios from "axios";
 import config from "@/config/api";
+
 export default {
   name: "App",
+
   data() {
     return {
-      user: "admin",
-      isApiOk: null,
-      
+      isApiOk: null
     };
   },
+
   methods: {
     checkApiOk() {
       axios({
         url: config.apiPrefix + "/health",
         method: "GET",
       }).then(
-        (result) => {
+        result => {
           this.isApiOk = result.data.status === "ok";
+          console.log('api is ' + this.isApiOk)
         },
-        (error) => {
+        error => {
           console.log(error);
-
           this.isApiOk = false;
         }
       );
@@ -60,35 +49,46 @@ export default {
 </script>
 
 <style lang="scss">
-.containersec {
-  flex-direction: row;
-  display: flex;
-}
-.autorization {
-  flex: 1;
-  text-align: center;
-}
-.header {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid lightgray;
-  text-align: center;
-  div {
-    display: flex;
-    flex-direction: row;
+
+div.md-tabs.md-theme-default {
+  .md-tabs-navigation {
+    background-color: #555;
+
+    .md-button .md-icon {
+      color: #ccc;
+    }
+
+    .md-button.md-active .md-icon {
+      color: white;
+    }
+
+    .md-button {
+      color: #ccc;
+    }
+  }
+
+  .md-tabs-indicator {
+    background-color: #ccf;
   }
 }
-.container {
-  flex: 1;
+
+header {
+  .md-tabs {
+    width: 100%;
+  }
+
+  padding: 0.5em;
   display: flex;
-  div {
-    flex: 1;
-    border: 1px solid lightgray;
-    text-align: center;
-    height: 50px;
-    font-size: 32px;
+  justify-content: space-between;
+
+  font-size: 150%;
+
+  .md-tabs-navigation a:last-of-type {
+      margin-left: auto;
   }
 }
+
+
 .title {
   flex: 9;
   text-align: center;

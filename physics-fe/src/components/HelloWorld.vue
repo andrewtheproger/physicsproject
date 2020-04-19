@@ -1,19 +1,17 @@
 <template>
   <div class="hello">
-    <h1 style="color: white;">
-      Вы авторизованы как {{ user === "user" ? "Пользователь" : "Админ" }}
-    </h1>
-    <form v-on:submit.prevent="getTask">
-      <div class="buttondiv">
-        <input
-          type="text"
-          placeholder="Искать задачу по номеру..."
-          v-model="num"
-        />
-        <br />
-        <input type="submit" />
-      </div>
+
+    <form class="search-form" v-on:submit.prevent="getTask">
+        <md-field>
+          <label>2.15...</label>
+          <md-input v-model="num"></md-input>
+        </md-field>
+        
+        <md-button class="md-icon-button md-primary">
+          <md-icon>search</md-icon>
+        </md-button>
     </form>
+
     <div class="container" v-if="getShowing !== undefined">
       <div v-for="item in getShowing.body.image_hrefs" :key="item">
         <img v-bind:src="item" class="graph" />
@@ -61,6 +59,28 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.search-form {
+  margin: 2em;
+  display: flex;
+
+  .md-button.md-primary {
+    background-color: #555;
+
+    i {
+      color: #ccf;
+    }
+  }
+
+  .md-field {
+    border-bottom: 1px solid #ccc;
+
+    label {
+      padding-left: 1em;
+      color: #555;
+    }
+  }
+}
+
 .graph {
   width: 100%;
   height: 100%;

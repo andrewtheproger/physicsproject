@@ -32,6 +32,7 @@
 <script>
 import { mapActions } from "vuex";
 export default {
+  name: "About",
   data() {
     return {
       number: "",

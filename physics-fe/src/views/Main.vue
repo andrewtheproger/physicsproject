@@ -1,8 +1,8 @@
 <template>
   <div class = "main">
-    
   </div>
 </template>
+
 <script>
 import { mapGetters, mapActions } from "vuex";
 export default {
@@ -25,6 +25,3 @@ export default {
   },
 };
 </script>
-<style lang="scss">
-
-</style>
