@@ -55,6 +55,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "config/variables.scss";
 
 .ph-hidden {
   display: none;
@@ -63,7 +64,7 @@ export default {
 .ph-warnings {
   list-style: none;
 
-  color: #fa5;
+  color: $warning-fg-color;
 }
 
 div.md-tabs.md-theme-default {
@@ -82,27 +83,27 @@ div.md-tabs.md-theme-default {
       margin-left: auto;
     }
 
-    background-color: #555;
+    background-color: $secondary-bg-color;
 
     .md-button {
-      color: #ccc;
+      color: $primary-fg-color;
 
       .md-icon {
-        color: #ccc;
+        color: $primary-fg-color;
       }
     }
 
     .md-button.md-active {
-      color: white;
+      color: $primary-fg-color;
 
       .md-icon {
-        color: white;
+        color: $primary-fg-color;
       }
     }
   }
 
   .md-tabs-indicator {
-    background-color: #ccf;
+    background-color: $secondary-fg-color;
   }
 }
 
@@ -110,13 +111,14 @@ body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #252525;
+
+  background-color: $primary-bg-color;
+
+  position: absolute;
+
   margin: 0;
   padding: 0;
-  p {
-    color: white;
-  }
-  position: absolute;
+
   top: 0;
   right: 0;
   bottom: 0;

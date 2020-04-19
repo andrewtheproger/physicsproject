@@ -50,9 +50,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "../config/variables.scss";
+
 .ph-task-hints,
 .ph-task {
-  color: white;
+  color: $primary-fg-color;
   padding-left: 0;
   list-style: none;
 

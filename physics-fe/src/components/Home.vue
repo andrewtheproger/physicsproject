@@ -94,9 +94,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "../config/variables.scss";
+
 .ph-nothing-found {
   margin: 1em;
-  color: white;
+  color: $primary-fg-color;
 }
 
 .ph-search-form {
@@ -104,23 +106,23 @@ export default {
   display: flex;
 
   .md-button.md-primary {
-    background-color: #555;
+    background-color: $secondary-bg-color;
 
     i {
-      color: #ccf;
+      color: $secondary-fg-color;
     }
   }
 
   .md-field {
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid $primary-fg-color;
 
     label {
       padding-left: 1em;
-      color: #555;
+      color: $secondary-bg-color;
     }
 
     input.md-input {
-      -webkit-text-fill-color: white;
+      -webkit-text-fill-color: $primary-fg-color;
     }
   }
 }
