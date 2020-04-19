@@ -45,13 +45,7 @@ import Task from './Task'
 
 export default {
   name: "Task",
-  props: ['task'],
-  methods: {
-    cl() {
-      console.log('a')
-      $imgVuer.close()
-    }
-  }
+  props: ['task']
 };
 </script>
 
