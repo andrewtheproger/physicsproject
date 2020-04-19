@@ -3,13 +3,15 @@
     <form class="search-form" v-on:submit.prevent="submit">
         <md-field>
           <label>2.15...</label>
-          <md-input v-model="number"></md-input>
+          <md-input v-model="number" :disabled="this.sending"></md-input>
         </md-field>
         
-        <md-button type="submit" class="md-icon-button md-primary">
+        <md-button type="submit" class="md-icon-button md-primary" :disabled="this.sending">
           <md-icon>search</md-icon>
         </md-button>
     </form>
+
+    <md-progress-bar md-mode="indeterminate" v-if="this.sending" />
 
     <ul class="ph-tasks">
       <li v-for="task in this.tasks" :key="task.id">
@@ -34,12 +36,17 @@ export default {
   data() {
     return {
       number: null,
-      tasks: []
+      tasks: [],
+      sending: false
     };
   },
 
   methods: {
-    async submit() { this.getTaskByNumber(this.number) },
+    async submit() { 
+      this.sending = true
+      await this.getTaskByNumber(this.number)
+      this.sending = false
+    },
 
     async getTaskByNumber(number) {
       let url = config.apiPrefix + "/tasks"
@@ -66,7 +73,7 @@ export default {
 
 <style scoped lang="scss">
 .search-form {
-  margin: 2em;
+  margin: 2em 1em 0 1em;
   display: flex;
 
   .md-button.md-primary {
@@ -89,6 +96,10 @@ export default {
       -webkit-text-fill-color: white;
     }
   }
+}
+
+.md-progress-bar {
+
 }
 
 .ph-tasks {

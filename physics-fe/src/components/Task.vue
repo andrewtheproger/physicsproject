@@ -2,7 +2,7 @@
   <div class="ph-task" v-on:keyup.escape="cl">
     <h3>3800.{{ task.number }}</h3>
 
-    <div v-for="formula in task.body.latex.split('\n')" :key="formula">
+    <div class="latex" v-for="formula in task.body.latex.split('\n')" :key="formula">
       <vue-mathjax :formula="formula"></vue-mathjax>
     </div>
 
@@ -17,7 +17,7 @@
 
       <ul class="ph-task-hints">
         <li v-for="hint in task.hints" :key="hint.id">
-          <div v-for="formula in hint.body.latex.split('\n')" :key="formula">
+          <div class="latex" v-for="formula in hint.body.latex.split('\n')" :key="formula">
             <vue-mathjax :formula="formula"></vue-mathjax>
           </div>
 
@@ -59,11 +59,16 @@ export default {
 .ph-task-hints,
 .ph-task {
   color: white;
-
+  padding-left: 0;
   list-style: none;
 
   h3 {
-    text-decoration: underline;
+    margin-top: 3em;
+    text-decoration: bold;
+  }
+
+  .latex {
+    margin-left: 2em;
   }
 
   .ph-task-hints-images,
@@ -82,7 +87,7 @@ export default {
     }
 
     img {
-      height: 200px;
+      max-height: 200px;
       filter: invert(7%);
 
       &:hover {
