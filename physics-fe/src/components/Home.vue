@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form class="search-form" v-on:submit.prevent="submit">
+    <form class="ph-search-form" v-on:submit.prevent="submit">
         <md-field>
           <label>{{numberExample}}</label>
           <md-input v-model="number" :disabled="this.sending"></md-input>
@@ -99,7 +99,7 @@ export default {
   color: white;
 }
 
-.search-form {
+.ph-search-form {
   margin: 2em 1em 0 1em;
   display: flex;
 
@@ -123,10 +123,6 @@ export default {
       -webkit-text-fill-color: white;
     }
   }
-}
-
-.md-progress-bar {
-
 }
 
 .ph-tasks {
