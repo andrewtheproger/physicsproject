@@ -2,7 +2,7 @@
   <div id="app">
     <header>
         <md-tabs md-sync-route>
-          <md-tab id="tab-home" md-label="3800" to="/search" exact></md-tab>
+          <md-tab id="tab-home" md-label="3800" to="/" exact></md-tab>
           <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>
           <md-tab id="tab-registration" md-icon="face" to="/user" exact></md-tab>
         </md-tabs>
