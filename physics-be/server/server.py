@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from sqlalchemy import and_, or_
 from flask_jsonschema_validator import JSONSchemaValidator
 from flask_cors import CORS
+from sqlalchemy.sql import text
 
 from .models import db, Task, Hint, HintStatus
 from .config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO
@@ -37,18 +38,47 @@ def on_validation_error(e):
     return Response(f'There was a request body validation error: {str(e)}', 400)
 
 
+def get_query_parameters(request):
+    get = lambda name, default, convert: convert(request.args.get(name)) if request.args.get(name) else default
+
+    page = get('page', 0, int)
+    count = get('count', 10, int)
+    order = get('order', 'number', str)
+    order_direction = get('order_direction', 'asc', str)
+
+    allowed_properties = ['number']
+    allowed_directions = ['asc', 'desc']
+
+    if (page < 0) or \
+        (count <= 0) or \
+        (not order in allowed_properties) or \
+        (not order_direction in allowed_directions):
+        abort(400)
+
+    return {
+        'page': page + 1, #  due to flask counter starts from 1 but the common approach is to start from 0
+        'count': count,
+        'order': order,
+        'order_direction': order_direction
+    }
+
+
 # tasks
 
 
 @app.route('/api/tasks', methods=['GET'])
 def get_tasks():
+    query_parameters = get_query_parameters(request)
     filter_number = request.args.get('filter_by_number')
+    tasks = db.session.query(Task)
 
     if filter_number:
-        tasks = db.session.query(Task).filter_by(number=filter_number).all()
-        return jsonify(tasks_helpers.to_models_list(tasks))
+        tasks = tasks.filter_by(number=filter_number)
 
-    tasks = db.session.query(Task).all()
+    tasks = tasks \
+            .order_by(text(f"{query_parameters['order']} {query_parameters['order_direction']}")) \
+            .paginate(query_parameters['page'], query_parameters['count'], False) \
+            .items
     return jsonify(tasks_helpers.to_models_list(tasks))
 
 
