@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../components/Home";
 import Main from "../components/Main";
 import About from "../components/About";
-import Reg from "../components/Reg";
+import User from "../components/User";
 
 Vue.use(VueRouter);
 
@@ -24,9 +24,9 @@ const routes = [
     component: About
   },
   {
-    path: "/reg",
-    name: "Reg",
-    component: Reg
+    path: "/user",
+    name: "User",
+    component: User
   }
 ];
 

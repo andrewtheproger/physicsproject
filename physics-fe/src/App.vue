@@ -4,7 +4,7 @@
         <md-tabs md-sync-route> <!-- todo: fix transition -->
           <md-tab id="tab-home" md-label="3800" to="/search" exact></md-tab>
           <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>
-          <md-tab id="tab-registration" md-icon="face" to="/reg" exact></md-tab>
+          <md-tab id="tab-registration" md-icon="face" to="/user" exact></md-tab>
         </md-tabs>
     </header>
 
