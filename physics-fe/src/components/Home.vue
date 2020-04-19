@@ -1,58 +1,91 @@
 <template>
   <div class="hello">
 
-    <form class="search-form" v-on:submit.prevent="getTask">
+    <form class="search-form" v-on:submit.prevent="submit">
         <md-field>
           <label>2.15...</label>
-          <md-input v-model="num"></md-input>
+          <md-input v-model="number"></md-input>
         </md-field>
         
-        <md-button class="md-icon-button md-primary">
+        <md-button type="submit" class="md-icon-button md-primary">
           <md-icon>search</md-icon>
         </md-button>
     </form>
 
-    <div class="container" v-if="getShowing !== undefined">
-      <div v-for="item in getShowing.body.image_hrefs" :key="item">
-        <img v-bind:src="item" class="graph" />
-      </div>
-      <p v-if="solution">{{ getShowing.body.latex }}</p>
-    </div>
-    <div v-if="getShowing !== undefined">
-      <div v-for="item in getShowing.hints" :key="item.id">
-        <p v-if="item.id <= hints && item.status !== `pending`">
-          {{ item.latex }}
-        </p>
-        <div v-for="n in item.image_hrefs" :key="n">
-          <img v-bind:src="n" class="graph" />
+    <ul class="ph-tasks">
+      <li v-for="task in this.tasks" :key="task.id">
+        <h3>3800.{{ task.number }}</h3>
+
+        <div v-for="formula in task.body.latex.split('\n')" :key="formula">
+          <vue-mathjax :formula="formula"></vue-mathjax>
         </div>
-      </div>
-    </div>
+
+        <ul class="ph-task-images">
+          <li>
+            <md-content v-for="href in task.body.image_hrefs" :key="href">
+              <img :src="href" alt="Task image" />
+            </md-content>
+          </li>
+        </ul>
+
+        <div v-if="task.hints.length">
+          <h4>Идея решения</h4>
+
+          <ul class="ph-tasks-hints">
+            <li v-for="hint in task.hints" :key="hint.id">
+              <div v-for="formula in hint.body.latex.split('\n')" :key="formula">
+                <vue-mathjax :formula="formula"></vue-mathjax>
+              </div>
+
+              <ul class="ph-tasks-hints-images">
+                <li>
+                  <md-content v-for="href in hint.body.image_hrefs" :key="href">
+                    <img :src="href" alt="Task image" />
+                  </md-content>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div v-else>
+          Подсказок к решению пока нет.
+        </div>
+      </li>
+    </ul>
+
   </div>
 </template>
 
 <script>
 /* eslint-disable */
-import { mapGetters, mapActions } from "vuex";
+import config from '../config/api'
+import axios from "axios";
+
 export default {
   name: "HelloWorld",
-  props: {
-    user: String,
-  },
-  computed: mapGetters(["getShowing"]),
 
   data() {
     return {
-      url: "http://127.0.0.1:5000/api/",
-      num: "",
-      hints: 0,
-      solution: false,
+      number: null,
+      tasks: []
     };
   },
+
   methods: {
-    ...mapActions(["getTaskByNum"]),
-    getTask() {
-      this.getTaskByNum(this.num);
+    async submit() { this.getTaskByNumber(this.number) },
+
+    async getTaskByNumber(number) {
+      await axios({
+        url: config.apiPrefix + "/tasks",
+        method: "GET",
+      }).then(
+        result => {
+          this.tasks = result.data
+        },
+        error => {
+          console.log(error);
+        }
+      );
     },
   },
 };
@@ -81,37 +114,30 @@ export default {
   }
 }
 
-.graph {
-  width: 100%;
-  height: 100%;
-}
-.buttondiv {
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-  input {
-    &[type = text] {
-      width: 100%;
-    }
-    
-    color: white;
-    border: 1px solid lightgray;
-    background-color: #252525;
-  }
-}
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
+.ph-tasks-hints,
+.ph-tasks {
+  color: white;
 
-  li {
-    display: inline-block;
-    margin: 0 10px;
+  list-style: none;
+
+  h3 {
+    text-decoration: underline;
   }
-}
-a {
-  color: #7e9ef5;
+
+  .ph-tasks-hints-images,
+  .ph-task-images {
+    list-style: none;
+    padding-left: 0;
+
+    .md-content {
+      width: 200px;
+      height: 160px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+
+      margin: 0.5em;
+    }
+  }
 }
 </style>
