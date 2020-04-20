@@ -1,4 +1,4 @@
-from models import Hint
+from .models import Hint
 import json
 
 
