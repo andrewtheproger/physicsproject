@@ -1,84 +1,127 @@
 <template>
   <div id="app">
     <header>
-      <div class="container">
+        <md-tabs md-sync-route>
+          <md-tab id="tab-home" md-label="3800" to="/" exact></md-tab>
+          <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>
+          <md-tab id="tab-registration" md-icon="face" to="/user" exact></md-tab>
+        </md-tabs>
+
         <div>
-          <router-link to="/">Главная</router-link>
+          <ul class="ph-warnings">
+            <li :class="this.isApiOk ? 'ph-hidden' : ''">Что-то не работает, мы уже чиним.</li>
+          </ul>
         </div>
-        <div>
-          <router-link to="/about">О проекте</router-link>
-        </div>
-      </div>
     </header>
-    <span>Api is {{isApiOk ? '' : 'not'}} working</span>
+
     <router-view />
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import config from "@/config/api"
+import config from "@/config/api";
+
 export default {
   name: "App",
-  data(){
-      return {
-          isApiOk: null
-      }
+
+  data() {
+    return {
+      isApiOk: null
+    };
   },
+
   methods: {
     checkApiOk() {
       axios({
         url: config.apiPrefix + "/health",
-        method: "GET"})
-      .then(result => {
-        this.isApiOk = result.data.status === "ok";
-      }, error => {
-        console.log(error);
-
-        this.isApiOk = false;
-      });
-    }
+        method: "GET",
+      }).then(
+        result => {
+          this.isApiOk = result.data.status === "ok";
+          console.log('api is ' + this.isApiOk)
+        },
+        error => {
+          console.log(error);
+          this.isApiOk = false;
+        }
+      );
+    },
   },
-  mounted() { 
-    this.checkApiOk()
-  }
-}
+  mounted() {
+    this.checkApiOk();
+  },
+};
 </script>
 
 <style lang="scss">
-.container {
+@import "config/variables.scss";
+
+.ph-hidden {
+  display: none;
+}
+
+.ph-warnings {
+  list-style: none;
+
+  color: $warning-fg-color;
+}
+
+div.md-tabs.md-theme-default {
+  .md-tabs {
+    width: 100%;
+  }
+
+  padding: 0.5em;
   display: flex;
-  div {
-    flex: 1;
-    border: 1px solid lightgray;
-    text-align: center;
-    height: 50px;
-    font-size: 32px;
+  justify-content: space-between;
+
+  font-size: 150%;
+
+  .md-tabs-navigation {
+    a:last-of-type {
+      margin-left: auto;
+    }
+
+    background-color: $secondary-bg-color;
+
+    .md-button {
+      color: $primary-fg-color;
+
+      .md-icon {
+        color: $primary-fg-color;
+      }
+    }
+
+    .md-button.md-active {
+      color: $primary-fg-color;
+
+      .md-icon {
+        color: $primary-fg-color;
+      }
+    }
+  }
+
+  .md-tabs-indicator {
+    background-color: $secondary-fg-color;
   }
 }
+
 body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  background-color: $primary-bg-color;
+
+  position: absolute;
+
   margin: 0;
   padding: 0;
 
-  position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-}
-
-header {
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #7e9ef5;
-    }
-  }
 }
 </style>
