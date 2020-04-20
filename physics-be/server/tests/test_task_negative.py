@@ -17,9 +17,14 @@ wrong_task_ids = [
     'random string'
 ]
 
+wrong_counts = [
+    0,
+    -17
+]
+
 
 @pytest.mark.parametrize('number', wrong_task_numbers)
-def test_get_by_nonexisting_filter_number(client, number):
+def test_get_by_invalid_filter_number(client, number):
     check_not_exists(lambda x: x['number'] == number)
 
     data = {
@@ -32,7 +37,7 @@ def test_get_by_nonexisting_filter_number(client, number):
 
 
 @pytest.mark.parametrize('id', wrong_task_ids)
-def test_get_by_nonexisting_id(client, id):
+def test_get_by_invalid_id(client, id):
     check_not_exists(lambda x: x['id'] == id)
 
     response = client.get(f'/api/tasks/{id}')
@@ -41,9 +46,50 @@ def test_get_by_nonexisting_id(client, id):
 
 
 @pytest.mark.parametrize('id', wrong_task_ids)
-def test_delete_by_nonexisting_id(client, id):
+def test_delete_by_invalid_id(client, id):
     check_not_exists(lambda x: x['id'] == id)
 
     response = client.delete(f'/api/tasks/{id}')
 
     assert response.status_code == 404
+
+
+def test_get_invalid_page(client):
+    data = {
+        'page': -17
+    }
+
+    response = client.get('/api/tasks', query_string=data)
+
+    assert response.status_code == 400
+
+
+@pytest.mark.parametrize('count', wrong_counts)
+def test_get_invalid_count(client, count):
+    data = {
+        'count': count
+    }
+
+    response = client.get('/api/tasks', query_string=data)
+
+    assert response.status_code == 400
+
+
+def test_get_invalid_order(client):
+    data = {
+        'order': 'invalid'
+    }
+
+    response = client.get('/api/tasks', query_string=data)
+
+    assert response.status_code == 400
+
+
+def test_get_invalid_order_direction(client):
+    data = {
+        'order_direction': 'invalid'
+    }
+
+    response = client.get('/api/tasks', query_string=data)
+
+    assert response.status_code == 400
