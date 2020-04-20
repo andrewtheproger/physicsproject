@@ -1,17 +1,21 @@
 <template>
   <div>
     <form class="ph-search-form" v-on:submit.prevent="submit">
-        <md-field>
-          <transition name="slide-fade" mode="out-in">
-            <label :key="numberExample">{{numberExample}}</label>
-          </transition>
-          
-          <md-input v-model="number" :disabled="this.sending"></md-input>
-        </md-field>
-        
-        <md-button type="submit" class="md-icon-button md-primary" :disabled="this.sending">
-          <md-icon>search</md-icon>
-        </md-button>
+      <md-field>
+        <transition name="slide-fade" mode="out-in">
+          <label :key="numberExample">{{ numberExample }}</label>
+        </transition>
+
+        <md-input v-model="number" :disabled="this.sending"></md-input>
+      </md-field>
+
+      <md-button
+        type="submit"
+        class="md-icon-button md-primary"
+        :disabled="this.sending"
+      >
+        <md-icon>search</md-icon>
+      </md-button>
     </form>
 
     <md-progress-bar md-mode="indeterminate" v-if="this.sending" />
@@ -99,7 +103,6 @@ export default {
 <style scoped lang="scss">
 @import "../config/variables.scss";
 
-
 .slide-fade-enter-active {
   transition: all .3s ease;
 }
@@ -135,16 +138,20 @@ export default {
     }
   }
 
-  .md-field {
+  .md-field,
+  .md-field.md-theme-default.md-focused,
+  .md-field.md-theme-default.md-focused,
+  .md-field.md-theme-default.md-has-value {
     border-bottom: 1px solid $primary-fg-color;
+
+    input.md-input {
+      color: inherit;
+      -webkit-text-fill-color: $primary-fg-color;
+    }
 
     label {
       padding-left: 1em;
       color: $secondary-bg-color;
-    }
-
-    input.md-input {
-      -webkit-text-fill-color: $primary-fg-color;
     }
   }
 }
