@@ -30,24 +30,37 @@
             </div>
           </div>
 
-          <div v-if="filesAdded">
+          <div v-if="files.length">
             <p>
               <strong>{{ fileNameMessage }}</strong>
             </p>
             <ol>
-              <li v-for="(name, i) in filesNames" :key="`name-${i}`">{{ name }}</li>
+              <li
+                class="file-name"
+                v-for="(file, i) in files" 
+                :key="`${file.name}-${i}`"
+                :data-name="file.name"
+                @click="removeFile"
+                >
+                {{ file.name }}
+              </li>
             </ol>
             <p>
               <strong>{{ fileSizeMessage }}</strong>
             </p>
             <ol>
-              <li v-for="(size, i) in filesSizes" :key="`size-${i}`">{{ size }}</li>
+              <li
+                v-for="(file, i) in files"
+                :key="`size-${i}`"
+                >
+                {{ file.size }}
+              </li>
             </ol>
             <p>
-              <strong>{{ totalFileMessage }}</strong> {{ filesAdded }}
+              <strong>{{ totalFileMessage }}</strong> {{ files.length }}
             </p>
             <p>
-              <strong>{{ totalUploadSizeMessage }}</strong> {{ filesTotalSize }}
+              <strong>{{ totalUploadSizeMessage }}</strong> {{ this.bytesToSize(files.reduce((acc, cur) => acc + cur.size, 0)) }}
             </p>
 
             <button @click.prevent="$refs.file.click()">{{ addMoreFiles }}</button>
@@ -83,14 +96,14 @@
           type="button"
           class="md-raised md-accent"
           @click="removefiles"
-          :disabled="filesAdded.length === 0 && links.length === 0"
+          :disabled="files.length === 0 && links.length === 0"
         >
           {{ cancelButtonMessage }}
         </md-button>
         <md-button
           type="button"
           class="md-raised md-primary"
-          :disabled="(filesAdded < minfiles || filesAdded > maxfiles) && links.length === 0"
+          :disabled="(files.length < minfiles || files.length > maxfiles) && links.length === 0"
         >
           {{ uploadButtonMessage }}
         </md-button>
@@ -102,12 +115,12 @@
           retryErrorMessage
         }}
       </div>
-      <div class="errorMsg" v-if="filesAdded && filesAdded < minfiles">
+      <div class="errorMsg" v-if="files.length && files.length < minfiles">
         {{ minFilesErrorMessage }}: {{ minfiles }}. <br />{{
           retryErrorMessage
         }}
       </div>
-      <div class="errorMsg" v-if="filesAdded && filesAdded > maxfiles">
+      <div class="errorMsg" v-if="files.length && files.length > maxfiles">
         {{ maxFilesErrorMessage }}: {{ maxfiles }}. <br />{{
           retryErrorMessage
         }}
@@ -234,10 +247,6 @@ export default {
       dragging: false,
       files: [],
       links: [],
-      filesAdded: "",
-      filesNames: [],
-      filesSizes: [],
-      filesTotalSize: "",
       formData: "",
       successMsg: "",
       errorMsg: "",
@@ -274,27 +283,19 @@ export default {
       this.formData = new FormData();
 
       const inputFiles = [...(e.target.files || e.dataTransfer.files)] // this is hack to get out of FileList that's not an array
-      let files = [...inputFiles, ...this.files];
+      let files = [...inputFiles, ...this.files].filter(x => x);
       
-      this.filesAdded = files.length;
-      
-      for (const x in files) {
-        if (!isNaN(x)) {
-          this.filesNames = files.map(x => x.name)
-          this.filesSizes = files.map(x => this.bytesToSize(x.size));
-          this.filesTotalSize = this.bytesToSize(files.reduce((acc, cur) => acc + cur.size, 0));
-          this.files = files;
-          this.formData.append("files[]", this.files);
-        }
-      }
+      this.files = files;
+      this.formData.append("files[]", this.files);
+    },
+    removeFile(e) {
+      const value = e.target.dataset.name;
+
+      this.files = this.files.filter(x => x.name !== value);
     },
     removefiles() {
-      this.files = "";
-      this.links = "";
-      this.filesAdded = "";
-      this.filesNames = [];
-      this.filesSizes = [];
-      this.filesTotalSize = "";
+      this.files = [];
+      this.links = [];
       this.dragging = false;
     },
     onSubmit() {
@@ -347,6 +348,34 @@ export default {
 
 <style lang="scss" scoped>
 @import "../config/variables.scss";
+
+.file-name {
+  position: relative;
+
+      &:after {
+        display: none;
+        content: 'X';
+        font-size: 2em;
+        color: #d00;
+        cursor: pointer;
+
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        
+        background-color: rgba(0,0,0,0.2);
+      }
+
+      &:hover {
+        &:after {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+}
 
 .container {
   display: flex;
