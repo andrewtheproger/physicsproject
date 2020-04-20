@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 style="color: white">Добавить задачу</h2>
+    <h2 style="color: white;">Добавить задачу</h2>
     <form v-on:submit.prevent="sendTask">
       <p>Укажите номер задачи:</p>
       <input type="text" v-model="number" /><br />
@@ -24,8 +24,8 @@
       />
       <p>Укажите решение в формате LaTeX:</p>
       <textarea cols="30" rows="15" v-model="latex"> </textarea>
-      <br/>>
-      <input type="submit" value="Отправить">
+      <br />>
+      <input type="submit" value="Отправить" />
     </form>
   </div>
 </template>

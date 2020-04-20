@@ -1,17 +1,25 @@
 <template>
   <div id="app">
     <header>
-        <md-tabs md-sync-route>
-          <md-tab id="tab-home" md-label="3800" to="/" exact></md-tab>
-          <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>
-          <md-tab id="tab-registration" md-icon="face" to="/user" exact></md-tab>
-        </md-tabs>
+      <md-tabs md-sync-route>
+        <md-tab id="tab-home" md-label="3800" to="/" exact></md-tab>
+        <md-tab
+          id="tab-add"
+          md-label="Добавить задачу"
+          to="/add"
+          exact
+        ></md-tab>
+        <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>
+        <md-tab id="tab-registration" md-icon="face" to="/user" exact></md-tab>
+      </md-tabs>
 
-        <div>
-          <ul class="ph-warnings">
-            <li :class="this.isApiOk ? 'ph-hidden' : ''">Что-то не работает, мы уже чиним.</li>
-          </ul>
-        </div>
+      <div>
+        <ul class="ph-warnings">
+          <li :class="this.isApiOk ? 'ph-hidden' : ''">
+            Что-то не работает, мы уже чиним.
+          </li>
+        </ul>
+      </div>
     </header>
 
     <router-view />
@@ -27,7 +35,7 @@ export default {
 
   data() {
     return {
-      isApiOk: null
+      isApiOk: null,
     };
   },
 
@@ -37,11 +45,11 @@ export default {
         url: config.apiPrefix + "/health",
         method: "GET",
       }).then(
-        result => {
+        (result) => {
           this.isApiOk = result.data.status === "ok";
-          console.log('api is ' + this.isApiOk)
+          console.log("api is " + this.isApiOk);
         },
-        error => {
+        (error) => {
           console.log(error);
           this.isApiOk = false;
         }
