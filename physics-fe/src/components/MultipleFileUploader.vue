@@ -20,8 +20,8 @@
               <span>Перетащите файлы или...</span>
               <input
                 type="file"
-                id="items"
-                name="items[]"
+                id="files"
+                name="files[]"
                 required
                 multiple
                 @change="onChange"
@@ -30,24 +30,24 @@
             </div>
           </div>
 
-          <div v-if="itemsAdded">
+          <div v-if="filesAdded">
             <p>
               <strong>{{ fileNameMessage }}</strong>
             </p>
             <ol>
-              <li v-for="(name, i) in itemsNames" :key="`name-${i}`">{{ name }}</li>
+              <li v-for="(name, i) in filesNames" :key="`name-${i}`">{{ name }}</li>
             </ol>
             <p>
               <strong>{{ fileSizeMessage }}</strong>
             </p>
             <ol>
-              <li v-for="(size, i) in itemsSizes" :key="`size-${i}`">{{ size }}</li>
+              <li v-for="(size, i) in filesSizes" :key="`size-${i}`">{{ size }}</li>
             </ol>
             <p>
-              <strong>{{ totalFileMessage }}</strong> {{ itemsAdded }}
+              <strong>{{ totalFileMessage }}</strong> {{ filesAdded }}
             </p>
             <p>
-              <strong>{{ totalUploadSizeMessage }}</strong> {{ itemsTotalSize }}
+              <strong>{{ totalUploadSizeMessage }}</strong> {{ filesTotalSize }}
             </p>
 
             <button @click.prevent="$refs.file.click()">{{ addMoreFiles }}</button>
@@ -58,25 +58,32 @@
           </div>
         </div>
         
-        <md-field>
-          <label>...вставьте ссылку</label>
-          <md-input @paste.prevent="onPaste" class="ph-filelink-input" type="text"></md-input>
-        </md-field>
+        <div class="container">
+          <md-field>
+            <label>...вставьте ссылку</label>
+            <md-input @paste.prevent="onPaste" class="ph-filelink-input" type="text"></md-input>
+          </md-field>
+
+          <ul class="previews">
+            <li class="preview" v-for="(link, i) in links" :key="`link-${i}`" :style="`background: url(${link}) no-repeat; background-size:contain;`">
+            </li>
+          </ul>
+        </div>
       </div>
 
       <div class="buttons-wrapper">
         <md-button
           type="button"
           class="md-raised md-accent"
-          @click="removeItems"
-          :disabled="itemsAdded.length === 0"
+          @click="removefiles"
+          :disabled="filesAdded.length === 0"
         >
           {{ cancelButtonMessage }}
         </md-button>
         <md-button
           type="button"
           class="md-raised md-primary"
-          :disabled="itemsAdded < minItems || itemsAdded > maxItems"
+          :disabled="filesAdded < minfiles || filesAdded > maxfiles"
         >
           {{ uploadButtonMessage }}
         </md-button>
@@ -88,13 +95,13 @@
           retryErrorMessage
         }}
       </div>
-      <div class="errorMsg" v-if="itemsAdded && itemsAdded < minItems">
-        {{ minFilesErrorMessage }}: {{ minItems }}. <br />{{
+      <div class="errorMsg" v-if="filesAdded && filesAdded < minfiles">
+        {{ minFilesErrorMessage }}: {{ minfiles }}. <br />{{
           retryErrorMessage
         }}
       </div>
-      <div class="errorMsg" v-if="itemsAdded && itemsAdded > maxItems">
-        {{ maxFilesErrorMessage }}: {{ maxItems }}. <br />{{
+      <div class="errorMsg" v-if="filesAdded && filesAdded > maxfiles">
+        {{ maxFilesErrorMessage }}: {{ maxfiles }}. <br />{{
           retryErrorMessage
         }}
       </div>
@@ -114,11 +121,11 @@ export default {
       type: String,
       required: true,
     },
-    minItems: {
+    minfiles: {
       type: Number,
       default: 1,
     },
-    maxItems: {
+    maxfiles: {
       type: Number,
       default: 30,
     },
@@ -218,11 +225,12 @@ export default {
   data() {
     return {
       dragging: false,
-      items: [],
-      itemsAdded: "",
-      itemsNames: [],
-      itemsSizes: [],
-      itemsTotalSize: "",
+      files: [],
+      links: [],
+      filesAdded: "",
+      filesNames: [],
+      filesSizes: [],
+      filesTotalSize: "",
       formData: "",
       successMsg: "",
       errorMsg: "",
@@ -230,6 +238,9 @@ export default {
     };
   },
   methods: {
+    onPaste(e) {
+      this.links = [...this.links, e.clipboardData.getData('Text')]
+    },
     // http://scratch99.com/web-development/javascript/convert-bytes-to-mb-kb/
     bytesToSize(bytes) {
       const sizes = ["байт", "килобайт", "мегабайт", "гигабайт", "терабайт"];
@@ -245,26 +256,27 @@ export default {
       this.formData = new FormData();
 
       const inputFiles = [...(e.target.files || e.dataTransfer.files)] // this is hack to get out of FileList that's not an array
-      let files = [...inputFiles, ...this.items];
+      let files = [...inputFiles, ...this.files];
       
-      this.itemsAdded = files.length;
+      this.filesAdded = files.length;
       
       for (const x in files) {
         if (!isNaN(x)) {
-          this.itemsNames = files.map(x => x.name)
-          this.itemsSizes = files.map(x => this.bytesToSize(x.size));
-          this.itemsTotalSize = this.bytesToSize(files.reduce((acc, cur) => acc + cur.size, 0));
-          this.items = files;
-          this.formData.append("items[]", this.items);
+          this.filesNames = files.map(x => x.name)
+          this.filesSizes = files.map(x => this.bytesToSize(x.size));
+          this.filesTotalSize = this.bytesToSize(files.reduce((acc, cur) => acc + cur.size, 0));
+          this.files = files;
+          this.formData.append("files[]", this.files);
         }
       }
     },
-    removeItems() {
-      this.items = "";
-      this.itemsAdded = "";
-      this.itemsNames = [];
-      this.itemsSizes = [];
-      this.itemsTotalSize = "";
+    removefiles() {
+      this.files = "";
+      this.links = "";
+      this.filesAdded = "";
+      this.filesNames = [];
+      this.filesSizes = [];
+      this.filesTotalSize = "";
       this.dragging = false;
     },
     onSubmit() {
@@ -298,17 +310,17 @@ export default {
             // Show success message
             if (this.showHttpMessages)
               this.successMsg = response + "." + this.successMessagePath;
-            this.removeItems();
+            this.removefiles();
           })
           .catch((error) => {
             this.isLoaderVisible = false;
             if (this.showHttpMessages)
               this.errorMsg = error + "." + this.errorMessagePath;
-            this.removeItems();
+            this.removefiles();
           });
       } else {
         if (this.showHttpMessages) this.errorMsg = this.httpMethodErrorMessage;
-        this.removeItems();
+        this.removefiles();
       }
     },
   },
@@ -317,6 +329,23 @@ export default {
 
 <style lang="scss" scoped>
 @import "../config/variables.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+
+  .previews {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+
+    .preview {
+      min-height: 7em;
+      min-width: 30%;
+    }
+  }
+}
 
 .md-field,
 .md-field.md-theme-default.md-focused,
@@ -327,7 +356,6 @@ export default {
     -webkit-text-fill-color: inherit;
   }
 
-  width: 50%;
   max-height: 3em;
 }
 
