@@ -65,7 +65,12 @@
           </md-field>
 
           <ul class="previews">
-            <li class="preview" v-for="(link, i) in links" :key="`link-${i}`" :style="`background: url(${link}) no-repeat; background-size:contain;`">
+            <li 
+              class="preview"
+              v-for="(link, i) in links" 
+              :key="`link-${i}`"
+              >
+              <img :src="link" alt="img" :data-link="link" @click="removeLink" />
             </li>
           </ul>
         </div>
@@ -76,14 +81,14 @@
           type="button"
           class="md-raised md-accent"
           @click="removefiles"
-          :disabled="filesAdded.length === 0"
+          :disabled="filesAdded.length === 0 && links.length === 0"
         >
           {{ cancelButtonMessage }}
         </md-button>
         <md-button
           type="button"
           class="md-raised md-primary"
-          :disabled="filesAdded < minfiles || filesAdded > maxfiles"
+          :disabled="(filesAdded < minfiles || filesAdded > maxfiles) && links.length === 0"
         >
           {{ uploadButtonMessage }}
         </md-button>
@@ -239,7 +244,18 @@ export default {
   },
   methods: {
     onPaste(e) {
-      this.links = [...this.links, e.clipboardData.getData('Text')]
+      const value = e.clipboardData.getData('Text').trim()
+
+      if (this.links.includes(value)) {
+        return;
+      }
+
+      this.links = [...this.links, value]
+    },
+    removeLink(e) {
+      const value = e.target.dataset.link;
+
+      this.links = this.links.filter(x => x !== value)
     },
     // http://scratch99.com/web-development/javascript/convert-bytes-to-mb-kb/
     bytesToSize(bytes) {
@@ -339,10 +355,19 @@ export default {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
 
     .preview {
-      min-height: 7em;
-      min-width: 30%;
+      margin: 3px;
+      width: 30%;
+
+      img {
+        &:hover {
+          filter: invert(10%);
+        }
+      }
+
+      
     }
   }
 }
