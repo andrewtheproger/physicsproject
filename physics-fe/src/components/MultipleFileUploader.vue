@@ -69,8 +69,10 @@
               class="preview"
               v-for="(link, i) in links" 
               :key="`link-${i}`"
+              :data-link="link"
+              @click="removeLink"
               >
-              <img :src="link" alt="img" :data-link="link" @click="removeLink" />
+              <img :src="link" alt="img"  />
             </li>
           </ul>
         </div>
@@ -360,14 +362,31 @@ export default {
     .preview {
       margin: 3px;
       width: 30%;
+      position: relative;
 
-      img {
-        &:hover {
-          filter: invert(10%);
-        }
+      &:after {
+        display: none;
+        content: 'X';
+        font-size: 3em;
+        color: #d00;
+        cursor: pointer;
+
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        
+        background-color: rgba(0,0,0,0.2);
       }
 
-      
+      &:hover {
+        &:after {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
     }
   }
 }
