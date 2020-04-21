@@ -380,29 +380,29 @@ export default {
 .file-name {
   position: relative;
 
-      &:after {
-        display: none;
-        content: 'X';
-        font-size: 2em;
-        color: #d00;
-        cursor: pointer;
+  &:after {
+    display: none;
+    content: 'X';
+    font-size: 2em;
+    color: #d00;
+    cursor: pointer;
 
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        
-        background-color: rgba(0,0,0,0.2);
-      }
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    
+    background-color: rgba(0,0,0,0.2);
+  }
 
-      &:hover {
-        &:after {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-      }
+  &:hover {
+    &:after {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
 }
 
 .container {
@@ -474,6 +474,12 @@ export default {
   label {
     color: inherit;
     -webkit-text-fill-color: inherit;
+  }
+
+
+  &:hover:after {
+    background-color: $secondary-fg-color;
+    transition: all .3s;
   }
 
   max-height: 3em;
