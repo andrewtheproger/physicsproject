@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import MultipleFileUploader from "./MultipleFileUploader";
+import MultipleFileUploader from "./MultipleFileUploader/MultipleFileUploader";
 import config from '../config/api.js';
 
 export default {
