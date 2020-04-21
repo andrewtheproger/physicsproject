@@ -101,7 +101,7 @@
           {{ cancelButtonMessage }}
         </md-button>
         <md-button
-          type="button"
+          type="submit"
           class="md-raised md-primary"
           :disabled="(files.length < minfiles || files.length > maxfiles) && links.length === 0"
         >
@@ -246,8 +246,8 @@ export default {
     return {
       dragging: false,
       files: [],
+      filelist: null,
       links: [],
-      formData: "",
       successMsg: "",
       errorMsg: "",
       isLoaderVisible: false,
@@ -280,13 +280,12 @@ export default {
       this.successMsg = "";
       this.errorMsg = "";
       this.dragging = false; // that doesn't work on element, idk why
-      this.formData = new FormData();
 
-      const inputFiles = [...(e.target.files || e.dataTransfer.files)] // this is hack to get out of FileList that's not an array
+      const inputFilelist = e.target.files || e.dataTransfer.files;
+      const inputFiles = [...(inputFilelist)]; // this is hack to get out of FileList that's not an array
       let files = [...inputFiles, ...this.files].filter(x => x);
       
       this.files = files;
-      this.formData.append("files[]", this.files);
     },
     removeFile(e) {
       const value = e.target.dataset.name;
@@ -300,47 +299,67 @@ export default {
     },
     onSubmit() {
       this.isLoaderVisible = true;
-      if (
-        (typeof this.postMeta === "string" && this.postMeta !== "") ||
-        (typeof this.postMeta === "object" &&
-          Object.keys(this.postMeta).length > 0)
-      ) {
-        this.formData.append("postMeta", this.postMeta);
+
+      const formData = new FormData();
+      for (let i = 0; i < this.$refs.file.files.length; i++) {
+        formData.append(`files[${i}]`, this.$refs.file.files[i]);
       }
 
-      if (
-        typeof this.postData === "object" &&
-        this.postData !== null &&
-        Object.keys(this.postData).length > 0
-      ) {
-        for (var key in this.postData) {
-          this.formData.append(key, this.postData[key]);
+      for (let i = 0; i < this.links.length; i++) {
+        formData.append(`links[${i}]`, this.links[i]);
+      }
+
+      // why do we need separate postMeta and postData?
+      const isString = typeof this.postMeta === "string" && this.postMeta !== "";
+      const isObject = typeof this.postMeta === "object" && Object.keys(this.postMeta).length > 0
+      const isArray = typeof this.postData === "object" &&
+                this.postData !== null &&
+                Object.keys(this.postData).length > 0
+
+      if (isString || isObject) {
+        formData.append("postMeta", this.postMeta);
+      }
+
+      if (isArray) {
+        for (const key in this.postData) {
+          formData.append(key, this.postData[key]);
         }
       }
-      if (this.method === "put" || this.method === "post") {
-        axios({
+
+      if (this.method !== "put" && this.method !== "post") {
+        if (this.showHttpMessages) { 
+          this.errorMsg = this.httpMethodErrorMessage;
+        }
+
+        this.removefiles();
+
+        return;
+      }
+
+      axios({
           method: this.method,
           url: this.postURL,
-          data: this.formData,
+          data: formData,
           headers: this.postHeader,
         })
-          .then((response) => {
-            this.isLoaderVisible = false;
-            // Show success message
-            if (this.showHttpMessages)
-              this.successMsg = response + "." + this.successMessagePath;
-            this.removefiles();
-          })
-          .catch((error) => {
-            this.isLoaderVisible = false;
-            if (this.showHttpMessages)
-              this.errorMsg = error + "." + this.errorMessagePath;
-            this.removefiles();
-          });
-      } else {
-        if (this.showHttpMessages) this.errorMsg = this.httpMethodErrorMessage;
-        this.removefiles();
-      }
+        .then((response) => {
+          this.isLoaderVisible = false;
+          
+          if (this.showHttpMessages) {
+            this.successMsg = response + "." + this.successMessagePath;
+          }
+
+          this.removefiles();
+        })
+        .catch((error) => {
+          this.isLoaderVisible = false;
+          
+          if (this.showHttpMessages) {
+            this.errorMsg = error + "." + this.errorMessagePath;
+          }
+
+          this.removefiles();
+        });
     },
   },
 };
