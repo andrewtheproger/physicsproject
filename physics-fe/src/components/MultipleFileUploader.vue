@@ -1,33 +1,31 @@
 <template>
-  <div class="uploadBox">
+  <div class="mfu-uploadBox">
     <form role="form" enctype="multipart/form-data" @submit.prevent="onSubmit">
 
-      <div class="ph-files-input">
+      <div class="mfu-files-input">
 
-        <div class="uploadBoxMain">
-          <div class="form-group">
-            <div
-              class="dropArea animatedBorders"
-              @ondragover="onChange"
-              :class="dragging ? 'dropAreaDragging' : ''"
-              @dragenter="dragging = true"
-              @dragend="dragging = false"
-              @dragleave="dragging = false"
-            >
-              <md-icon>
-                file_copy
-              </md-icon>
-              <span>Перетащите файлы или...</span>
-              <input
-                type="file"
-                id="files"
-                name="files[]"
-                required
-                multiple
-                @change="onChange"
-                ref="file"
-              />
-            </div>
+        <div class="mfu-uploadBoxMain">
+          <div
+            class="mfu-dropArea mfu-animatedBorders"
+            @ondragover="onChange"
+            :class="dragging ? 'mfu-dropAreaDragging' : ''"
+            @dragenter="dragging = true"
+            @dragend="dragging = false"
+            @dragleave="dragging = false"
+          >
+            <md-icon>
+              file_copy
+            </md-icon>
+            <span>Перетащите файлы или...</span>
+            <input
+              type="file"
+              id="files"
+              name="files[]"
+              required
+              multiple
+              @change="onChange"
+              ref="file"
+            />
           </div>
 
           <div v-if="files.length">
@@ -36,7 +34,7 @@
             </p>
             <ol>
               <li
-                class="file-name"
+                class="mfu-file-name"
                 v-for="(file, i) in files" 
                 :key="`${file.name}-${i}`"
                 :data-name="file.name"
@@ -77,17 +75,17 @@
           </div>
         </div>
         
-        <div class="container">
+        <div class="mfu-container">
           <md-field>
             <label>...вставьте ссылку</label>
-            <md-input @paste.prevent="onPaste" class="ph-filelink-input" type="text"></md-input>
+            <md-input @paste.prevent="onPaste" class="mfu-filelink-input" type="text"></md-input>
           </md-field>
 
-          <ul class="previews">
+          <ul class="mfu-previews">
                   <transition-group name="slide-fade" mode="out-in">
 
               <li 
-                class="preview"
+                class="mfu-preview"
                 v-for="(link, i) in links" 
                 :key="`link-${i}`"
                 :data-link="link"
@@ -100,7 +98,7 @@
         </div>
       </div>
 
-      <div class="buttons-wrapper">
+      <div class="mfu-buttons-wrapper">
         <md-button
           type="button"
           class="md-raised md-accent"
@@ -118,18 +116,18 @@
         </md-button>
       </div>
       <br />
-      <div class="successMsg" v-if="successMsg !== ''">{{ successMsg }}</div>
-      <div class="errorMsg" v-if="errorMsg !== ''">
+      <div class="mfu-successMsg" v-if="successMsg !== ''">{{ successMsg }}</div>
+      <div class="mfu-errorMsg" v-if="errorMsg !== ''">
         {{ fileUploadErrorMessage }}:<br />{{ errorMsg }} <br />{{
           retryErrorMessage
         }}
       </div>
-      <div class="errorMsg" v-if="files.length && files.length < minfiles">
+      <div class="mfu-errorMsg" v-if="files.length && files.length < minfiles">
         {{ minFilesErrorMessage }}: {{ minfiles }}. <br />{{
           retryErrorMessage
         }}
       </div>
-      <div class="errorMsg" v-if="files.length && files.length > maxfiles">
+      <div class="mfu-errorMsg" v-if="files.length && files.length > maxfiles">
         {{ maxFilesErrorMessage }}: {{ maxfiles }}. <br />{{
           retryErrorMessage
         }}
@@ -377,7 +375,7 @@ export default {
 <style lang="scss" scoped>
 @import "../config/variables.scss";
 
-.file-name {
+.mfu-file-name {
   position: relative;
 
   &:after {
@@ -405,12 +403,12 @@ export default {
   }
 }
 
-.container {
+.mfu-container {
   display: flex;
   flex-direction: column;
   width: 50%;
 
-  .previews span{
+  .mfu-previews span{
     list-style: none;
     display: flex;
     flex-wrap: wrap;
@@ -434,7 +432,7 @@ export default {
       opacity: 0; 
     }
 
-    .preview {
+    .mfu-preview {
       margin: 3px;
       width: 30%;
       position: relative;
@@ -494,7 +492,7 @@ export default {
   padding-left: 1em;
 }
 
-.buttons-wrapper {
+.mfu-buttons-wrapper {
   display: flex;
   flex-direction: row-reverse;
 
@@ -503,22 +501,22 @@ export default {
   }
 }
 
-.ph-files-input {
+.mfu-files-input {
   display: flex;
   align-items: bottom;
 
-  .uploadBoxMain,
-  .ph-filelink-input {
+  .mfu-uploadBoxMain,
+  .mfu-filelink-input {
     width: 50%;
   }
 }
 
-.uploadBox {
+.mfu-uploadBox {
   background: $secondary-bg-color;
   color: $primary-fg-color;
   width: 100%;
 
-  .dropArea {
+  .mfu-dropArea {
     text-align: center;
     padding: 1em;
     background-color: $secondary-bg-color;
@@ -543,11 +541,11 @@ export default {
     }
   }
   
-  .dropAreaDragging {
+  .mfu-dropAreaDragging {
     background-color: lighten($secondary-bg-color, 10%);
   }
 
-  .animatedBorders {
+  .mfu-animatedBorders {
     position: relative;
 
     box-sizing: border-box;
@@ -608,7 +606,4 @@ export default {
     }
   }
 }
-
-
-  
 </style>
