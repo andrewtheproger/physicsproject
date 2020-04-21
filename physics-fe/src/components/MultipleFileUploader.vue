@@ -53,18 +53,24 @@
                 v-for="(file, i) in files"
                 :key="`size-${i}`"
                 >
-                {{ file.size }}
+                {{ bytesToSize(file.size) }}
               </li>
             </ol>
             <p>
               <strong>{{ totalFileMessage }}</strong> {{ files.length }}
             </p>
             <p>
-              <strong>{{ totalUploadSizeMessage }}</strong> {{ this.bytesToSize(files.reduce((acc, cur) => acc + cur.size, 0)) }}
+              <strong>{{ totalUploadSizeMessage }}</strong> {{ bytesToSize(files.reduce((acc, cur) => acc + cur.size, 0)) }}
             </p>
-
-            <button @click.prevent="$refs.file.click()">{{ addMoreFiles }}</button>
             
+            <md-button
+              type="button"
+              class="md-raised"
+              @click.prevent="$refs.file.click()"
+            >
+              {{ addMoreFiles }}
+            </md-button>
+
             <div class="loader" v-if="isLoaderVisible">
               <div class="loaderImg"></div>
             </div>
@@ -78,15 +84,18 @@
           </md-field>
 
           <ul class="previews">
-            <li 
-              class="preview"
-              v-for="(link, i) in links" 
-              :key="`link-${i}`"
-              :data-link="link"
-              @click="removeLink"
-              >
-              <img :src="link" alt="img"  />
-            </li>
+                  <transition-group name="slide-fade" mode="out-in">
+
+              <li 
+                class="preview"
+                v-for="(link, i) in links" 
+                :key="`link-${i}`"
+                :data-link="link"
+                @click="removeLink"
+                >
+                    <img :src="link" alt="img"  />
+              </li>
+                  </transition-group>
           </ul>
         </div>
       </div>
@@ -401,16 +410,35 @@ export default {
   flex-direction: column;
   width: 50%;
 
-  .previews {
+  .previews span{
     list-style: none;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
 
+    .slide-fade-enter-active {
+      transition: all .3s ease;
+    }
+
+    .slide-fade-leave-active {
+      transition: all .3s ease;
+    }
+
+    .slide-fade-enter {
+      transform: translateY(-100px);
+      opacity: 0;
+    }
+
+    .slide-fade-leave-to {
+      transform: translateY(100px);
+      opacity: 0; 
+    }
+
     .preview {
       margin: 3px;
       width: 30%;
       position: relative;
+      transition: all 1 easy;
 
       &:after {
         display: none;
