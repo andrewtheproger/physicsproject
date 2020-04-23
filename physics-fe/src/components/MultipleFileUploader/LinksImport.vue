@@ -2,25 +2,28 @@
   <div class="mfu-links-import">
     <md-field>
       <label>...вставьте ссылку</label>
-      <md-input @paste.prevent="onPaste" class="mfu-filelink-input" type="text"></md-input>
+      <md-input
+        @paste.prevent="onPaste"
+        class="mfu-filelink-input"
+        type="text"
+      ></md-input>
     </md-field>
 
     <ul class="mfu-previews">
       <transition-group name="slide-fade" mode="out-in">
-        <li 
+        <li
           class="mfu-preview"
-          v-for="(link, i) in links" 
+          v-for="(link, i) in links"
           :key="`link-${i}`"
           :data-link="link"
           @click="removeLink"
-          >
-            <img :src="link" alt="img"  />
+        >
+          <img :src="link" alt="img" />
         </li>
       </transition-group>
     </ul>
   </div>
 </template>
-
 
 <script>
 require("es6-promise").polyfill();
@@ -29,25 +32,21 @@ import axios from "axios";
   axios;
 }
 export default {
-  data() {
-    return {
-      links: []
-    };
-  },
+  props: ['links'],
   methods: {
     onPaste(e) {
-      const value = e.clipboardData.getData('Text').trim()
+      const value = e.clipboardData.getData("Text").trim();
 
       if (this.links.includes(value)) {
         return;
       }
 
-      this.links = [...this.links, value]
+      this.$emit('link_added', value)
     },
     removeLink(e) {
       const value = e.target.dataset.link;
 
-      this.links = this.links.filter(x => x !== value)
+      this.$emit('link_removed', value)
     }
   }
 };

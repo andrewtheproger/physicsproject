@@ -1,8 +1,21 @@
 <template>
-  <form class="mfu-uploadBox" role="form" enctype="multipart/form-data" @submit.prevent="onSubmit">
+  <form
+    class="mfu-uploadBox"
+    role="form"
+    enctype="multipart/form-data"
+    @submit.prevent="onSubmit"
+  >
     <div class="mfu-files-input">
-      <Dragndrop />
-      <LinksImport />
+      <Dragndrop 
+        :files="this.files"
+        @file_added="file_added"
+        @file_removed="file_removed"
+      />
+
+      <LinksImport 
+        :links="this.links"
+        @link_added="link_added"
+        @link_removed="link_removed"/>
     </div>
 
     <div class="mfu-buttons-wrapper">
@@ -17,7 +30,10 @@
       <md-button
         type="submit"
         class="md-raised md-primary"
-        :disabled="(files.length < minfiles || files.length > maxfiles) && links.length === 0"
+        :disabled="
+          (files.length < minfiles || files.length > maxfiles) &&
+            links.length === 0
+        "
       >
         {{ uploadButtonMessage }}
       </md-button>
@@ -30,22 +46,18 @@
       }}
     </div>
     <div class="mfu-errorMsg" v-if="files.length && files.length < minfiles">
-      {{ minFilesErrorMessage }}: {{ minfiles }}. <br />{{
-        retryErrorMessage
-      }}
+      {{ minFilesErrorMessage }}: {{ minfiles }}. <br />{{ retryErrorMessage }}
     </div>
     <div class="mfu-errorMsg" v-if="files.length && files.length > maxfiles">
-      {{ maxFilesErrorMessage }}: {{ maxfiles }}. <br />{{
-        retryErrorMessage
-      }}
+      {{ maxFilesErrorMessage }}: {{ maxfiles }}. <br />{{ retryErrorMessage }}
     </div>
   </form>
 </template>
 
 <script>
 require("es6-promise").polyfill();
-import Dragndrop from './Dragndrop';
-import LinksImport from './LinksImport'
+import Dragndrop from "./Dragndrop";
+import LinksImport from "./LinksImport";
 import axios from "axios";
 {
   axios;
@@ -54,105 +66,105 @@ export default {
   props: {
     postURL: {
       type: String,
-      required: true,
+      required: true
     },
     minfiles: {
       type: Number,
-      default: 1,
+      default: 1
     },
     maxfiles: {
       type: Number,
-      default: 30,
+      default: 30
     },
     method: {
       type: String,
-      default: "post",
+      default: "post"
     },
     postMeta: {
       type: [String, Array, Object],
-      default: "",
+      default: ""
     },
     postData: {
       type: [Object],
-      default: () => {},
+      default: () => {}
     },
     postHeader: {
       type: [Object],
-      default: () => {},
+      default: () => {}
     },
     successMessagePath: {
       type: String,
-      required: true,
+      required: true
     },
     errorMessagePath: {
       type: String,
-      required: true,
+      required: true
     },
     headerMessage: {
       type: String,
-      default: "",
+      default: ""
     },
     dropAreaPrimaryMessage: {
       type: String,
-      default: "",
+      default: ""
     },
     dropAreaSecondaryMessage: {
       type: String,
-      default: "",
+      default: ""
     },
     fileNameMessage: {
       type: String,
-      default: "Имена",
+      default: "Имена"
     },
     fileSizeMessage: {
       type: String,
-      default: "Длина",
+      default: "Длина"
     },
     totalFileMessage: {
       type: String,
-      default: "Всего файлов:",
+      default: "Всего файлов:"
     },
     totalUploadSizeMessage: {
       type: String,
-      default: "Всего данных:",
+      default: "Всего данных:"
     },
     addMoreFiles: {
       type: String,
-      default: "Добавить ещё файл",
+      default: "Добавить ещё файл"
     },
     uploadButtonMessage: {
       type: String,
-      default: "Загрузить",
+      default: "Загрузить"
     },
     cancelButtonMessage: {
       type: String,
-      default: "Отменить",
+      default: "Отменить"
     },
     fileUploadErrorMessage: {
       type: String,
-      default: "Произошла ошибка",
+      default: "Произошла ошибка"
     },
     minFilesErrorMessage: {
       type: String,
-      default: "Минимальное количество файлов",
+      default: "Минимальное количество файлов"
     },
     maxFilesErrorMessage: {
       type: String,
-      default: "Максимальное количество файлов",
+      default: "Максимальное количество файлов"
     },
     retryErrorMessage: {
       type: String,
-      default: "Попробуйте снова",
+      default: "Попробуйте снова"
     },
     httpMethodErrorMessage: {
       type: String,
       default:
-        "This HTTP method is not allowed. Please use either 'put' or 'post' methods.",
+        "This HTTP method is not allowed. Please use either 'put' or 'post' methods."
     },
     showHttpMessages: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
   /*
    * The component's data.
@@ -161,11 +173,10 @@ export default {
     return {
       dragging: false,
       files: [],
-      filelist: null,
       links: [],
       successMsg: "",
       errorMsg: "",
-      isLoaderVisible: false,
+      isLoaderVisible: false
     };
   },
   components: {
@@ -178,12 +189,24 @@ export default {
       this.links = [];
       this.dragging = false;
     },
+    link_added($event) {
+      this.links = [...this.links, $event];
+    },
+    link_removed($event) {
+      this.links = this.links.filter(x => x !== $event);
+    },
+    file_added($event) {
+      this.files = [...$event, ...this.files].filter(x => x);
+    },
+    file_removed($event) {
+      this.files = this.files.filter(x => x.name !== $event);
+    },
     onSubmit() {
       this.isLoaderVisible = true;
 
       const formData = new FormData();
-      for (let i = 0; i < this.$refs.file.files.length; i++) {
-        formData.append(`files[${i}]`, this.$refs.file.files[i]);
+      for (let i = 0; i < this.files.length; i++) {
+        formData.append(`files[${i}]`, this.files[i]);
       }
 
       for (let i = 0; i < this.links.length; i++) {
@@ -191,11 +214,15 @@ export default {
       }
 
       // why do we need separate postMeta and postData?
-      const isString = typeof this.postMeta === "string" && this.postMeta !== "";
-      const isObject = typeof this.postMeta === "object" && Object.keys(this.postMeta).length > 0
-      const isArray = typeof this.postData === "object" &&
-                this.postData !== null &&
-                Object.keys(this.postData).length > 0
+      const isString =
+        typeof this.postMeta === "string" && this.postMeta !== "";
+      const isObject =
+        typeof this.postMeta === "object" &&
+        Object.keys(this.postMeta).length > 0;
+      const isArray =
+        typeof this.postData === "object" &&
+        this.postData !== null &&
+        Object.keys(this.postData).length > 0;
 
       if (isString || isObject) {
         formData.append("postMeta", this.postMeta);
@@ -208,7 +235,7 @@ export default {
       }
 
       if (this.method !== "put" && this.method !== "post") {
-        if (this.showHttpMessages) { 
+        if (this.showHttpMessages) {
           this.errorMsg = this.httpMethodErrorMessage;
         }
 
@@ -218,31 +245,31 @@ export default {
       }
 
       axios({
-          method: this.method,
-          url: this.postURL,
-          data: formData,
-          headers: this.postHeader,
-        })
-        .then((response) => {
+        method: this.method,
+        url: this.postURL,
+        data: formData,
+        headers: this.postHeader
+      })
+        .then(response => {
           this.isLoaderVisible = false;
-          
+
           if (this.showHttpMessages) {
             this.successMsg = response + "." + this.successMessagePath;
           }
 
           this.removefiles();
         })
-        .catch((error) => {
+        .catch(error => {
           this.isLoaderVisible = false;
-          
+
           if (this.showHttpMessages) {
             this.errorMsg = error + "." + this.errorMessagePath;
           }
 
           this.removefiles();
         });
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -268,5 +295,4 @@ export default {
   color: $primary-fg-color;
   width: 100%;
 }
-
 </style>

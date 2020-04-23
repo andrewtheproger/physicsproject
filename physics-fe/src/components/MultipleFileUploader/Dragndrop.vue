@@ -2,7 +2,7 @@
   <div class="mfu-uploadBoxMain">
     <div
       class="mfu-dropArea mfu-animatedBorders"
-      @ondragover="onChange"
+      @ondragover="addFile"
       :class="dragging ? 'mfu-dropAreaDragging' : ''"
       @dragenter="dragging = true"
       @dragend="dragging = false"
@@ -20,7 +20,7 @@
         name="files[]"
         required
         multiple
-        @change="onChange"
+        @change="addFile"
         ref="file"
       />
     </div>
@@ -87,6 +87,9 @@ import axios from "axios";
 }
 export default {
   props: {
+    files: {
+      type: Array
+    },
     fileNameMessage: {
       type: String,
       default: "Имена",
@@ -111,9 +114,6 @@ export default {
   data() {
     return {
       dragging: false,
-      files: [],
-      filelist: null,
-      links: [],
       isLoaderVisible: false,
     };
   },
@@ -125,21 +125,20 @@ export default {
       if (i === 0) return bytes + " " + sizes[i];
       return (bytes / Math.pow(1024, i)).toFixed(2) + " " + sizes[i];
     },
-    onChange(e) {
+    addFile(e) {
       this.successMsg = "";
       this.errorMsg = "";
       this.dragging = false; // that doesn't work on element, idk why
 
       const inputFilelist = e.target.files || e.dataTransfer.files;
       const inputFiles = [...(inputFilelist)]; // this is hack to get out of FileList that's not an array
-      let files = [...inputFiles, ...this.files].filter(x => x);
       
-      this.files = files;
+      this.$emit('file_added', inputFiles)
     },
     removeFile(e) {
       const value = e.target.dataset.name;
 
-      this.files = this.files.filter(x => x.name !== value);
+      this.$emit('file_removed', value)
     }
   }
 };
