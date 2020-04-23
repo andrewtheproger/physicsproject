@@ -24,8 +24,8 @@ export default {
     ...mapActions(["getUser"]),
     getTask() {
       this.getUser(this.login, this.password);
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

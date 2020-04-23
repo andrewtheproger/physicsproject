@@ -61,18 +61,18 @@ export default {
   flex-direction: column;
   width: 50%;
 
-  .mfu-previews span{
+  .mfu-previews span {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
 
     .slide-fade-enter-active {
-      transition: all .3s ease;
+      transition: all 0.3s ease;
     }
 
     .slide-fade-leave-active {
-      transition: all .3s ease;
+      transition: all 0.3s ease;
     }
 
     .slide-fade-enter {
@@ -82,7 +82,7 @@ export default {
 
     .slide-fade-leave-to {
       transform: translateY(100px);
-      opacity: 0; 
+      opacity: 0;
     }
 
     .mfu-preview {
@@ -93,7 +93,7 @@ export default {
 
       &:after {
         display: none;
-        content: 'X';
+        content: "X";
         font-size: 3em;
         color: #d00;
         cursor: pointer;
@@ -103,8 +103,8 @@ export default {
         right: 0;
         bottom: 0;
         left: 0;
-        
-        background-color: rgba(0,0,0,0.2);
+
+        background-color: rgba(0, 0, 0, 0.2);
       }
 
       &:hover {
@@ -127,10 +127,9 @@ export default {
     -webkit-text-fill-color: inherit;
   }
 
-
   &:hover:after {
     background-color: $secondary-fg-color;
-    transition: all .3s;
+    transition: all 0.3s;
   }
 
   max-height: 3em;

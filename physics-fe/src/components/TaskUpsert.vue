@@ -6,13 +6,12 @@
       successMessagePath=""
       errorMessagePath=""
     ></multiple-file-uploader>
-
   </div>
 </template>
 
 <script>
 import MultipleFileUploader from "./MultipleFileUploader/MultipleFileUploader";
-import config from '../config/api.js';
+import config from "../config/api.js";
 
 export default {
   name: "User",
@@ -24,14 +23,14 @@ export default {
   },
 
   components: {
-    MultipleFileUploader,
+    MultipleFileUploader
   },
 
   methods: {
     onPaste(evt) {
       console.log(evt);
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -5,7 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    showingTask: undefined,
+    showingTask: undefined
   },
   mutations: {
     changeShowing(state, problem) {
@@ -14,7 +14,7 @@ export default new Vuex.Store({
     goesWell() {
       document.cookie = "user=admin; path=/; expires=60*60*24*365";
     },
-    goesBad() {},
+    goesBad() {}
   },
   actions: {
     async getTaskByNum(ctx, num) {
@@ -33,14 +33,14 @@ export default new Vuex.Store({
     async sendProblem(ctx, image_hrefs, latex, number) {
       fetch(`http://127.0.0.1:5000/api/tasks`, {
         method: "POST",
-        body: JSON.stringify({ number, body: { latex, image_hrefs } }),
+        body: JSON.stringify({ number, body: { latex, image_hrefs } })
       });
       ctx.commit("goesBad");
-    },
+    }
   },
   getters: {
     getShowing(state) {
       return state.showingTask;
-    },
-  },
+    }
+  }
 });

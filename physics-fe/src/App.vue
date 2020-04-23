@@ -35,7 +35,7 @@ export default {
 
   data() {
     return {
-      isApiOk: null,
+      isApiOk: null
     };
   },
 
@@ -43,22 +43,22 @@ export default {
     checkApiOk() {
       axios({
         url: config.apiPrefix + "/health",
-        method: "GET",
+        method: "GET"
       }).then(
-        (result) => {
+        result => {
           this.isApiOk = result.data.status === "ok";
           console.log("api is " + this.isApiOk);
         },
-        (error) => {
+        error => {
           console.log(error);
           this.isApiOk = false;
         }
       );
-    },
+    }
   },
   mounted() {
     this.checkApiOk();
-  },
+  }
 };
 </script>
 

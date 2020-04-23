@@ -42,7 +42,7 @@ export default {
       href3: "",
       href4: "",
       href5: "",
-      latex: "",
+      latex: ""
     };
   },
   methods: {
@@ -65,8 +65,8 @@ export default {
         massive.push(this.href5);
       }
       this.sendProblem(massive, this.number, this.latex);
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped></style>
