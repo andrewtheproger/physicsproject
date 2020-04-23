@@ -18,7 +18,7 @@ def exec_crossplatform(command):
 	if os.name == 'nt':
 	    os.system(f'cmd /c {command}')
 	elif os.name == 'posix':
-	    os.system(cmd)
+	    os.system(command)
 	else:
 		raise Exception('Cant determinate os')
 

@@ -8,6 +8,7 @@ COPY . /app
 RUN pip install -r requirements.txt
 
 ENV FLASK_APP server/server.py
+ENV CLOUDINARY_URL cloudinary://738462148762527:t9Jri_atBqGG7yJkmqHmTmKY_V4@du95usvl0
 
 RUN flask db init && \
     flask db migrate && \

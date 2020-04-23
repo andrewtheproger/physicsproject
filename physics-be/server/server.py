@@ -1,5 +1,8 @@
 import jsonschema
 import time
+import urllib.request
+from cloudinary.uploader import upload
+from cloudinary.utils import cloudinary_url
 
 from flask import Flask, jsonify, abort, request, Response
 from flask_migrate import Migrate
@@ -8,7 +11,7 @@ from flask_jsonschema_validator import JSONSchemaValidator
 from flask_cors import CORS
 from sqlalchemy.sql import text
 
-from .models import db, Task, Hint, HintStatus
+from .models import db, Task, Hint, HintStatus, Image
 from .config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO
 from . import tasks_helpers
 from . import hints_helpers
@@ -64,6 +67,29 @@ def get_query_parameters(request):
 
 
 # tasks
+
+
+@app.route('/api/images', methods=['POST'])
+def upload_images():
+    now = int(time.time() * 1000)  # ms
+
+    filename = 'local-filename.jpg'
+    urllib.request.urlretrieve(request.form['links[0]'], filename)
+    upload_result = upload(filename)
+    thumbnail_url, options = cloudinary_url(upload_result['public_id'], format="png", crop="fit", width=200, height=200)
+
+    image = Image(created_date=now,
+        updated_date=now,
+        url=upload_result['url'],
+        thumbnail_url=thumbnail_url)
+
+    db.session.add(image)
+    db.session.commit()
+
+    return jsonify(
+        {
+            'id': image.id
+        });
 
 
 @app.route('/api/tasks', methods=['GET'])

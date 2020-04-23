@@ -18,7 +18,6 @@
         type="file"
         id="files"
         name="files[]"
-        required
         multiple
         @change="addFile"
         ref="file"
