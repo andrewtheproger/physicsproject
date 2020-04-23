@@ -4,24 +4,19 @@
     <form v-on:submit.prevent="sendTask">
       <p>Укажите номер задачи:</p>
       <input type="text" v-model="number" /><br />
-      <p>Укажите количество ссылок на картинки:</p>
-      <input type="text" v-model="hrefs" /><br />
-      <p>Укажите ссылки:</p>
-      <input type="text" v-model="href1" v-if="Number(hrefs) >= 1" /><br
-        v-if="Number(hrefs) >= 1"
-      />
-      <input type="text" v-model="href2" v-if="Number(hrefs) >= 2" /><br
-        v-if="Number(hrefs) >= 2"
-      />
-      <input type="text" v-model="href3" v-if="Number(hrefs) >= 3" /><br
-        v-if="Number(hrefs) >= 3"
-      />
-      <input type="text" v-model="href4" v-if="Number(hrefs) >= 4" /><br
-        v-if="Number(hrefs) >= 4"
-      />
-      <input type="text" v-model="href5" v-if="Number(hrefs) >= 5" /><br
-        v-if="Number(hrefs) >= 5"
-      />
+      <div
+        @click="
+          hrefAmount++;
+          hrefs.push('');
+        "
+      >
+      <p>Увеличить количество ссылок:</p>
+        <md-icon>add</md-icon>
+      </div>
+      <div v-for="item in hrefAmount" :key="item">
+        <p>Добавьте ссылку:</p>
+        <input type="text" name="" id="" v-model="hrefs[item - 1]" />
+      </div>
       <p>Укажите решение в формате LaTeX:</p>
       <textarea cols="30" rows="15" v-model="latex"> </textarea>
       <br />>
@@ -36,13 +31,9 @@ export default {
   data() {
     return {
       number: "",
-      hrefs: "1",
-      href1: "",
-      href2: "",
-      href3: "",
-      href4: "",
-      href5: "",
-      latex: "",
+      hrefs: [],
+      hrefAmount: 0,
+      latex: "", 
     };
   },
   methods: {
@@ -69,4 +60,8 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+p {
+  color: white;
+}
+</style>

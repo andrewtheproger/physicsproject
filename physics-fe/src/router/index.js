@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../components/Home";
 import About from "../components/About";
 import User from "../components/User";
-import TaskUpsert from "../components/TaskUpsert";
+import TaskUpsert from "../components/Task";
 
 Vue.use(VueRouter);
 
