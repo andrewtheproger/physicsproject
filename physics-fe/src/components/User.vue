@@ -1,14 +1,18 @@
 <template>
-  <div class="main">
+  <div class="ph-main">
     <h1>Войти:</h1>
-    <div class="reg">
+    <div class="ph-reg">
       <form v-on:submit.prevent="getTask">
         <p>Введите логин:</p>
-        <input type="text" v-model="login" />
+        <md-field>
+        <md-input type="text" v-model="login" /></md-field>
         <p>Введите пароль</p>
-        <input type="password" v-model="password" />
-
-        <input type="submit" />
+        <md-field>
+        <md-input type="password" v-model="password" />
+        </md-field>
+        <md-field>
+        <md-input type="submit" />
+        </md-field>
       </form>
     </div>
   </div>
@@ -29,7 +33,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.reg {
+p {
+  color: white;
+}
+.ph-reg {
   text-align: center;
 }
 h1 {
@@ -41,7 +48,7 @@ input {
   background-color: #252525;
   margin: 5px;
 }
-.main {
+.ph-main {
   margin: auto;
   margin-top: 150px;
   width: 300px;
