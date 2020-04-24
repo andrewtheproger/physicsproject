@@ -130,9 +130,8 @@ export default {
       this.dragging = false; // that doesn't work on element, idk why
 
       const inputFilelist = e.target.files || e.dataTransfer.files;
-      const inputFiles = [...(inputFilelist)]; // this is hack to get out of FileList that's not an array
-      
-      this.$emit('file_added', inputFiles)
+
+      this.$emit('file_added', inputFilelist)
     },
     removeFile(e) {
       const value = e.target.dataset.name;

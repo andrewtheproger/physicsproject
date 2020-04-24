@@ -172,8 +172,9 @@ export default {
   data() {
     return {
       dragging: false,
-      files: [],
       links: [],
+      files: [], // files to show
+      filelist: [], // files to send
       successMsg: "",
       errorMsg: "",
       isLoaderVisible: false
@@ -186,6 +187,7 @@ export default {
   methods: {
     removefiles() {
       this.files = [];
+      this.filelist = [];
       this.links = [];
       this.dragging = false;
     },
@@ -196,7 +198,10 @@ export default {
       this.links = this.links.filter(x => x !== $event);
     },
     file_added($event) {
-      this.files = [...$event, ...this.files].filter(x => x);
+      this.filelist = $event;
+
+      const inputFiles = [...($event)]; // this is hack to get out of FileList that's not an array
+      this.files = [...inputFiles, ...this.files].filter(x => x);
     },
     file_removed($event) {
       this.files = this.files.filter(x => x.name !== $event);
@@ -205,8 +210,8 @@ export default {
       this.isLoaderVisible = true;
 
       const formData = new FormData();
-      for (let i = 0; i < this.files.length; i++) {
-        formData.append(`files[${i}]`, this.files[i]);
+      for (let i = 0; i < this.filelist.length; i++) {
+        formData.append(`files[${i}]`, this.filelist[i]);
       }
 
       for (let i = 0; i < this.links.length; i++) {

@@ -76,17 +76,36 @@ def upload_images():
     now = int(time.time() * 1000)  # ms
     ids = []
 
+    print(request.files)
     print(request.form)
+    
+    filename = uuid.uuid4().hex
+
 
     for i in request.form:
-        item = request.form[i]
-        filename = uuid.uuid4().hex
-
-        print(i)
-
         if 'links' in i:
+            item = request.form[i]
             urllib.request.urlretrieve(item, filename)
-        elif 'files' in i:
+        else:
+            raise Exception(f'Unknown form filetype {i}')
+
+        upload_result = upload(filename)
+        thumbnail_url, options = cloudinary_url(upload_result['public_id'], format="png", crop="fit", width=200, height=200)
+        os.remove(filename)
+
+        image = Image(created_date=now,
+            updated_date=now,
+            url=upload_result['url'],
+            thumbnail_url=thumbnail_url)
+
+        db.session.add(image)
+        db.session.commit()
+
+        ids.append(image.id)
+
+    for i in request.files:
+        if 'files' in i:
+            item = request.files[i]
             item.save(filename)
         else:
             raise Exception(f'Unknown form filetype {i}')
