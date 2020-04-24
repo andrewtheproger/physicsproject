@@ -9,7 +9,7 @@
           to="/add"
           exact
         ></md-tab>
-        <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>
+        <md-tab id="tab-about" md-label="Добавить задачу" to="/about" exact></md-tab>
         <md-tab id="tab-registration" md-icon="face" to="/user" exact></md-tab>
       </md-tabs>
 
@@ -64,6 +64,10 @@ export default {
 
 <style lang="scss">
 @import "config/variables.scss";
+
+body {
+  color: $primary-fg-color;
+}
 
 .ph-hidden {
   display: none;
