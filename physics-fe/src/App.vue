@@ -136,4 +136,44 @@ body {
   bottom: 0;
   left: 0;
 }
+
+div.md-field,
+div.md-field.md-theme-default.md-has-textarea,
+div.md-field.md-theme-default,
+div.md-field.md-theme-default.md-focused,
+div.md-field.md-theme-default.md-focused .md-textarea,
+div.md-field.md-theme-default.md-has-value,
+div.md-field.md-theme-default.md-has-value .md-textarea {
+  .md-input,
+  label {
+    color: $primary-fg-color;
+    -webkit-text-fill-color: $primary-fg-color;
+  }
+
+  &:after,
+  &:before,
+  &:not(.md-autogrow):after,
+  &:not(.md-autogrow):before {
+    background-color: $primary-fg-color;
+    border-color: $primary-fg-color;
+    transition: all 0.3s;
+  }
+
+  &:hover:after {
+    background-color: $secondary-fg-color;
+    transition: all 0.3s;
+  }
+
+  color: $primary-fg-color;
+  -webkit-text-fill-color: $primary-fg-color;
+}
+
+.md-field.md-theme-default label,
+.md-icon.md-theme-default.md-icon-font {
+  color: inherit;
+}
+
+.md-field.md-theme-default label {
+  padding-left: 1em;
+}
 </style>

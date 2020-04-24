@@ -1,11 +1,27 @@
 <template>
   <div class="ph-file-input-wrapper">
-    <multiple-file-uploader
-      class="ph-filelink-input"
-      :postURL="url"
-      successMessagePath=""
-      errorMessagePath=""
-    ></multiple-file-uploader>
+      <form>
+        <md-field>
+          <label>Номер задачи...</label>
+          <md-input type="text" v-model="number" />
+        </md-field>
+
+        <md-field>
+          <label>LaTeX...</label>
+          <md-textarea cols="30" rows="15" v-model="latex"> </md-textarea
+        ></md-field>
+
+        <md-field>
+          <md-input type="submit" value="Отправить" />
+        </md-field>
+
+        <multiple-file-uploader
+          class="ph-filelink-input"
+          :postURL="url"
+          successMessagePath=""
+          errorMessagePath=""
+        ></multiple-file-uploader>
+      </form>
   </div>
 </template>
 
@@ -35,6 +51,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../config/variables.scss";
+
 .ph-file-input-wrapper {
   display: flex;
 

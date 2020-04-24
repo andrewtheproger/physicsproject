@@ -118,28 +118,9 @@ export default {
 }
 
 .md-field,
+.md-field.md-theme-default,
 .md-field.md-theme-default.md-focused,
 .md-field.md-theme-default.md-has-value {
-  .md-input,
-  label {
-    color: inherit;
-    -webkit-text-fill-color: inherit;
-  }
-
-  &:hover:after {
-    background-color: $secondary-fg-color;
-    transition: all 0.3s;
-  }
-
   max-height: 3em;
-}
-
-.md-field.md-theme-default label,
-.md-icon.md-theme-default.md-icon-font {
-  color: inherit;
-}
-
-.md-field.md-theme-default label {
-  padding-left: 1em;
 }
 </style>
