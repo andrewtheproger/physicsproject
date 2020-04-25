@@ -1,9 +1,8 @@
 <template>
-  <form
+  <div
     class="mfu-uploadBox"
     role="form"
     enctype="multipart/form-data"
-    @submit.prevent="onSubmit"
   >
     <div class="mfu-files-input">
       <Dragndrop
@@ -31,6 +30,7 @@
       <md-button
         type="submit"
         class="md-raised md-primary"
+        @click.prevent="onSubmit"
         :disabled="
           (files.length < minfiles || files.length > maxfiles) &&
             links.length === 0
@@ -52,7 +52,7 @@
     <div class="mfu-errorMsg" v-if="files.length && files.length > maxfiles">
       {{ maxFilesErrorMessage }}: {{ maxfiles }}. <br />{{ retryErrorMessage }}
     </div>
-  </form>
+  </div>
 </template>
 
 <script>
@@ -262,6 +262,8 @@ export default {
           if (this.showHttpMessages) {
             this.successMsg = response + "." + this.successMessagePath;
           }
+
+          this.$emit('files_uploaded', response)
 
           this.removefiles();
         })
