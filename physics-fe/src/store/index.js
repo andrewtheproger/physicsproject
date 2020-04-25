@@ -11,10 +11,10 @@ export default new Vuex.Store({
     changeShowing(state, problem) {
       state.showingTask = problem;
     },
-    goesWell() {
-      document.cookie = "user=admin; path=/; expires=60*60*24*365";
-    },
-    goesBad() {},
+    goesWellReg() {},
+    goesWellLog() {},
+    goesBadReg() {},
+    goesBadLog() {},
   },
   actions: {
     async getTaskByNum(ctx, num) {
@@ -28,7 +28,13 @@ export default new Vuex.Store({
       //const res = (await fetch(`http://127.0.0.1:5000/api/tasks?page=0&count=10&order=number&filter_by_number=${login}`))
       //const problem = await res.json()
       const res = true;
-      res ? ctx.commit("goesWell") : ctx.commit("goesBad");
+      res ? ctx.commit("goesWellLog") : ctx.commit("goesBadLog");
+    },
+    async regUser(ctx) {
+      //const res = (await fetch(`http://127.0.0.1:5000/api/tasks?page=0&count=10&order=number&filter_by_number=${login}`))
+      //const problem = await res.json()
+      const res = true;
+      res ? ctx.commit("goesWellReg") : ctx.commit("goesBadPeg");
     },
     async sendProblem(ctx, image_hrefs, latex, number) {
       fetch(`http://127.0.0.1:5000/api/tasks`, {

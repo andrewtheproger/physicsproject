@@ -3,8 +3,8 @@ import VueRouter from "vue-router";
 import Home from "../components/Home";
 import About from "../components/About";
 import User from "../components/User";
-import TaskUpsert from "../components/Task";
-
+//import TaskUpsert from "../components/TaskUpsert";
+import Reg from "../components/Reg"
 Vue.use(VueRouter);
 
 const routes = [
@@ -18,15 +18,20 @@ const routes = [
     name: "About",
     component: About,
   },
+  //{
+  //  path: "/add",
+  //  name: "Add",
+  //  component: TaskUpsert,
+  //},
   {
-    path: "/add",
-    name: "Add",
-    component: TaskUpsert,
-  },
-  {
-    path: "/user",
+    path: "/log",
     name: "User",
     component: User,
+  },
+  {
+    path: "/reg",
+    name: "Reg",
+    component: Reg,
   },
 ];
 

@@ -1,7 +1,14 @@
 <template>
   <div class="ph-task" v-on:keyup.escape="cl">
     <h3>3800.{{ task.number }}</h3>
-
+    <h4>Условие:</h4>
+    <div
+      class="ph-latex"
+      v-for="formula in task.body.text.split('\n')"
+      :key="formula"
+    >
+      <vue-mathjax :formula="formula"></vue-mathjax>
+    </div>
     <div
       class="ph-latex"
       v-for="formula in task.body.latex.split('\n')"
