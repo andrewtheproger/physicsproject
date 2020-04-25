@@ -7,9 +7,7 @@
 </template>
 <script>
 export default {
-  name: "About",
+  name: "About"
 };
 </script>
-<style lang="scss" scoped>
-  
-</style>
+<style lang="scss" scoped></style>

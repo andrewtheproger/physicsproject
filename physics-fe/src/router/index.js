@@ -4,7 +4,7 @@ import Home from "../components/Home";
 import About from "../components/About";
 import User from "../components/User";
 //import TaskUpsert from "../components/TaskUpsert";
-import Reg from "../components/Reg"
+import Reg from "../components/Reg";
 import TaskUpsert from "../components/TaskUpsert";
 
 Vue.use(VueRouter);
@@ -31,10 +31,10 @@ const routes = [
     component: User
   },
   {
-   path: "/reg",
-   name: "Reg",
-   component: Reg,
-  },
+    path: "/reg",
+    name: "Reg",
+    component: Reg
+  }
 ];
 
 const router = new VueRouter({

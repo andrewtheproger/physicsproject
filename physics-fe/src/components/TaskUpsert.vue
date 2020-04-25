@@ -1,44 +1,44 @@
 <template>
   <div class="ph-task-upsert">
-      <form @submit.prevent="onSubmit">
-        <md-field>
-          <label>Номер задачи...</label>
-          <md-input type="text" v-model="number" />
-        </md-field>
+    <form @submit.prevent="onSubmit">
+      <md-field>
+        <label>Номер задачи...</label>
+        <md-input type="text" v-model="number" />
+      </md-field>
 
-        <md-field>
-          <label for="movie">Isbn...</label>
-          <md-select v-model="isbn" name="movie" id="movie">
-            <md-option value="fight-club">Fight Club</md-option>
-            <md-option value="godfather">Godfather</md-option>
-            <md-option value="godfather-ii">Godfather II</md-option>
-            <md-option value="godfather-iii">Godfather III</md-option>
-            <md-option value="godfellas">Godfellas</md-option>
-            <md-option value="pulp-fiction">Pulp Fiction</md-option>
-            <md-option value="scarface">Scarface</md-option>
-          </md-select>
-        </md-field>
+      <md-field>
+        <label for="movie">Isbn...</label>
+        <md-select v-model="isbn" name="movie" id="movie">
+          <md-option value="fight-club">Fight Club</md-option>
+          <md-option value="godfather">Godfather</md-option>
+          <md-option value="godfather-ii">Godfather II</md-option>
+          <md-option value="godfather-iii">Godfather III</md-option>
+          <md-option value="godfellas">Godfellas</md-option>
+          <md-option value="pulp-fiction">Pulp Fiction</md-option>
+          <md-option value="scarface">Scarface</md-option>
+        </md-select>
+      </md-field>
 
-        <md-field class="ph-task-upsert-latex">
-          <label>LaTeX...</label>
-          <md-textarea cols="30" rows="15" v-model="latex"> </md-textarea>
+      <md-field class="ph-task-upsert-latex">
+        <label>LaTeX...</label>
+        <md-textarea cols="30" rows="15" v-model="latex"> </md-textarea>
 
-          <div>
-            <vue-mathjax :formula="latex"></vue-mathjax>
-          </div>
-        </md-field>
+        <div>
+          <vue-mathjax :formula="latex"></vue-mathjax>
+        </div>
+      </md-field>
 
-        <multiple-file-uploader
-          class="ph-filelink-input"
-          :postURL="url"
-          successMessagePath=""
-          errorMessagePath=""
-        ></multiple-file-uploader>
+      <multiple-file-uploader
+        class="ph-filelink-input"
+        :postURL="url"
+        successMessagePath=""
+        errorMessagePath=""
+      ></multiple-file-uploader>
 
-        <md-field>
-          <md-input type="submit" value="Отправить" />
-        </md-field>
-      </form>
+      <md-field>
+        <md-input type="submit" value="Отправить" />
+      </md-field>
+    </form>
   </div>
 </template>
 
@@ -62,9 +62,7 @@ export default {
   },
 
   methods: {
-    onSubmit() {
-      
-    }
+    onSubmit() {}
   }
 };
 </script>
@@ -82,7 +80,8 @@ export default {
       border-right: 2px dotted $secondary-bg-color;
     }
 
-    textarea, div {
+    textarea,
+    div {
       width: 50%;
     }
   }

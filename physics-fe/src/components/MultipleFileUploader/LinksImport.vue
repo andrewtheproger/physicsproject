@@ -32,7 +32,7 @@ import axios from "axios";
   axios;
 }
 export default {
-  props: ['links'],
+  props: ["links"],
   methods: {
     onPaste(e) {
       const value = e.clipboardData.getData("Text").trim();
@@ -41,12 +41,12 @@ export default {
         return;
       }
 
-      this.$emit('link_added', value)
+      this.$emit("link_added", value);
     },
     removeLink(e) {
       const value = e.target.dataset.link;
 
-      this.$emit('link_removed', value)
+      this.$emit("link_removed", value);
     }
   }
 };

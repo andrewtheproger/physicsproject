@@ -6,16 +6,17 @@
     @submit.prevent="onSubmit"
   >
     <div class="mfu-files-input">
-      <Dragndrop 
+      <Dragndrop
         :files="this.files"
         @file_added="file_added"
         @file_removed="file_removed"
       />
 
-      <LinksImport 
+      <LinksImport
         :links="this.links"
         @link_added="link_added"
-        @link_removed="link_removed"/>
+        @link_removed="link_removed"
+      />
     </div>
 
     <div class="mfu-buttons-wrapper">
@@ -200,7 +201,7 @@ export default {
     file_added($event) {
       this.filelist = $event;
 
-      const inputFiles = [...($event)]; // this is hack to get out of FileList that's not an array
+      const inputFiles = [...$event]; // this is hack to get out of FileList that's not an array
       this.files = [...inputFiles, ...this.files].filter(x => x);
     },
     file_removed($event) {

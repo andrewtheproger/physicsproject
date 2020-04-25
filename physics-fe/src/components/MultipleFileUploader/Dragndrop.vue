@@ -34,8 +34,7 @@
             v-for="(file, i) in files" 
             :key="`${file.name}-${i}`"
             :data-name="file.name"
-            @click="removeFile"
-            >
+            @click="removeFile">
             {{ file.name }}
           </li>
         </ol>
