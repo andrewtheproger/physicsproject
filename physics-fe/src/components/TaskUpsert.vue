@@ -45,6 +45,7 @@
       <multiple-file-uploader
         class="ph-filelink-input"
         :postURL="url"
+        ref="multipleFileUploader"
         @files_uploaded="files_uploaded"
         successMessagePath=""
         errorMessagePath=""
@@ -72,8 +73,7 @@ export default {
       latex: "Привет, это текст на $ \\LaTeX $, да. ",
       url: `${config.apiPrefix}/images`,
       number: null,
-      isbn: null,
-      images_ids: []
+      isbn: null
     };
   },
 
@@ -82,9 +82,13 @@ export default {
   },
 
   methods: {
-    onSubmit() {},
-    files_uploaded($event) {
-      this.images_ids = $event.data.ids;
+    onSubmit() {
+      this.$refs.multipleFileUploader.onSubmit().then(result => {
+        this.send(result.data.ids);
+      })
+    },
+    send(images_ids) {
+      console.log(images_ids)
     }
   }
 };

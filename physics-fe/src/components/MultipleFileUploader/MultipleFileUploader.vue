@@ -250,7 +250,7 @@ export default {
         return;
       }
 
-      axios({
+      return axios({
         method: this.method,
         url: this.postURL,
         data: formData,
@@ -263,9 +263,9 @@ export default {
             this.successMsg = response + "." + this.successMessagePath;
           }
 
-          this.$emit('files_uploaded', response)
-
           this.removefiles();
+
+          return response;
         })
         .catch(error => {
           this.isLoaderVisible = false;
