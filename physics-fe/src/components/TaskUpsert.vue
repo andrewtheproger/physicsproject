@@ -46,7 +46,6 @@
         class="ph-filelink-input"
         :postURL="url"
         ref="multipleFileUploader"
-        @files_uploaded="files_uploaded"
         successMessagePath=""
         errorMessagePath=""
       ></multiple-file-uploader>
