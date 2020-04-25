@@ -7,6 +7,11 @@
         <md-input type="text" v-model="number" />
         <br />
       </md-field>
+      <p>Укажите издание задачника</p>
+      <md-field>
+        <md-input type="text" v-model="isbn" />
+        <br />
+      </md-field>
       <div
         @click="
           hrefAmount++;
@@ -43,6 +48,7 @@ export default {
       hrefs: [],
       hrefAmount: 0,
       latex: "",
+      isbn: "",
     };
   },
   methods: {
