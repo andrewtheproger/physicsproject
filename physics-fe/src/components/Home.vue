@@ -22,6 +22,9 @@
 
     <ul class="ph-tasks" v-if="this.tasks">
       <li v-for="task in this.tasks" :key="task.id">
+        <div v-if = "!task.text">
+        {{task.text = "2.52 На материальную точку, масса которой равна $ m= 600 г$, действуют две силы $ F_1=2$ Н и $ F_2=3$ Н. Найти угол $ \\alpha $ между этими силами, если под их действием материальная точка движется с ускорением $ a = 8 м/с^2 $? При каких условиях её движение под действием этих сил будет прямоугольным?"}}
+        </div>
         <Task :task="task" />
       </li>
     </ul>
@@ -34,23 +37,23 @@
 
 <script>
 /* eslint-disable */
-import config from '../config/api'
+import config from "../config/api";
 import axios from "axios";
-import Task from "./Task"
+import Task from "./Task";
 
 export default {
   name: "Home",
   components: {
-    Task
+    Task,
   },
 
   data() {
     return {
       number: null,
       tasks: null,
-      numberExample: '2.15...',
+      numberExample: "2.15...",
       numberExampleInterval: null,
-      sending: false
+      sending: false,
     };
   },
 
@@ -62,37 +65,39 @@ export default {
   },
 
   methods: {
-    getRandomInt(min, max) { return Math.floor(Math.random() * (max - min) + min) },
-
-    setNewNumberExample() {
-      const lhs = this.getRandomInt(1, 12)
-      const rhs = this.getRandomInt(1, 200)
-      this.numberExample = lhs + "." + rhs + "..."
+    getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min) + min);
     },
 
-    async submit() { 
-      this.sending = true
-      await this.getTaskByNumber(this.number)
-      this.sending = false
+    setNewNumberExample() {
+      const lhs = this.getRandomInt(1, 12);
+      const rhs = this.getRandomInt(1, 200);
+      this.numberExample = lhs + "." + rhs + "...";
+    },
+
+    async submit() {
+      this.sending = true;
+      await this.getTaskByNumber(this.number);
+      this.sending = false;
     },
 
     async getTaskByNumber(number) {
-      let url = config.apiPrefix + "/tasks"
+      let url = config.apiPrefix + "/tasks";
 
       if (number) {
-        url += "?filter_by_number=" + number
+        url += "?filter_by_number=" + number;
       }
 
       await axios({
         url: url,
         method: "GET",
       }).then(
-        result => {
-          this.tasks = result.data
+        (result) => {
+          this.tasks = result.data;
         },
-        error => {
+        (error) => {
           console.log(error);
-          this.tasks = []
+          this.tasks = [];
         }
       );
     },
@@ -104,11 +109,11 @@ export default {
 @import "../config/variables.scss";
 
 .slide-fade-enter-active {
-  transition: all .3s ease;
+  transition: all 0.3s ease;
 }
 
 .slide-fade-leave-active {
-  transition: all .3s ease;
+  transition: all 0.3s ease;
 }
 
 .slide-fade-enter {
@@ -118,7 +123,7 @@ export default {
 
 .slide-fade-leave-to {
   transform: translateY(-10px);
-  opacity: 0; 
+  opacity: 0;
 }
 
 .ph-nothing-found {

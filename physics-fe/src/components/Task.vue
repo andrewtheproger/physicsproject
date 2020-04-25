@@ -1,22 +1,9 @@
 <template>
   <div class="ph-task" v-on:keyup.escape="cl">
     <h3>3800.{{ task.number }}</h3>
-    <h4>Условие:</h4>
-    <div
-      class="ph-latex"
-      v-for="formula in task.body.text.split('\n')"
-      :key="formula"
-    >
-      <vue-mathjax :formula="formula"></vue-mathjax>
+    <div classs = "ph-text">
+      <vue-mathjax :formula="task.text"></vue-mathjax>
     </div>
-    <div
-      class="ph-latex"
-      v-for="formula in task.body.latex.split('\n')"
-      :key="formula"
-    >
-      <vue-mathjax :formula="formula"></vue-mathjax>
-    </div>
-
     <ul class="ph-task-images">
       <li>
         <img
@@ -59,13 +46,13 @@
 
 <script>
 /* eslint-disable */
-import config from '../config/api'
+import config from "../config/api";
 import axios from "axios";
-import Task from './Task'
+import Task from "./Task";
 
 export default {
   name: "Task",
-  props: ['task']
+  props: ["task"],
 };
 </script>
 
