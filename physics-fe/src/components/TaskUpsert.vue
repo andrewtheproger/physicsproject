@@ -1,18 +1,31 @@
 <template>
-  <div class="ph-file-input-wrapper">
-      <form>
+  <div class="ph-task-upsert">
+      <form @submit.prevent="onSubmit">
         <md-field>
           <label>Номер задачи...</label>
           <md-input type="text" v-model="number" />
         </md-field>
 
         <md-field>
-          <label>LaTeX...</label>
-          <md-textarea cols="30" rows="15" v-model="latex"> </md-textarea
-        ></md-field>
+          <label for="movie">Isbn...</label>
+          <md-select v-model="isbn" name="movie" id="movie">
+            <md-option value="fight-club">Fight Club</md-option>
+            <md-option value="godfather">Godfather</md-option>
+            <md-option value="godfather-ii">Godfather II</md-option>
+            <md-option value="godfather-iii">Godfather III</md-option>
+            <md-option value="godfellas">Godfellas</md-option>
+            <md-option value="pulp-fiction">Pulp Fiction</md-option>
+            <md-option value="scarface">Scarface</md-option>
+          </md-select>
+        </md-field>
 
-        <md-field>
-          <md-input type="submit" value="Отправить" />
+        <md-field class="ph-task-upsert-latex">
+          <label>LaTeX...</label>
+          <md-textarea cols="30" rows="15" v-model="latex"> </md-textarea>
+
+          <div>
+            <vue-mathjax :formula="latex"></vue-mathjax>
+          </div>
         </md-field>
 
         <multiple-file-uploader
@@ -21,6 +34,10 @@
           successMessagePath=""
           errorMessagePath=""
         ></multiple-file-uploader>
+
+        <md-field>
+          <md-input type="submit" value="Отправить" />
+        </md-field>
       </form>
   </div>
 </template>
@@ -33,8 +50,10 @@ export default {
   name: "User",
   data() {
     return {
-      files: null,
-      url: `${config.apiPrefix}/images`
+      latex: "Привет, это текст на $ \\LaTeX $, да. ",
+      url: `${config.apiPrefix}/images`,
+      number: null,
+      isbn: null
     };
   },
 
@@ -43,8 +62,8 @@ export default {
   },
 
   methods: {
-    onPaste(evt) {
-      console.log(evt);
+    onSubmit() {
+      
     }
   }
 };
@@ -53,11 +72,19 @@ export default {
 <style lang="scss" scoped>
 @import "../config/variables.scss";
 
-.ph-file-input-wrapper {
-  display: flex;
+.ph-task-upsert {
+  padding: 2em;
 
-  input {
-    width: 50%;
+  .ph-task-upsert-latex {
+    display: flex;
+
+    textarea {
+      border-right: 2px dotted $secondary-bg-color;
+    }
+
+    textarea, div {
+      width: 50%;
+    }
   }
 }
 </style>

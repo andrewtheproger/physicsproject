@@ -9,7 +9,7 @@
           to="/add"
           exact
         ></md-tab>
-        <md-tab id="tab-about" md-label="Добавить задачу" to="/about" exact></md-tab>
+        <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>
         <md-tab id="tab-registration" md-icon="face" to="/user" exact></md-tab>
       </md-tabs>
 
@@ -161,6 +161,11 @@ div.md-field.md-theme-default.md-has-value .md-textarea {
 
   &:hover:after {
     background-color: $secondary-fg-color;
+    transition: all 0.3s;
+  }
+
+  &:hover {
+    border-color: $secondary-fg-color;
     transition: all 0.3s;
   }
 
