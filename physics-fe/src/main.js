@@ -10,7 +10,8 @@ import {
   MdButton,
   MdField,
   MdContent,
-  MdProgress
+  MdProgress,
+  MdTooltip
 } from "vue-material/dist/components";
 import VueMathjax from "vue-mathjax";
 import gallery from "img-vuer";
@@ -22,6 +23,7 @@ Vue.use(MdButton);
 Vue.use(MdField);
 Vue.use(MdContent);
 Vue.use(MdProgress);
+Vue.use(MdTooltip);
 Vue.use(gallery);
 
 Vue.config.productionTip = false;
