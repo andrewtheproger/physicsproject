@@ -1,6 +1,7 @@
 import jsonschema
 import uuid
 import time
+import requests
 import os
 import urllib.request
 from cloudinary.uploader import upload
@@ -15,7 +16,7 @@ from flask_cors import CORS
 from sqlalchemy.sql import text
 
 from .models import db, Task, Hint, HintStatus, Image
-from .config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO
+from .config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO, DISCORD_WEBHOOK
 from . import tasks_helpers, hints_helpers, images_helpers
 
 app = Flask(__name__)
@@ -32,6 +33,11 @@ CORS(app, resources={r"/api/*": {"origins": "*", "methods": ['GET', 'POST'], "al
 # todo: extract to controller files
 
 # helpers
+
+
+def notify(msg):
+    requests.post(DISCORD_WEBHOOK, data={'content': msg})
+
 
 @app.route('/api/health', methods=['GET'])
 def health():
@@ -130,6 +136,7 @@ def upload_images():
 
         ids.append(image.id)
 
+    notify(f'Added images {ids} to 3800 be')
 
     return jsonify({
         'ids': ids
@@ -144,7 +151,7 @@ def get_tasks():
     query_parameters = get_query_parameters(request)
     filter_number = request.args.get('filter_by_number')
     tasks = db.session.query(Task) \
-                .join(Image, Task.id == Image.task_id) 
+                .outerjoin(Image, Task.id == Image.task_id) 
                 # .add_columns()
 
     if filter_number:
@@ -209,6 +216,8 @@ def upsert_task():
 
     db.session.commit()
 
+    notify(f'Upsert task {tasks_helpers.to_model(task)} to 3800 be')
+
     return jsonify({'id': task.id})
 
 
@@ -218,6 +227,8 @@ def delete_task(task_id):
 
     if not task:
         abort(404)
+
+    notify(f'Deleted task {tasks_helpers.to_model(task)} from 3800 be')
 
     db.session.delete(task)
     db.session.commit()
