@@ -76,11 +76,7 @@ def upload_images():
     now = int(time.time() * 1000)  # ms
     ids = []
 
-    print(request.files)
-    print(request.form)
-    
     filename = uuid.uuid4().hex
-
 
     for i in request.form:
         if 'links' in i:
