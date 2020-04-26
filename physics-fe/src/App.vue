@@ -126,7 +126,7 @@ body {
 
   background-color: $primary-bg-color;
 
-  position: absolute;
+  position: relative;
 
   margin: 0;
   padding: 0;

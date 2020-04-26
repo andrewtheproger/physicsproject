@@ -20,7 +20,7 @@ yarn run lint
 ### Run in docker
 
 ```
-docker run -p 0.0.0.0:80:8080 snowinmars/3800fe
+docker run -p 80:8080 snowinmars/3800fe
 ```
 
 Host is `http://localhost:80`
