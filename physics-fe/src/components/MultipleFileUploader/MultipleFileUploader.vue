@@ -172,6 +172,10 @@ export default {
       this.files = this.files.filter(x => x.name !== $event);
     },
     onSubmit() {
+      if (this.filelist.length === 0) {
+        return Promise.resolve({status: 200, data: {ids: []}});
+      }
+
       const formData = new FormData();
       for (let i = 0; i < this.filelist.length; i++) {
         formData.append(`files[${i}]`, this.filelist[i]);

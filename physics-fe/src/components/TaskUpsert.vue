@@ -87,7 +87,6 @@ export default {
       this.isLoading = true;
       this.$refs.multipleFileUploader.onSubmit()
         .then(result => {
-          console.log(result);
           if (result.status != 200) {
             throw "General error";
           }
@@ -119,7 +118,6 @@ export default {
         }
       })
       .then(function (response) {
-        console.log(response)
         return response;
       })
       .catch(function (error) {
