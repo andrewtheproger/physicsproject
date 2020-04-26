@@ -69,8 +69,10 @@ flask run --host 0.0.0.0 --port 5000
 
 Interface `0.0.0.0` is required due to Flask server stuff. If the interface will be mismatched you will not be able to communicate with container (it will looks like 404).
 
+The volume should contain sqlite `server.db` file.
+
 ```
-docker run -p 0.0.0.0:5000:5000 snowinmars/3800be
+docker run -v 3800be:/app/server/vol -p 0.0.0.0:5000:5000 snowinmars/3800be
 ```
 
 ### Build in docker
