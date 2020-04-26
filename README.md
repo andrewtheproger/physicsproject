@@ -1,5 +1,7 @@
 # physics
 
+To run the site locally you should run `snowinmars/3800fe` and `snowinmars/3800be` docker images.
+
 ## Frontend
 
 The frontend exists in the `/physics-fe` directory.
