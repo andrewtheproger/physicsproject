@@ -17,41 +17,6 @@
         @link_removed="link_removed"
       />
     </div>
-
-    <div class="mfu-buttons-wrapper">
-      <md-button
-        type="button"
-        class="md-raised md-accent"
-        @click="removefiles"
-        :disabled="files.length === 0 && links.length === 0"
-      >
-        {{ cancelButtonMessage }}
-      </md-button>
-      <md-button
-        type="submit"
-        class="md-raised md-primary"
-        @click.prevent="onSubmit"
-        :disabled="
-          (files.length < minfiles || files.length > maxfiles) &&
-            links.length === 0
-        "
-      >
-        {{ uploadButtonMessage }}
-      </md-button>
-    </div>
-    <br />
-    <div class="mfu-successMsg" v-if="successMsg !== ''">{{ successMsg }}</div>
-    <div class="mfu-errorMsg" v-if="errorMsg !== ''">
-      {{ fileUploadErrorMessage }}:<br />{{ errorMsg }} <br />{{
-        retryErrorMessage
-      }}
-    </div>
-    <div class="mfu-errorMsg" v-if="files.length && files.length < minfiles">
-      {{ minFilesErrorMessage }}: {{ minfiles }}. <br />{{ retryErrorMessage }}
-    </div>
-    <div class="mfu-errorMsg" v-if="files.length && files.length > maxfiles">
-      {{ maxFilesErrorMessage }}: {{ maxfiles }}. <br />{{ retryErrorMessage }}
-    </div>
   </div>
 </template>
 
@@ -177,8 +142,7 @@ export default {
       files: [], // files to show
       filelist: [], // files to send
       successMsg: "",
-      errorMsg: "",
-      isLoaderVisible: false
+      errorMsg: ""
     };
   },
   components: {
@@ -208,8 +172,6 @@ export default {
       this.files = this.files.filter(x => x.name !== $event);
     },
     onSubmit() {
-      this.isLoaderVisible = true;
-
       const formData = new FormData();
       for (let i = 0; i < this.filelist.length; i++) {
         formData.append(`files[${i}]`, this.filelist[i]);
@@ -257,8 +219,6 @@ export default {
         headers: this.postHeader
       })
         .then(response => {
-          this.isLoaderVisible = false;
-
           if (this.showHttpMessages) {
             this.successMsg = response + "." + this.successMessagePath;
           }
@@ -268,8 +228,6 @@ export default {
           return response;
         })
         .catch(error => {
-          this.isLoaderVisible = false;
-
           if (this.showHttpMessages) {
             this.errorMsg = error + "." + this.errorMessagePath;
           }

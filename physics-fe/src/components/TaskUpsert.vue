@@ -3,32 +3,13 @@
     <form class="ph-form" @submit.prevent="onSubmit">
       <div class="ph-params-wrapper">
         <md-field>
-          <label>Номер задачи через точку...</label>
+          <label>Номер задачи...</label>
           <md-input type="text" v-model="number" />
 
           <span>
             <md-icon>help_outline</md-icon>
 
             <md-tooltip id="number_help">Например, "2.27"</md-tooltip>
-          </span>
-        </md-field>
-
-        <md-field>
-          <label for="movie">Isbn 3800...</label>
-          <md-select v-model="isbn" name="movie" id="movie">
-            <md-option value="fight-club">Fight Club</md-option>
-            <md-option value="godfather">Godfather</md-option>
-            <md-option value="godfather-ii">Godfather II</md-option>
-            <md-option value="godfather-iii">Godfather III</md-option>
-            <md-option value="godfellas">Godfellas</md-option>
-            <md-option value="pulp-fiction">Pulp Fiction</md-option>
-            <md-option value="scarface">Scarface</md-option>
-          </md-select>
-
-          <span>
-            <md-icon>help_outline</md-icon>
-
-            <md-tooltip id="isbn_help">ISBN - это уникальный номер книги из 11 или 13 символов. <br /> Найти его можно на первых или на последних страницах книги.</md-tooltip>
           </span>
         </md-field>
       </div>
@@ -50,12 +31,24 @@
         errorMessagePath=""
       ></multiple-file-uploader>
 
+    <md-progress-bar md-mode="indeterminate" v-if="isLoading"></md-progress-bar>
+
+
       <div class="ph-task-upsert-submit-controls">
         <md-button
           type="submit"
-          class="md-raised md-primary">
+          class="md-raised md-primary"
+          :disabled="isLoading">
           Добавить
         </md-button>
+
+        <div class="ph-success" v-if="loadStatus == 200">
+          Задача добавлена, спасибо
+        </div>
+
+        <div class="ph-failure" v-if="loadStatus && loadStatus != 200">
+          Задача не была добавлена из-за ошибки сервера
+        </div>
       </div>
     </form>
   </div>
@@ -64,7 +57,10 @@
 <script>
 import MultipleFileUploader from "./MultipleFileUploader/MultipleFileUploader";
 import config from "../config/api.js";
-
+import axios from "axios";
+{
+  axios;
+}
 export default {
   name: "User",
   data() {
@@ -72,7 +68,9 @@ export default {
       latex: "Привет, это текст на $ \\LaTeX $, да. ",
       url: `${config.apiPrefix}/images`,
       number: null,
-      isbn: null
+      isbn: null,
+      isLoading: false,
+      loadStatus: null
     };
   },
 
@@ -81,13 +79,53 @@ export default {
   },
 
   methods: {
+    reset() {
+      this.latex = "";
+      this.number = null;
+      this.isbn = null;
+    },
     onSubmit() {
-      this.$refs.multipleFileUploader.onSubmit().then(result => {
-        this.send(result.data.ids);
-      })
+      this.isLoading = true;
+      this.$refs.multipleFileUploader.onSubmit()
+        .then(result => {
+          if (result.status != 200) {
+            throw "General error";
+          }
+
+          console.log(result)
+          this.send(result.data.ids)
+            .then(result => {
+              this.loadStatus = result.status;
+              this.isLoading = false;
+              this.reset();
+            })
+            .cathc(error => {
+              console.log(error);
+              this.loadStatus = "General error";
+              this.isLoading = false;    
+            })
+        })
+        .catch(error => {
+          console.log(error);
+          this.loadStatus = "General error";
+          this.isLoading = false;
+        })
     },
     send(images_ids) {
-      console.log(images_ids)
+      axios.post(`${config.apiPrefix}/tasks`, {
+        number: this.number,
+        body: {
+          latex: this.latex,
+          image_hrefs: images_ids
+        }
+      })
+      .then(function (response) {
+        console.log(response)
+        return response;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     }
   }
 };
@@ -135,6 +173,15 @@ export default {
     display: flex;
     width: 100%;
     flex-direction: row-reverse;
+    align-items: baseline;
+
+    .ph-success {
+      color: green;
+    }
+
+    .ph-failure {
+      color: red;
+    }
   }
 
   .ph-task-upsert-latex {

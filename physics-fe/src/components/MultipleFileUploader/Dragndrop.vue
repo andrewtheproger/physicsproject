@@ -61,18 +61,6 @@
       <p>
         <strong>{{ totalUploadSizeMessage }}</strong> {{ bytesToSize(files.reduce((acc, cur) => acc + cur.size, 0)) }}
       </p>
-      
-      <md-button
-        type="button"
-        class="md-raised"
-        @click.prevent="$refs.file.click()"
-      >
-        {{ addMoreFiles }}
-      </md-button>
-
-      <div class="loader" v-if="isLoaderVisible">
-        <div class="loaderImg"></div>
-      </div>
     </div>
   </div>
 </template>
@@ -111,8 +99,7 @@ export default {
   },
   data() {
     return {
-      dragging: false,
-      isLoaderVisible: false,
+      dragging: false
     };
   },
   methods: {
