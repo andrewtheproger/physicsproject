@@ -20,10 +20,10 @@ yarn run lint
 ### Run in docker
 
 ```
-docker run -p 0.0.0.0:8080:8080 snowinmars/3800fe
+docker run -p 0.0.0.0:80:8080 snowinmars/3800fe
 ```
 
-Host is `http://localhost:8080`
+Host is `http://localhost:80`
 
 ### Build in docker
 
@@ -68,6 +68,15 @@ flask run --host 0.0.0.0 --port 5000
 ### Run in docker
 
 Interface `0.0.0.0` is required due to Flask server stuff. If the interface will be mismatched you will not be able to communicate with container (it will looks like 404).
+
+##### Create volume
+```
+docker volume create
+	--opt type=none
+	--opt device=/home/user/docker/3800/
+	--opt o=bind
+		3800be
+```
 
 The volume should contain sqlite `server.db` file.
 
