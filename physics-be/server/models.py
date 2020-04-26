@@ -5,6 +5,23 @@ import enum
 db = SQLAlchemy()
 
 
+class Image(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    created_date = db.Column(db.BigInteger)
+    updated_date = db.Column(db.BigInteger)
+    url = db.Column(db.String(256))
+    thumbnail_url = db.Column(db.String(256))
+
+    def __repr__(self):
+        return json.dumps({
+            'id': self.id,
+            'created_date': self.created_date,
+            'updated_date': self.updated_date,
+            'url': self.url,
+            'thumbnail_url': self.thumbnail_url
+        })
+
+
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_date = db.Column(db.BigInteger)
