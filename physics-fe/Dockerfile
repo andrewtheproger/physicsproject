@@ -1,11 +1,14 @@
-FROM mhart/alpine-node:11 AS builder
+FROM node:lts-alpine
+
+RUN npm install -g http-server
 WORKDIR /app
-COPY . .
+COPY package*.json ./
+
 RUN yarn install
+
+COPY . .
+
 RUN yarn run build
 
-FROM mhart/alpine-node
-RUN yarn global add serve
-WORKDIR /app
-COPY --from=builder /app .
-CMD ["serve", "-p", "8080", "-s", "."]
+EXPOSE 8080
+CMD [ "http-server", "dist" ]
