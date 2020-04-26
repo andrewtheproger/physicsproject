@@ -18,7 +18,7 @@ yarn run lint
 ### Run in docker
 
 ```
-docker run -p 0.0.0.0:8080:8080 las/3800fe
+docker run -p 0.0.0.0:8080:8080 snowinmars/3800fe
 ```
 
 Host is `http://localhost:8080`
@@ -26,7 +26,7 @@ Host is `http://localhost:8080`
 ### Build in docker
 
 ```
-docker build -t las/3800fe .
+docker build -t snowinmars/3800fe .
 ```
 
 ## Backend
@@ -68,7 +68,7 @@ flask run --host 0.0.0.0 --port 5000
 Interface `0.0.0.0` is required due to Flask server stuff. If the interface will be mismatched you will not be able to communicate with container (it will looks like 404).
 
 ```
-docker run -p 0.0.0.0:5000:5000 las/3800be
+docker run -p 0.0.0.0:5000:5000 snowinmars/3800be
 ```
 
 ### Build in docker
@@ -77,5 +77,5 @@ Host is `http://localhost:5000/api`
 
 
 ```
-docker build -t las/3800be .
+docker build -t snowinmars/3800be .
 ```
