@@ -5,6 +5,10 @@ RUN mkdir -p /app
 WORKDIR /app
 COPY . /app
 
+# sqlite3 for dev build
+# RUN apt-get update
+# RUN apt-get install -y sqlite3
+
 RUN pip install -r requirements.txt > server.log
 
 ENV FLASK_APP server/server.py

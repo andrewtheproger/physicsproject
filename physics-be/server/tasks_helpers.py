@@ -8,6 +8,11 @@ def to_models_list(tasks):
 
 
 def to_model(task):
+    to_view = lambda i: {
+        'id': i.id,
+        'url': i.url
+    }
+
     return {
         'id': task.id,
         'created_date': task.created_date,
@@ -15,7 +20,7 @@ def to_model(task):
         'number': task.number,
         'body': {
             'latex': task.latex,
-            'image_hrefs': json.loads(task.image_hrefs_json)
+            'images': [to_view(i) for i in task.images]
         },
         'hints': hints_helpers.to_models_list(task.hints)
     }
@@ -30,14 +35,14 @@ def from_model(model):
     number = get_or_none(model, 'number')
     body = get_or_none(model, 'body')
     latex = get_or_none(body, 'latex')
-    hrefs = get_or_none(body, 'image_hrefs')
+    image_ids = get_or_none(body, 'image_ids')
 
     return Task(id=id,
                 created_date=created_date,
                 updated_date=updated_date,
                 number=number,
                 latex=latex,
-                image_hrefs_json=json.dumps(hrefs))
+                image_ids_json=json.dumps(image_ids))
 
 
 def does_task_exists(session, number):

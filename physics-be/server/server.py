@@ -5,6 +5,7 @@ import os
 import urllib.request
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
+import json
 
 from flask import Flask, jsonify, abort, request, Response
 from flask_migrate import Migrate
@@ -15,8 +16,7 @@ from sqlalchemy.sql import text
 
 from .models import db, Task, Hint, HintStatus, Image
 from .config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO
-from . import tasks_helpers
-from . import hints_helpers
+from . import tasks_helpers, hints_helpers, images_helpers
 
 app = Flask(__name__)
 JSONSchemaValidator(app=app, root="schemas")
@@ -26,7 +26,7 @@ app.config["SQLALCHEMY_MIGRATE_REPO"] = SQLALCHEMY_MIGRATE_REPO
 
 db.init_app(app)
 migrate = Migrate(app, db)
-CORS(app, resources={r"/api/*": {"origins": "*", "methods": "*", "allow_headers": "*", "max_age": 86400}})
+CORS(app, resources={r"/api/*": {"origins": "*", "methods": ['GET', 'POST'], "allow_headers": "*", "max_age": 86400}})
 
 
 # todo: extract to controller files
@@ -68,7 +68,17 @@ def get_query_parameters(request):
     }
 
 
-# tasks
+# images
+
+
+@app.route('/api/images/<int:image_id>', methods=['GET'])
+def get_image(image_id):
+    image = db.session.query(Image).get(image_id)
+
+    if not image:
+        abort(404)
+
+    return jsonify(images_helpers.to_model(image))
 
 
 @app.route('/api/images', methods=['POST'])
@@ -126,25 +136,31 @@ def upload_images():
     })
 
 
+# tasks
+
+
 @app.route('/api/tasks', methods=['GET'])
 def get_tasks():
     query_parameters = get_query_parameters(request)
     filter_number = request.args.get('filter_by_number')
-    tasks = db.session.query(Task)
+    tasks = db.session.query(Task) \
+                .join(Image, Task.id == Image.task_id) 
+                # .add_columns()
 
     if filter_number:
-        tasks = tasks.filter_by(number=filter_number)
+        tasks = tasks.filter(Task.number == filter_number)
 
     tasks = tasks \
             .order_by(text(f"{query_parameters['order']} {query_parameters['order_direction']}")) \
             .paginate(query_parameters['page'], query_parameters['count'], False) \
             .items
+
     return jsonify(tasks_helpers.to_models_list(tasks))
 
 
 @app.route('/api/tasks/<int:task_id>', methods=['GET'])
 def get_task(task_id):
-    task = db.session.query(Task).get(task_id)
+    task = db.session.query(Task).filter_by(Task.id == task_id).first()
 
     if not task:
         abort(404)
@@ -168,6 +184,12 @@ def upsert_task():
         task.updated_date = now
 
         db.session.add(task)
+
+        image_ids = json.loads(task.image_ids_json)
+        for image_id in image_ids:
+            image = db.session.query(Image).filter_by(id=image_id).first()
+            image.task_id = task.id
+
     else:
         db_task = db.session.query(Task).filter_by(id=task.id).first()
 
@@ -182,8 +204,8 @@ def upsert_task():
         if task.latex:
             db_task.latex = task.latex
 
-        if task.image_hrefs_json:
-            db_task.image_hrefs_json = task.image_hrefs_json
+        if task.image_ids_json:
+            db_task.image_ids_json = task.image_ids_json
 
     db.session.commit()
 
@@ -250,8 +272,8 @@ def upsert_hint(task_id):
         if hint.latex:
             db_hint.latex = hint.latex
 
-        if hint.image_hrefs_json:
-            db_hint.image_hrefs_json = hint.image_hrefs_json
+        if hint.image_ids_json:
+            db_hint.image_ids_json = hint.image_ids_json
 
         if hint.status:
             db_hint.status = hint.status

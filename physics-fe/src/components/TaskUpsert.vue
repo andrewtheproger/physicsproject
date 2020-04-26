@@ -31,14 +31,13 @@
         errorMessagePath=""
       ></multiple-file-uploader>
 
-    <md-progress-bar md-mode="indeterminate" v-if="isLoading"></md-progress-bar>
-
+      <md-progress-bar md-mode="indeterminate" v-if="this.isLoading"></md-progress-bar>
 
       <div class="ph-task-upsert-submit-controls">
         <md-button
           type="submit"
           class="md-raised md-primary"
-          :disabled="isLoading">
+          :disabled="this.isLoading">
           Добавить
         </md-button>
 
@@ -88,18 +87,18 @@ export default {
       this.isLoading = true;
       this.$refs.multipleFileUploader.onSubmit()
         .then(result => {
+          console.log(result);
           if (result.status != 200) {
             throw "General error";
           }
 
-          console.log(result)
           this.send(result.data.ids)
             .then(result => {
               this.loadStatus = result.status;
               this.isLoading = false;
               this.reset();
             })
-            .cathc(error => {
+            .catch(error => {
               console.log(error);
               this.loadStatus = "General error";
               this.isLoading = false;    
@@ -112,11 +111,11 @@ export default {
         })
     },
     send(images_ids) {
-      axios.post(`${config.apiPrefix}/tasks`, {
+      return axios.post(`${config.apiPrefix}/tasks`, {
         number: this.number,
         body: {
           latex: this.latex,
-          image_hrefs: images_ids
+          image_ids: images_ids
         }
       })
       .then(function (response) {

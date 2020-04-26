@@ -2,15 +2,14 @@
   <div class="ph-task" v-on:keyup.escape="cl">
     <h3>3800.{{ task.number }}</h3>
     <div classs="ph-text">
-      <vue-mathjax :formula="task.text"></vue-mathjax>
+      <vue-mathjax :formula="task.body.latex"></vue-mathjax>
     </div>
     <ul class="ph-task-images">
-      <li>
+      <li v-for="image in task.body.images"
+          :key="image.id">
         <img
           v-gallery:task-images
-          v-for="href in task.body.image_hrefs"
-          :key="href"
-          :src="href"
+          :src="image.url"
         />
       </li>
     </ul>
@@ -30,8 +29,8 @@
 
           <ul class="ph-task-hints-images">
             <li>
-              <md-content v-for="href in hint.body.image_hrefs" :key="href">
-                <img :src="href" alt="Task image" />
+              <md-content v-for="id in hint.body.image_ids" :key="id">
+                <img :src="id" alt="Task image" />
               </md-content>
             </li>
           </ul>
