@@ -4,7 +4,7 @@
       <div class="ph-params-wrapper">
         <md-field>
           <label>Номер задачи...</label>
-          <md-input type="text" v-model="number" />
+          <md-input type="text" @change="onNumberChange" v-model="number" />
 
           <span>
             <md-icon>help_outline</md-icon>
@@ -78,6 +78,13 @@ export default {
   },
 
   methods: {
+    onNumberChange() {
+      if (this.number.includes('.')) {
+        return;
+      }
+
+      this.number = this.number.replace(',', '.').replace(' ', '.').replace('-', '.')
+    },
     reset() {
       this.latex = "";
       this.number = null;
@@ -110,8 +117,13 @@ export default {
         })
     },
     send(images_ids) {
+      const numbers = this.number.split('.')
+      const base_number = numbers[0];
+      const task_number = numbers[1];
+
       return axios.post(`${config.apiPrefix}/tasks`, {
-        number: this.number,
+        base_number: base_number,
+        task_number: task_number,
         body: {
           latex: this.latex,
           image_ids: images_ids

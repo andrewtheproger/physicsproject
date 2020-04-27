@@ -54,10 +54,10 @@ def get_query_parameters(request):
 
     page = get('page', 0, int)
     count = get('count', 10, int)
-    order = get('order', 'number', str)
+    order = get('order', 'task_number', str)
     order_direction = get('order_direction', 'asc', str)
 
-    allowed_properties = ['number']
+    allowed_properties = ['base_number', 'task_number']
     allowed_directions = ['asc', 'desc']
 
     if (page < 0) or \
@@ -149,13 +149,17 @@ def upload_images():
 @app.route('/api/tasks', methods=['GET'])
 def get_tasks():
     query_parameters = get_query_parameters(request)
-    filter_number = request.args.get('filter_by_number')
+    filter_base_number = request.args.get('filter_by_base_number')
+    filter_task_number = request.args.get('filter_by_task_number')
     tasks = db.session.query(Task) \
                 .outerjoin(Image, Task.id == Image.task_id) 
                 # .add_columns()
 
-    if filter_number:
-        tasks = tasks.filter(Task.number == filter_number)
+    if filter_base_number:
+        tasks = tasks.filter(Task.base_number == filter_base_number)
+
+    if filter_task_number:
+        tasks = tasks.filter(Task.task_number == filter_task_number)
 
     tasks = tasks \
             .order_by(text(f"{query_parameters['order']} {query_parameters['order_direction']}")) \
@@ -179,12 +183,17 @@ def get_task(task_id):
 @app.validate('task', 'upsert')
 def upsert_task():
     body = request.json
-    task = tasks_helpers.from_model(body)
+    
+    try:
+        task = tasks_helpers.from_model(body)
+    except Exception as e:
+        abort(400)
+
     should_insert = task.id is None
     now = int(time.time() * 1000)  # ms
 
     if should_insert:
-        if tasks_helpers.does_task_exists(db.session, task.number):
+        if tasks_helpers.does_task_exists(db.session, task.base_number, task.task_number):
             abort(409)
 
         task.created_date = now
@@ -205,8 +214,11 @@ def upsert_task():
 
         db_task.updated_date = now
 
-        if task.number:
-            db_task.number = task.number
+        if task.base_number:
+            db_task.base_number = task.base_number
+
+        if task.task_number:
+            db_task.task_number = task.task_number
 
         if task.latex:
             db_task.latex = task.latex

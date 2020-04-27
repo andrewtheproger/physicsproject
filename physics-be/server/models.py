@@ -28,7 +28,8 @@ class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_date = db.Column(db.BigInteger)
     updated_date = db.Column(db.BigInteger)
-    number = db.Column(db.String(16))
+    base_number = db.Column(db.String(16))
+    task_number = db.Column(db.String(16))
     latex = db.Column(db.String(4096))
     hints = db.relationship('Hint', backref='task', lazy='dynamic')
     image_ids_json = db.Column(db.String(4096))
@@ -39,7 +40,8 @@ class Task(db.Model):
             'id': self.id,
             'created_date': self.created_date,
             'updated_date': self.updated_date,
-            'number': self.number,
+            'base_number': self.base_number,
+            'task_number': self.task_number,
             'latex': self.latex,
             'image_ids_json': self.image_ids_json,
             'hints': self.hints

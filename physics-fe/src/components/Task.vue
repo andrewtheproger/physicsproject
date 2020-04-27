@@ -1,6 +1,6 @@
 <template>
   <div class="ph-task" v-on:keyup.escape="cl">
-    <h3>3800.{{ task.number }}</h3>
+    <h3>3800.{{ task.base_number }}.{{ task.task_number }}</h3>
     <div classs="ph-text">
       <vue-mathjax :formula="task.body.latex"></vue-mathjax>
     </div>

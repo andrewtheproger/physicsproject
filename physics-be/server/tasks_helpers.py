@@ -17,7 +17,8 @@ def to_model(task):
         'id': task.id,
         'created_date': task.created_date,
         'updated_date': task.updated_date,
-        'number': task.number,
+        'base_number': task.base_number,
+        'task_number': task.task_number,
         'body': {
             'latex': task.latex,
             'images': [to_view(i) for i in task.images]
@@ -32,7 +33,8 @@ def from_model(model):
     id = get_or_none(model, 'id')
     created_date = get_or_none(model, 'created_date')
     updated_date = get_or_none(model, 'updated_date')
-    number = get_or_none(model, 'number')
+    base_number = get_or_none(model, 'base_number')
+    task_number = get_or_none(model, 'task_number')
     body = get_or_none(model, 'body')
     latex = get_or_none(body, 'latex')
     image_ids = get_or_none(body, 'image_ids')
@@ -40,13 +42,14 @@ def from_model(model):
     return Task(id=id,
                 created_date=created_date,
                 updated_date=updated_date,
-                number=number,
+                base_number=base_number,
+                task_number=task_number,
                 latex=latex,
                 image_ids_json=json.dumps(image_ids))
 
 
-def does_task_exists(session, number):
-    q = session.query(Task).filter_by(number=number)
+def does_task_exists(session, base_number, task_number):
+    q = session.query(Task).filter_by(base_number=base_number).filter_by(task_number=task_number)
     res = session.query(q.exists()).scalar()
 
     return res
