@@ -3,7 +3,7 @@
     <form class="ph-form" @submit.prevent="onSubmit">
       <div class="ph-params-wrapper">
         <md-field>
-          <label>Номер задачи...</label>
+          <label :class="{'ph-task-exists': could_task_be_created === false, 'ph-task-not-exists': could_task_be_created === true}">Номер задачи...</label>
           <md-input type="text" @change="onNumberChange" v-model="number" />
 
           <span>
@@ -69,21 +69,50 @@ export default {
       number: null,
       isbn: null,
       isLoading: false,
-      loadStatus: null
+      loadStatus: null,
+      existing_numbers: [],
+      could_task_be_created: null
     };
   },
-
+  computed: {
+    classObject: function () {
+      return {
+        could_task_be_created: this.could_task_be_created !== null && this.could_task_be_created === true
+      }
+    }
+  },
   components: {
     MultipleFileUploader
   },
+  created() {
+    const url = config.apiPrefix + "/tasks/predicate_numbers";
 
+    axios({
+      url: url,
+      method: 'GET'
+    }).then(
+      result => {
+        this.existing_numbers = result.data.map(x => x.base_number + '.' + x.task_number);
+      },
+      error => {
+        console.log(error);
+      }
+    )
+  },
   methods: {
     onNumberChange() {
       if (this.number.includes('.')) {
+        if (this.existing_numbers.includes(this.number)) {
+          this.could_task_be_created = false;
+        } else {
+          this.could_task_be_created = true;
+        }
+
         return;
       }
 
       this.number = this.number.replace(',', '.').replace(' ', '.').replace('-', '.')
+      this.could_task_be_created = null;
     },
     reset() {
       this.latex = "";
@@ -151,6 +180,14 @@ export default {
 
 .ph-task-upsert {
   padding: 2em;
+
+  div.md-field.md-theme-default label.ph-task-exists {
+    -webkit-text-fill-color: red;
+  }
+
+  div.md-field.md-theme-default label.ph-task-not-exists {
+    -webkit-text-fill-color: green;
+  }
 
   .ph-form {
     display: flex;

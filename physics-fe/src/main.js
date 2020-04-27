@@ -11,7 +11,10 @@ import {
   MdField,
   MdContent,
   MdProgress,
-  MdTooltip
+  MdTooltip,
+  MdAutocomplete,
+  MdMenu,
+  MdList
 } from "vue-material/dist/components";
 import VueMathjax from "vue-mathjax";
 import gallery from "img-vuer";
@@ -24,6 +27,9 @@ Vue.use(MdField);
 Vue.use(MdContent);
 Vue.use(MdProgress);
 Vue.use(MdTooltip);
+Vue.use(MdAutocomplete);
+Vue.use(MdMenu);
+Vue.use(MdList);
 Vue.use(gallery);
 
 Vue.config.productionTip = false;

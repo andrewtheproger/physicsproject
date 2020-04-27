@@ -1,13 +1,11 @@
 <template>
   <div>
     <form class="ph-search-form" v-on:submit.prevent="submit">
-      <md-field>
+      <md-autocomplete v-model="number" :md-options="existing_numbers" md-dense :disabled="this.sending">
         <transition name="slide-fade" mode="out-in">
           <label :key="numberExample">{{ numberExample }}</label>
         </transition>
-
-        <md-input v-model="number" :disabled="this.sending"></md-input>
-      </md-field>
+      </md-autocomplete>
 
       <md-button
         type="submit"
@@ -51,11 +49,25 @@ export default {
       numberExample: "2.15...",
       numberExampleInterval: null,
       sending: false,
+      existing_numbers: []
     };
   },
 
   created() {
     this.numberExampleInterval = setInterval(this.setNewNumberExample, 1000);
+    const url = config.apiPrefix + "/tasks/predicate_numbers";
+
+    axios({
+      url: url,
+      method: 'GET'
+    }).then(
+      result => {
+        this.existing_numbers = result.data.map(x => x.base_number + '.' + x.task_number);
+      },
+      error => {
+        console.log(error);
+      }
+    )
   },
   beforeDestroy() {
     clearInterval(this.numberExampleInterval);
@@ -82,7 +94,9 @@ export default {
       let url = config.apiPrefix + "/tasks";
 
       if (number) {
-        url += "?filter_by_number=" + number;
+        const [base_number, task_number] = number.split('.')
+        url += "?filter_by_base_number=" + base_number; // todo make it looks ok
+        url += "&filter_by_task_number=" + task_number;
       }
 
       await axios({

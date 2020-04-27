@@ -3,6 +3,17 @@ from . import hints_helpers
 import json
 
 
+def to_predicate_models_list(tasks):
+    return [to_predicate_model(t) for t in tasks]
+
+
+def to_predicate_model(task):
+    return {
+        'id': task.id,
+        'base_number': task.base_number,
+        'task_number': task.task_number
+    }
+
 def to_models_list(tasks):
     return [to_model(t) for t in tasks]
 

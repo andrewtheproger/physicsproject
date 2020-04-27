@@ -179,6 +179,18 @@ def get_task(task_id):
     return jsonify(tasks_helpers.to_model(task))
 
 
+@app.route('/api/tasks/predicate_numbers', methods=['GET'])
+def predicate_tasks_number():
+    tasks = db.session.query(Task).with_entities(Task.id, Task.base_number, Task.task_number)\
+            .order_by(Task.base_number, Task.task_number)\
+            .all()
+
+    if not tasks:
+        return jsonify([])
+
+    return jsonify(tasks_helpers.to_predicate_models_list(tasks))
+
+
 @app.route('/api/tasks', methods=['POST'])
 @app.validate('task', 'upsert')
 def upsert_task():
