@@ -9,8 +9,8 @@ from cloudinary.utils import cloudinary_url
 import json
 
 from flask import Flask, jsonify, abort, request, Response
+from flask_restful import HTTPException, Api
 from flask_migrate import Migrate
-from sqlalchemy import and_, or_
 from flask_jsonschema_validator import JSONSchemaValidator
 from flask_cors import CORS
 from sqlalchemy.sql import text
@@ -29,10 +29,28 @@ db.init_app(app)
 migrate = Migrate(app, db)
 CORS(app, resources={r"/api/*": {"origins": "*", "methods": ['GET', 'POST'], "allow_headers": "*", "max_age": 86400}})
 
+print(f'Using {SQLALCHEMY_DATABASE_URI}')
+
 
 # todo: extract to controller files
 
 # helpers
+
+
+errors = {
+    'developer': 1,
+    'task_not_exists': 2,
+    'task_business_id_conflict': 3,
+    'hint_not_exists': 4,
+}
+
+
+@app.errorhandler(HTTPException)
+def http_error(e):
+    return jsonify({
+        'message': str(e),
+        'code': e.description
+    }), e.code
 
 
 def notify(msg):
@@ -61,13 +79,13 @@ def get_query_parameters(request):
     allowed_directions = ['asc', 'desc']
 
     if (page < 0) or \
-        (count <= 0) or \
-        (not order in allowed_properties) or \
-        (not order_direction in allowed_directions):
-        abort(400)
+            (count <= 0) or \
+            (order not in allowed_properties) or \
+            (order_direction not in allowed_directions):
+        abort(400, errors['developer'])
 
     return {
-        'page': page + 1, #  due to flask counter starts from 1 but the common approach is to start from 0
+        'page': page + 1,  # due to flask counter starts from 1 but the common approach is to start from 0
         'count': count,
         'order': order,
         'order_direction': order_direction
@@ -82,7 +100,7 @@ def get_image(image_id):
     image = db.session.query(Image).get(image_id)
 
     if not image:
-        abort(404)
+        abort(404, errors['developer'])
 
     return jsonify(images_helpers.to_model(image))
 
@@ -102,13 +120,15 @@ def upload_images():
             raise Exception(f'Unknown form filetype {i}')
 
         upload_result = upload(filename)
-        thumbnail_url, options = cloudinary_url(upload_result['public_id'], format="png", crop="fit", width=200, height=200)
+        thumbnail_url, options = cloudinary_url(upload_result['public_id'],
+                                                format="png", crop="fit",
+                                                width=200, height=200)
         os.remove(filename)
 
         image = Image(created_date=now,
-            updated_date=now,
-            url=upload_result['url'],
-            thumbnail_url=thumbnail_url)
+                      updated_date=now,
+                      url=upload_result['url'],
+                      thumbnail_url=thumbnail_url)
 
         db.session.add(image)
         db.session.commit()
@@ -121,15 +141,17 @@ def upload_images():
             item.save(filename)
         else:
             raise Exception(f'Unknown form filetype {i}')
-    
+
         upload_result = upload(filename)
-        thumbnail_url, options = cloudinary_url(upload_result['public_id'], format="png", crop="fit", width=200, height=200)
+        thumbnail_url, options = cloudinary_url(upload_result['public_id'],
+                                                format="png", crop="fit",
+                                                width=200, height=200)
         os.remove(filename)
 
         image = Image(created_date=now,
-            updated_date=now,
-            url=upload_result['url'],
-            thumbnail_url=thumbnail_url)
+                      updated_date=now,
+                      url=upload_result['url'],
+                      thumbnail_url=thumbnail_url)
 
         db.session.add(image)
         db.session.commit()
@@ -152,8 +174,8 @@ def get_tasks():
     filter_base_number = request.args.get('filter_by_base_number')
     filter_task_number = request.args.get('filter_by_task_number')
     tasks = db.session.query(Task) \
-                .outerjoin(Image, Task.id == Image.task_id) 
-                # .add_columns()
+        .outerjoin(Image, Task.id == Image.task_id)
+    # .add_columns()
 
     if filter_base_number:
         tasks = tasks.filter(Task.base_number == filter_base_number)
@@ -162,9 +184,9 @@ def get_tasks():
         tasks = tasks.filter(Task.task_number == filter_task_number)
 
     tasks = tasks \
-            .order_by(text(f"{query_parameters['order']} {query_parameters['order_direction']}")) \
-            .paginate(query_parameters['page'], query_parameters['count'], False) \
-            .items
+        .order_by(text(f"{query_parameters['order']} {query_parameters['order_direction']}")) \
+        .paginate(query_parameters['page'], query_parameters['count'], False) \
+        .items
 
     return jsonify(tasks_helpers.to_models_list(tasks))
 
@@ -174,16 +196,16 @@ def get_task(task_id):
     task = db.session.query(Task).filter_by(Task.id == task_id).first()
 
     if not task:
-        abort(404)
+        abort(404, errors['task_not_exists'])
 
     return jsonify(tasks_helpers.to_model(task))
 
 
 @app.route('/api/tasks/predicate_numbers', methods=['GET'])
 def predicate_tasks_number():
-    tasks = db.session.query(Task).with_entities(Task.id, Task.base_number, Task.task_number)\
-            .order_by(Task.base_number, Task.task_number)\
-            .all()
+    tasks = db.session.query(Task).with_entities(Task.id, Task.base_number, Task.task_number) \
+        .order_by(Task.base_number, Task.task_number) \
+        .all()
 
     if not tasks:
         return jsonify([])
@@ -195,18 +217,18 @@ def predicate_tasks_number():
 @app.validate('task', 'upsert')
 def upsert_task():
     body = request.json
-    
+
     try:
         task = tasks_helpers.from_model(body)
     except Exception as e:
-        abort(400)
+        abort(400, errors['developer'])
 
     should_insert = task.id is None
     now = int(time.time() * 1000)  # ms
 
     if should_insert:
         if tasks_helpers.does_task_exists(db.session, task.base_number, task.task_number):
-            abort(409)
+            abort(409, errors['task_business_id_conflict'])
 
         task.created_date = now
         task.updated_date = now
@@ -222,7 +244,7 @@ def upsert_task():
         db_task = db.session.query(Task).filter_by(id=task.id).first()
 
         if db_task is None:
-            abort(404)
+            abort(404, errors['task_not_exists'])
 
         db_task.updated_date = now
 
@@ -250,7 +272,7 @@ def delete_task(task_id):
     task = db.session.query(Task).filter(Task.id == task_id).first()
 
     if not task:
-        abort(404)
+        abort(404, errors['task_not_exists'])
 
     notify(f'Deleted task {tasks_helpers.to_model(task)} from 3800 be')
 
@@ -297,7 +319,7 @@ def upsert_hint(task_id):
         db_hint = db.session.query(Hint).filter_by(id=hint.id).first()
 
         if db_hint is None:
-            abort(404)
+            abort(404, errors['hint_not_exists'])
 
         db_hint.updated_date = now
 
@@ -324,7 +346,7 @@ def enable_hint(task_id, hint_id):
     db_hint = db.session.query(Hint).filter(Hint.id == hint_id).filter(Hint.status != HintStatus.approved).first()
 
     if db_hint is None:
-        abort(404)
+        abort(404, errors['hint_not_exists'])
 
     db_hint.updated_date = now
     db_hint.status = HintStatus.approved
@@ -340,7 +362,7 @@ def disable_hint(task_id, hint_id):
     db_hint = db.session.query(Hint).filter(Hint.id == hint_id).filter(Hint.status != HintStatus.declined).first()
 
     if db_hint is None:
-        abort(404)
+        abort(404, errors['hint_not_exists'])
 
     db_hint.updated_date = now
     db_hint.status = HintStatus.declined

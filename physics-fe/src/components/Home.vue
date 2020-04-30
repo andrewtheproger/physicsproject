@@ -18,6 +18,10 @@
 
     <md-progress-bar md-mode="indeterminate" v-if="this.sending" />
 
+    <div class="ph-error-message" v-if="isHttpFailed">
+      Произошла ошибка: {{ this.flowFailed.message }}
+    </div>
+
     <ul class="ph-tasks" v-if="this.tasks">
       <li v-for="task in this.tasks" :key="task.id">
         <Task :task="task" />
@@ -49,7 +53,9 @@ export default {
       numberExample: "2.15...",
       numberExampleInterval: null,
       sending: false,
-      existing_numbers: []
+      existing_numbers: [],
+      isHttpFailed: false,
+      httpFailed: null
     };
   },
 
@@ -90,11 +96,20 @@ export default {
       this.sending = false;
     },
 
+    get_error_message(code) {
+      switch (code) {
+        case 1:
+          return 'разработчик сделал что-то не так';
+        default:
+          throw 'This should not happens';
+      }
+    },
+
     async getTaskByNumber(number) {
       let url = config.apiPrefix + "/tasks";
 
       if (number) {
-        const [base_number, task_number] = number.split('.')
+        const [base_number, task_number] = number.split('.');
         url += "?filter_by_base_number=" + base_number; // todo make it looks ok
         url += "&filter_by_task_number=" + task_number;
       }
@@ -104,10 +119,19 @@ export default {
         method: "GET",
       }).then(
         (result) => {
+          this.isHttpFailed = false;
           this.tasks = result.data;
         },
         (error) => {
-          console.log(error);
+          this.isHttpFailed = true;
+
+          const data = error.response.data;
+
+          this.httpFailed = {
+            http_code: error.response.code,
+            internal_code: data.code,
+            message: this.get_error_message(data.code),
+          };
           this.tasks = [];
         }
       );
@@ -140,6 +164,11 @@ export default {
 .ph-nothing-found {
   margin: 1em;
   color: $primary-fg-color;
+}
+
+.ph-error-message {
+  color: red;
+  margin: 0 1em;
 }
 
 .ph-search-form {
