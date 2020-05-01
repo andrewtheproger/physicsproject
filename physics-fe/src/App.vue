@@ -137,6 +137,11 @@ body {
   left: 0;
 }
 
+div.md-card.md-theme-default {
+  color: inherit;
+  background-color: $secondary-bg-color;
+}
+
 div.md-field,
 div.md-field.md-theme-default.md-has-textarea,
 div.md-field.md-theme-default,

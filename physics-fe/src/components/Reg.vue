@@ -1,84 +1,136 @@
 <template>
   <div class="ph-main">
-    <h1>Зарегистрироваться:</h1>
-    <div class="ph-reg">
-      <form v-on:submit.prevent="getTask">
-        <p>Введите вашу почту:</p>
-        <md-field> <md-input type="text" v-model="login"/></md-field>
-        <p>Введите пароль:</p>
-        <md-field>
-          <md-input type="password2" v-model="password" />
-        </md-field>
-        <p>Введите пароль еще раз:</p>
-        <md-field>
-          <md-input type="password1" v-model="password" />
-        </md-field>
-        <md-field>
-          <md-input type="submit" />
-        </md-field>
-      </form>
-    </div>
+    <md-card>
+      <md-card-header>
+        <div class="md-title">Регистрация</div>
+      </md-card-header>
+
+      <md-card-content>
+        <div class="ph-reg">
+          <form v-on:submit.prevent="submit">
+            <md-field :class="getValidationClass('email')">
+              <label>Почта для восстановления доступа</label>
+
+              <md-input type="email" v-model.trim="form.email" name="form-email" id="form-email"/>
+              <span class="md-error" v-if="!$v.form.email.required">Почта необходима для восстановления доступа к аккаунту в случае утраты пароля</span>
+              <span class="md-error" v-if="!$v.form.email.email">Не похоже на почту</span>
+            </md-field>
+
+            <md-field :class="getValidationClass('password')">
+              <label>Пароль</label>
+
+              <md-input type="password" v-model.trim="form.password" name="form-password" id="form-password"/>
+              <span class="md-error" v-if="!$v.form.password.required">Пароль не должен быть пустым</span>
+              <span class="md-error" v-if="!$v.form.password.minLength">Длина пароля - минимум {{$v.form.password.$params.minLength.min}} символов</span>
+            </md-field>
+
+            <md-field :class="getValidationClass('repeatPassword')">
+              <label>Пароль</label>
+
+              <md-input type="password" v-model.trim="form.repeatPassword" name="form-repeatPassword" id="form-repeatPassword"/>
+              <span class="md-error" v-if="!$v.form.repeatPassword.sameAsPassword">Пароль не должен быть пустым</span>
+            </md-field>
+
+            <div class="ph-registration-submit-controls">
+              <md-button
+                      type="submit"
+                      class="md-raised md-primary"
+                      :disabled="this.isLoading">
+                Далее
+              </md-button>
+            </div>
+          </form>
+
+          <md-progress-bar md-mode="indeterminate" v-if="this.isLoading"></md-progress-bar>
+        </div>
+      </md-card-content>
+    </md-card>
   </div>
 </template>
+
 <script>
-import { mapActions } from "vuex";
+import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
+import { validationMixin } from 'vuelidate'
+
 export default {
-  name: "User",
+  name: "Reg",
+  mixins: [validationMixin],
   data() {
     return {
-      login: "",
-      password: "",
+      form: {
+        login: null,
+        password: null,
+        repeatPassword: null
+      },
+      isLoading: false
     };
   },
+  validations: {
+    form: {
+      email: {
+        required,
+        email
+      },
+      password: {
+        required,
+        minLength: minLength(16)
+      },
+      repeatPassword: {
+        sameAsPassword: sameAs('password')
+      }
+    }
+  },
   methods: {
-    ...mapActions(["regUser"]),
-    getTask() {
-      this.regUser(this.login, this.password);
+    getValidationClass (fieldName) {
+      const field = this.$v.form[fieldName];
+
+      if (field) {
+        return {
+          'md-invalid': field.$invalid && field.$dirty
+        }
+      }
+    },
+    submit() {
+      this.isLoading = true;
+      this.$v.$touch();
+
+      if (this.$v.$invalid) {
+        this.isLoading = false;
+        return;
+      }
     }
   }
 };
 </script>
 <style lang="scss" scoped>
 @import "../config/variables.scss";
-.md-field,
-.md-field.md-theme-default.md-focused,
-.md-field.md-theme-default.md-focused,
-.md-field.md-theme-default.md-has-value {
-  border-bottom: 1px solid $primary-fg-color;
-  input.md-input {
-    color: inherit;
-    -webkit-text-fill-color: $primary-fg-color;
-  }
-  textarea.md-textarea {
-    color: inherit;
-    -webkit-text-fill-color: $primary-fg-color;
-    border: 1px solid $primary-fg-color;
-  }
-  label {
-    padding-left: 1em;
-    color: $secondary-bg-color;
+
+.ph-registration-submit-controls {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+div.md-field.md-theme-default
+{
+  &.md-invalid .md-error {
+    -webkit-text-fill-color: red;
+    color: red;
   }
 }
-p {
-  color: white;
-}
-.ph-reg {
-  text-align: center;
-}
-h1 {
-  color: white;
-}
-input {
-  color: white;
-  border: 1px solid lightgray;
-  background-color: #252525;
-  margin: 5px;
-}
+
 .ph-main {
-  margin: auto;
-  margin-top: 150px;
-  width: 400px;
-  border: 3px solid lightgray;
-  text-align: center;
+  display: flex;
+  align-content: center;
+  justify-content: center;
 }
+
+.md-card {
+  width: 70%;
+  margin: 4px;
+}
+
+.md-icon.md-theme-default.md-icon-font {
+  filter: invert(1);
+}
+
 </style>
