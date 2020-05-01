@@ -1,91 +1,81 @@
 <template>
   <div class="ph-main">
-    <md-card>
-      <md-card-header>
-        <div class="md-title">Регистрация</div>
-      </md-card-header>
+    <form v-on:submit.prevent="submit">
+      <md-field :class="getValidationClass('email')">
+        <label>Почта для восстановления доступа</label>
 
-      <md-card-content>
-        <div class="ph-reg">
-          <form v-on:submit.prevent="submit">
-            <md-field :class="getValidationClass('email')">
-              <label>Почта для восстановления доступа</label>
+        <md-input
+          type="email"
+          v-model.trim="form.email"
+          name="form-email"
+          id="form-email"
+        />
+        <span class="md-error" v-if="!$v.form.email.required"
+          >Почта необходима для восстановления доступа к аккаунту в случае
+          утраты пароля</span
+        >
+        <span class="md-error" v-if="!$v.form.email.email"
+          >Не похоже на почту</span
+        >
+      </md-field>
 
-              <md-input
-                type="email"
-                v-model.trim="form.email"
-                name="form-email"
-                id="form-email"
-              />
-              <span class="md-error" v-if="!$v.form.email.required"
-                >Почта необходима для восстановления доступа к аккаунту в случае
-                утраты пароля</span
-              >
-              <span class="md-error" v-if="!$v.form.email.email"
-                >Не похоже на почту</span
-              >
-            </md-field>
+      <md-field :class="getValidationClass('password')">
+        <label>Пароль</label>
 
-            <md-field :class="getValidationClass('password')">
-              <label>Пароль</label>
+        <md-input
+          type="password"
+          v-model.trim="form.password"
+          name="form-password"
+          id="form-password"
+        />
+        <span class="md-error" v-if="!$v.form.password.required"
+          >Пароль не должен быть пустым</span
+        >
+        <span class="md-error" v-if="!$v.form.password.minLength"
+          >Длина пароля - минимум
+          {{ $v.form.password.$params.minLength.min }} символов</span
+        >
+      </md-field>
 
-              <md-input
-                type="password"
-                v-model.trim="form.password"
-                name="form-password"
-                id="form-password"
-              />
-              <span class="md-error" v-if="!$v.form.password.required"
-                >Пароль не должен быть пустым</span
-              >
-              <span class="md-error" v-if="!$v.form.password.minLength"
-                >Длина пароля - минимум
-                {{ $v.form.password.$params.minLength.min }} символов</span
-              >
-            </md-field>
+      <md-field :class="getValidationClass('repeatPassword')">
+        <label>Пароль</label>
 
-            <md-field :class="getValidationClass('repeatPassword')">
-              <label>Пароль</label>
+        <md-input
+          type="password"
+          v-model.trim="form.repeatPassword"
+          name="form-repeatPassword"
+          id="form-repeatPassword"
+        />
+        <span
+          class="md-error"
+          v-if="!$v.form.repeatPassword.sameAsPassword"
+          >Пароль не должен быть пустым</span
+        >
+      </md-field>
 
-              <md-input
-                type="password"
-                v-model.trim="form.repeatPassword"
-                name="form-repeatPassword"
-                id="form-repeatPassword"
-              />
-              <span
-                class="md-error"
-                v-if="!$v.form.repeatPassword.sameAsPassword"
-                >Пароль не должен быть пустым</span
-              >
-            </md-field>
+      <div class="ph-registration-submit-controls">
+        <md-button
+          type="submit"
+          class="md-raised md-primary"
+          :disabled="this.isLoading"
+        >
+          Далее
+        </md-button>
+      </div>
+    </form>
 
-            <div class="ph-registration-submit-controls">
-              <md-button
-                type="submit"
-                class="md-raised md-primary"
-                :disabled="this.isLoading"
-              >
-                Далее
-              </md-button>
-            </div>
-          </form>
+    <md-progress-bar
+      md-mode="indeterminate"
+      v-if="this.isLoading"
+    ></md-progress-bar>
 
-          <md-progress-bar
-            md-mode="indeterminate"
-            v-if="this.isLoading"
-          ></md-progress-bar>
-
-          <div class="ph-failure" v-if="flowFailed">
-            {{
-              this.flowFailed.http_code
-                ? "Произошла ошибка на стороне сервера"
-                : "Вы ошиблись"
-            }}: {{ this.flowFailed.message }}
-          </div>
-        </div>
-      </md-card-content>
-    </md-card>
+    <div class="ph-failure" v-if="flowFailed">
+      {{
+        this.flowFailed.http_code
+          ? "Произошла ошибка на стороне сервера"
+          : "Вы ошиблись"
+      }}: {{ this.flowFailed.message }}
+    </div>
   </div>
 </template>
 
@@ -156,23 +146,31 @@ export default {
           this.isLoading = false;
           this.isFlowFailed = false;
 
-          console.log(response);
-
           this.$store.commit("set_jwt", response.data.token);
-          this.$route.go('/');
+          this.$router.replace('/');
 
           return response;
         })
         .catch(error => {
           this.isFlowFailed = true;
 
-          const data = error.response.data;
+          try {
+            const data = error.response.data;
 
-          this.flowFailed = {
-            http_code: error.response.code,
-            internal_code: data.code,
-            message: this.get_error_message(data.code)
-          };
+            this.flowFailed = {
+              http_code: error.response.code,
+              internal_code: data.code,
+              message: this.get_error_message(data.code)
+            };
+          } catch {
+            this.flowFailed = {
+              http_code: null,
+              internal_code: 1,
+              message: this.get_error_message(1)
+            };
+          }
+
+
 
           this.isLoading = false;
         });
@@ -203,14 +201,13 @@ div.md-field.md-theme-default {
   display: flex;
   align-content: center;
   justify-content: center;
-}
 
-.md-card {
-  width: 70%;
-  margin: 4px;
-}
+  form {
+    width: 70%;
 
-.md-icon.md-theme-default.md-icon-font {
-  filter: invert(1);
+    .md-icon.md-theme-default.md-icon-font.md-icon-image {
+      filter: invert(1);
+    }
+  }
 }
 </style>

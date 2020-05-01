@@ -1,6 +1,14 @@
 <template>
     <div class="ph-main">
-        Дизлогиню...
+        <form @submit.prevent="logout">
+            <md-button
+                    type="submit"
+                    class="md-raised md-primary"
+                    :disabled="this.isLoading"
+            >
+                Выйти
+            </md-button>
+        </form>
 
         <md-progress-bar
                 md-mode="indeterminate"
@@ -22,36 +30,38 @@
                 isLoading: false,
             };
         },
-        created() {
-            const url = config.apiPrefix + "/users/logout";
-            this.isLoading = true;
+        methods: {
+            logout() {
+                const url = config.apiPrefix + "/users/logout";
+                this.isLoading = true;
 
-            axios({
-                url: url,
-                method: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + this.$store.getters.get_jwt
-                }
-            }).then(
-                () => {
-                    this.isLoading = false;
-                    this.$store.commit("set_jwt", null);
-                    this.$route.go('/');
-                },
-                error => {
-                    this.isLoading = false;
-                    const data = error.response.data;
-
-                    if (data.code === 5) {
-                        this.$store.commit("set_jwt", null);
-
-                        this.$route.go('/');
-                        return;
+                axios({
+                    url: url,
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + this.$store.getters.get_jwt
                     }
+                }).then(
+                    () => {
+                        this.isLoading = false;
+                        this.$store.commit("set_jwt", null);
+                        this.$router.replace({ path: '/' });
+                    },
+                    error => {
+                        this.isLoading = false;
+                        const data = error.response.data;
 
-                    throw error;
-                }
-            )
+                        if (data.code === 5) {
+                            this.$store.commit("set_jwt", null);
+
+                            this.$router.replace({ path: '/' });
+                            return;
+                        }
+
+                        throw error;
+                    }
+                )
+            }
         }
     };
 </script>

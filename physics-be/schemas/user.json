@@ -2,22 +2,6 @@
   "register": {
     "type": "object",
     "properties": {
-      "id": {
-        "type": "integer",
-        "readonly": "True"
-      },
-      "created_date": {
-        "type": "integer",
-        "readonly": "True"
-      },
-      "updated_date": {
-        "type": "integer",
-        "readonly": "True"
-      },
-      "role": {
-        "type": "string",
-        "enum": ["user", "admin"]
-      },
       "email": {
         "type": "string",
         "maxLength": 256

@@ -4,8 +4,6 @@ import Home from "../components/Home";
 import About from "../components/About";
 import User from "../components/User";
 import Logout from "../components/Logout";
-//import TaskUpsert from "../components/TaskUpsert";
-import Reg from "../components/Reg";
 import TaskUpsert from "../components/TaskUpsert";
 
 Vue.use(VueRouter);
@@ -30,11 +28,6 @@ const routes = [
     path: "/user",
     name: "User",
     component: User
-  },
-  {
-    path: "/reg",
-    name: "Reg",
-    component: Reg
   },
   {
     path: "/logout",

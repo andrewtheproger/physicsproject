@@ -11,10 +11,7 @@
         ></md-tab>
         <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>
 
-        <md-tab id="tab-registration" md-icon="face" to="/reg" exact v-if="!this.$store.getters.get_jwt">
-        </md-tab>
-
-        <md-tab id="tab-logout" md-icon="exit_to_app" to="/logout" exact v-if="this.$store.getters.get_jwt">
+        <md-tab id="tab-user" md-icon="face" to="/user" exact >
         </md-tab>
       </md-tabs>
 
@@ -70,10 +67,6 @@ export default {
 <style lang="scss">
 @import "config/variables.scss";
 
-body {
-  color: $primary-fg-color;
-}
-
 .ph-hidden {
   display: none;
 }
@@ -104,10 +97,6 @@ div.md-tabs.md-theme-default {
 
     .md-button {
       color: $primary-fg-color;
-
-      .md-icon {
-        color: $primary-fg-color;
-      }
     }
 
     .md-button.md-active {
@@ -115,6 +104,7 @@ div.md-tabs.md-theme-default {
 
       .md-icon {
         color: $primary-fg-color;
+        filter: none;
       }
     }
   }
@@ -130,6 +120,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   background-color: $primary-bg-color;
+  color: $primary-fg-color;
 
   position: relative;
 
@@ -183,9 +174,12 @@ div.md-field.md-theme-default.md-has-value .md-textarea {
   -webkit-text-fill-color: $primary-fg-color;
 }
 
-.md-field.md-theme-default label,
-.md-icon.md-theme-default.md-icon-font {
+.md-field.md-theme-default label {
   color: inherit;
+}
+
+.md-icon-invert {
+  filter: invert(1);
 }
 
 .md-field.md-theme-default label {
