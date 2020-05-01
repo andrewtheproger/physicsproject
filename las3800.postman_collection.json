@@ -13,7 +13,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{admin_bearer}}",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -57,7 +57,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{user_bearer}}",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -104,7 +104,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{user_bearer}}",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -132,7 +132,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{admin_bearer}}",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -160,7 +160,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{user_bearer}}",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -206,7 +206,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{user_bearer}}",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -249,7 +249,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{admin_bearer}}",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -280,7 +280,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{admin_bearer}}",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -311,7 +311,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{admin_bearer}}",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -328,6 +328,242 @@
 						"1",
 						"hints",
 						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get users",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{prefix}}/users?page=0&count=10&order=number",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "count",
+							"value": "10"
+						},
+						{
+							"key": "order",
+							"value": "number"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register user",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"login\": \"snowinmars\",\n\t\"password\": \"Novikova\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{prefix}}/users/register",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"users",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{prefix}}/users/logout",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"users",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{prefix}}/users/2",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "875cb95c-f31c-4e85-80f2-f697a431d56b",
+						"exec": [
+							"const response = pm.response.json()",
+							"",
+							"pm.environment.set(\"token\", response.token)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"login\": \"snowinmars\",\n\t\"password\": \"Novikova\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{prefix}}/users/login",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"role\": \"user\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{prefix}}/users/2",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"users",
+						"2"
 					]
 				}
 			},

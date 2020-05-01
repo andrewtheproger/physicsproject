@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <header>
-      <md-tabs md-sync-route>
+      <md-tabs class="ph-menu" md-sync-route>
         <md-tab id="tab-home" md-label="3800" to="/" exact></md-tab>
         <md-tab
           id="tab-add"
@@ -10,7 +10,7 @@
           exact
         ></md-tab>
         <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>
-        <!--<md-tab id="tab-registration" md-icon="face" to="/reg" exact></md-tab> -->
+        <md-tab id="tab-registration" md-icon="face" to="/reg" exact></md-tab>
       </md-tabs>
 
       <div>
@@ -91,9 +91,9 @@ div.md-tabs.md-theme-default {
   font-size: 150%;
 
   .md-tabs-navigation {
-    //a:last-of-type {
-    //  margin-left: auto;
-    //}
+    a:last-of-type {
+      margin-left: auto;
+    }
 
     background-color: $secondary-bg-color;
 
