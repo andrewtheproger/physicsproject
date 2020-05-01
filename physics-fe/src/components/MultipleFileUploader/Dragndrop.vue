@@ -131,11 +131,13 @@ export default {
 <style lang="scss" scoped>
 @import "../../config/variables.scss";
 
-.mfu-uploadBoxMain,
 .mfu-filelink-input {
   width: 50%;
 }
-
+.mfu-uploadBoxMain {
+  width: 100%;
+  height: 100%;
+}
 .mfu-file-name {
   position: relative;
 
