@@ -45,6 +45,7 @@ errors = {
     'task_not_exists': 2,
     'task_business_id_conflict': 3,
     'hint_not_exists': 4,
+    'user_not_exists': 5
 }
 
 
@@ -549,7 +550,7 @@ def logout():
     db_user = db.session.query(User).filter_by(auth_token=f'{bearer_value}').first()
 
     if db_user is None:
-        return abort(404)
+        return abort(404, errors['user_not_exists'])
 
     db_user.auth_token = None
     db_user.updated_date = now

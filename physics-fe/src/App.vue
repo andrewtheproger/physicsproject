@@ -10,7 +10,12 @@
           exact
         ></md-tab>
         <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>
-        <md-tab id="tab-registration" md-icon="face" to="/reg" exact></md-tab>
+
+        <md-tab id="tab-registration" md-icon="face" to="/reg" exact v-if="!this.$store.getters.get_jwt">
+        </md-tab>
+
+        <md-tab id="tab-logout" md-icon="exit_to_app" to="/logout" exact v-if="this.$store.getters.get_jwt">
+        </md-tab>
       </md-tabs>
 
       <div>

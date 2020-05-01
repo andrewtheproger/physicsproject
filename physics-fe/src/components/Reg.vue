@@ -156,7 +156,10 @@ export default {
           this.isLoading = false;
           this.isFlowFailed = false;
 
-          this.$store.commit("set_jwt", response.data.jwt);
+          console.log(response);
+
+          this.$store.commit("set_jwt", response.data.token);
+          this.$route.go('/');
 
           return response;
         })
