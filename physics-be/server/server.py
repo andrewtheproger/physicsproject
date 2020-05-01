@@ -9,14 +9,15 @@ from cloudinary.utils import cloudinary_url
 import json
 
 from flask import Flask, jsonify, abort, request, Response
-from flask_restful import HTTPException, Api
+from flask_restful import HTTPException
 from flask_migrate import Migrate
 from flask_jsonschema_validator import JSONSchemaValidator
 from flask_cors import CORS
 from sqlalchemy.sql import text
 
 from .models import db, Task, Hint, HintStatus, Image, User
-from .config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO, DISCORD_WEBHOOK, SECRET_JWT_KEY, SECURITY_PASSWORD_SALT
+from .config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO, DISCORD_WEBHOOK, \
+                    SECRET_JWT_KEY, SECURITY_PASSWORD_SALT
 from . import tasks_helpers, hints_helpers, images_helpers, users_helpers
 
 app = Flask(__name__)
@@ -88,7 +89,7 @@ def on_validation_error(e):
     return Response(f'There was a request body validation error: {str(e)}', 400)
 
 
-def get_query_parameters(request):
+def get_query_parameters(request: object):
     get = lambda name, default, convert: convert(request.args.get(name)) if request.args.get(name) else default
 
     page = get('page', 0, int)

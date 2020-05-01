@@ -5,7 +5,7 @@ import VuexPersistence from "vuex-persist";
 Vue.use(Vuex);
 
 const vuexLocal = new VuexPersistence({
-  key: 'physicsproject',
+  key: "physicsproject",
   storage: window.localStorage,
   reducer: state => ({
     jwt: state.jwt
@@ -18,12 +18,12 @@ export default new Vuex.Store({
   },
   getters: {
     get_jwt: state => {
-      return state.jwt
+      return state.jwt;
     }
   },
   mutations: {
     set_jwt(state, jwt) {
-      state.jwt = jwt
+      state.jwt = jwt;
     }
   },
   plugins: [vuexLocal.plugin]

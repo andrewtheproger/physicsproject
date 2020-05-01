@@ -5,10 +5,22 @@
         <md-field :class="getValidationClass('number')">
           <label>Номер задачи...</label>
 
-          <md-input type="text" @change="onNumberChange" v-model.trim="form.number" name="form-number" id="form-number"/>
-          <span class="md-error" v-if="!$v.form.number.required">У задачи должен быть номер</span>
-          <span class="md-error" v-if="!$v.form.number.mustBeTaskNumber">Номер задачи должен быть записан через точку</span>
-          <span class="md-error" v-if="!$v.form.number.mustBeUniqueNumber">Такая задача уже есть</span>
+          <md-input
+            type="text"
+            @change="onNumberChange"
+            v-model.trim="form.number"
+            name="form-number"
+            id="form-number"
+          />
+          <span class="md-error" v-if="!$v.form.number.required"
+            >У задачи должен быть номер</span
+          >
+          <span class="md-error" v-if="!$v.form.number.mustBeTaskNumber"
+            >Номер задачи должен быть записан через точку</span
+          >
+          <span class="md-error" v-if="!$v.form.number.mustBeUniqueNumber"
+            >Такая задача уже есть</span
+          >
 
           <span>
             <md-icon>help_outline</md-icon>
@@ -18,15 +30,32 @@
         </md-field>
       </div>
 
-      <md-field :class="getValidationClass('latex')" class="ph-task-upsert-latex">
+      <md-field
+        :class="getValidationClass('latex')"
+        class="ph-task-upsert-latex"
+      >
         <label>LaTeX...</label>
-        <md-textarea cols="30" rows="15" v-model.trim="form.latex" name="form-latex" id="form-latex"> </md-textarea>
+        <md-textarea
+          cols="30"
+          rows="15"
+          v-model.trim="form.latex"
+          name="form-latex"
+          id="form-latex"
+        >
+        </md-textarea>
 
-        <span class="md-error" v-if="!$v.form.latex.required">Задача должна иметь условие</span>
-        <span class="md-error" v-if="!$v.form.latex.mustSeemOk">В задаче из 3800 не может идти речь про LaTeX</span>
+        <span class="md-error" v-if="!$v.form.latex.required"
+          >Задача должна иметь условие</span
+        >
+        <span class="md-error" v-if="!$v.form.latex.mustSeemOk"
+          >В задаче из 3800 не может идти речь про LaTeX</span
+        >
 
         <div>
-          <vue-mathjax class="ph-mathjax" :formula="this.form.latex"></vue-mathjax>
+          <vue-mathjax
+            class="ph-mathjax"
+            :formula="this.form.latex"
+          ></vue-mathjax>
         </div>
       </md-field>
 
@@ -38,13 +67,17 @@
         errorMessagePath=""
       ></multiple-file-uploader>
 
-      <md-progress-bar md-mode="indeterminate" v-if="this.isLoading"></md-progress-bar>
+      <md-progress-bar
+        md-mode="indeterminate"
+        v-if="this.isLoading"
+      ></md-progress-bar>
 
       <div class="ph-task-upsert-submit-controls">
         <md-button
           type="submit"
           class="md-raised md-primary"
-          :disabled="this.isLoading">
+          :disabled="this.isLoading"
+        >
           Добавить
         </md-button>
 
@@ -53,7 +86,11 @@
         </div>
 
         <div class="ph-failure" v-if="flowFailed">
-          {{ this.flowFailed.http_code ? 'Произошла ошибка на стороне сервера' : 'Вы ошиблись' }}: {{ this.flowFailed.message }}
+          {{
+            this.flowFailed.http_code
+              ? "Произошла ошибка на стороне сервера"
+              : "Вы ошиблись"
+          }}: {{ this.flowFailed.message }}
         </div>
       </div>
     </form>
@@ -67,10 +104,8 @@ import axios from "axios";
 {
   axios;
 }
-import {
-  required
-} from 'vuelidate/lib/validators'
-import { validationMixin } from 'vuelidate'
+import { required } from "vuelidate/lib/validators";
+import { validationMixin } from "vuelidate";
 
 export default {
   name: "User",
@@ -95,10 +130,10 @@ export default {
         required,
         mustSeemOk(v) {
           if (v) {
-            return !v.includes('LaTeX');
+            return !v.includes("LaTeX");
           }
 
-          return true
+          return true;
         }
       },
       number: {
@@ -128,32 +163,37 @@ export default {
 
     axios({
       url: url,
-      method: 'GET'
+      method: "GET"
     }).then(
       result => {
-        this.existing_numbers = result.data.map(x => x.base_number + '.' + x.task_number);
+        this.existing_numbers = result.data.map(
+          x => x.base_number + "." + x.task_number
+        );
       },
       error => {
         console.log(error);
       }
-    )
+    );
   },
   methods: {
     onNumberChange() {
-      if (!this.form.number.includes('.')) {
-        this.form.number = this.form.number.replace(',', '.').replace(' ', '.').replace('-', '.');
+      if (!this.form.number.includes(".")) {
+        this.form.number = this.form.number
+          .replace(",", ".")
+          .replace(" ", ".")
+          .replace("-", ".");
       }
 
       this.$v.$touch();
     },
 
-    getValidationClass (fieldName) {
+    getValidationClass(fieldName) {
       const field = this.$v.form[fieldName];
 
       if (field) {
         return {
-          'md-invalid': field.$invalid && field.$dirty
-        }
+          "md-invalid": field.$invalid && field.$dirty
+        };
       }
     },
 
@@ -161,7 +201,7 @@ export default {
       this.form.latex = "";
       this.form.number = null;
       this.form.isbn = null;
-      this.$v.$reset()
+      this.$v.$reset();
     },
     onSubmit() {
       this.isLoading = true;
@@ -169,10 +209,11 @@ export default {
 
       if (this.$v.$invalid) {
         this.isLoading = false;
-        return
+        return;
       }
 
-      this.$refs.multipleFileUploader.onSubmit()
+      this.$refs.multipleFileUploader
+        .onSubmit()
         .then(result => {
           if (result.status !== 200) {
             throw new TypeError("General error");
@@ -183,7 +224,10 @@ export default {
               this.loadStatus = result.status;
               this.isLoading = false;
               this.isFlowFailed = false;
-              this.existing_numbers = [...this.existing_numbers, this.form.number];
+              this.existing_numbers = [
+                ...this.existing_numbers,
+                this.form.number
+              ];
               this.reset();
             })
             .catch(error => {
@@ -194,11 +238,11 @@ export default {
               this.flowFailed = {
                 http_code: error.response.code,
                 internal_code: data.code,
-                message: this.get_error_message(data.code),
+                message: this.get_error_message(data.code)
               };
 
               this.isLoading = false;
-            })
+            });
         })
         .catch(error => {
           this.isFlowFailed = true;
@@ -208,31 +252,32 @@ export default {
           this.flowFailed = {
             http_code: error.response.code,
             internal_code: data.code,
-            message: this.get_error_message(data.code),
+            message: this.get_error_message(data.code)
           };
 
           this.isLoading = false;
-        })
+        });
     },
     send(images_ids) {
-      const numbers = this.form.number.split('.');
+      const numbers = this.form.number.split(".");
       const base_number = numbers[0];
       const task_number = numbers[1];
 
-      return axios.post(`${config.apiPrefix}/tasks`, {
-        base_number: base_number,
-        task_number: task_number,
-        body: {
-          latex: this.form.latex,
-          image_ids: images_ids
-        }
-      })
-      .then(function (response) {
-        return response;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      return axios
+        .post(`${config.apiPrefix}/tasks`, {
+          base_number: base_number,
+          task_number: task_number,
+          body: {
+            latex: this.form.latex,
+            image_ids: images_ids
+          }
+        })
+        .then(function(response) {
+          return response;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     }
   }
 };
@@ -250,8 +295,7 @@ export default {
 .ph-task-upsert {
   padding: 2em;
 
-  div.md-field.md-theme-default
-  {
+  div.md-field.md-theme-default {
     &.md-invalid .md-error {
       -webkit-text-fill-color: red;
       color: red;
@@ -330,8 +374,6 @@ export default {
       overflow: overlay;
     }
   }
-
-
 
   @media (min-width: 756px) {
     .ph-task-upsert-latex {

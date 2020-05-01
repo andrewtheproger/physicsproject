@@ -11,40 +11,77 @@
             <md-field :class="getValidationClass('email')">
               <label>Почта для восстановления доступа</label>
 
-              <md-input type="email" v-model.trim="form.email" name="form-email" id="form-email"/>
-              <span class="md-error" v-if="!$v.form.email.required">Почта необходима для восстановления доступа к аккаунту в случае утраты пароля</span>
-              <span class="md-error" v-if="!$v.form.email.email">Не похоже на почту</span>
+              <md-input
+                type="email"
+                v-model.trim="form.email"
+                name="form-email"
+                id="form-email"
+              />
+              <span class="md-error" v-if="!$v.form.email.required"
+                >Почта необходима для восстановления доступа к аккаунту в случае
+                утраты пароля</span
+              >
+              <span class="md-error" v-if="!$v.form.email.email"
+                >Не похоже на почту</span
+              >
             </md-field>
 
             <md-field :class="getValidationClass('password')">
               <label>Пароль</label>
 
-              <md-input type="password" v-model.trim="form.password" name="form-password" id="form-password"/>
-              <span class="md-error" v-if="!$v.form.password.required">Пароль не должен быть пустым</span>
-              <span class="md-error" v-if="!$v.form.password.minLength">Длина пароля - минимум {{$v.form.password.$params.minLength.min}} символов</span>
+              <md-input
+                type="password"
+                v-model.trim="form.password"
+                name="form-password"
+                id="form-password"
+              />
+              <span class="md-error" v-if="!$v.form.password.required"
+                >Пароль не должен быть пустым</span
+              >
+              <span class="md-error" v-if="!$v.form.password.minLength"
+                >Длина пароля - минимум
+                {{ $v.form.password.$params.minLength.min }} символов</span
+              >
             </md-field>
 
             <md-field :class="getValidationClass('repeatPassword')">
               <label>Пароль</label>
 
-              <md-input type="password" v-model.trim="form.repeatPassword" name="form-repeatPassword" id="form-repeatPassword"/>
-              <span class="md-error" v-if="!$v.form.repeatPassword.sameAsPassword">Пароль не должен быть пустым</span>
+              <md-input
+                type="password"
+                v-model.trim="form.repeatPassword"
+                name="form-repeatPassword"
+                id="form-repeatPassword"
+              />
+              <span
+                class="md-error"
+                v-if="!$v.form.repeatPassword.sameAsPassword"
+                >Пароль не должен быть пустым</span
+              >
             </md-field>
 
             <div class="ph-registration-submit-controls">
               <md-button
-                      type="submit"
-                      class="md-raised md-primary"
-                      :disabled="this.isLoading">
+                type="submit"
+                class="md-raised md-primary"
+                :disabled="this.isLoading"
+              >
                 Далее
               </md-button>
             </div>
           </form>
 
-          <md-progress-bar md-mode="indeterminate" v-if="this.isLoading"></md-progress-bar>
+          <md-progress-bar
+            md-mode="indeterminate"
+            v-if="this.isLoading"
+          ></md-progress-bar>
 
           <div class="ph-failure" v-if="flowFailed">
-            {{ this.flowFailed.http_code ? 'Произошла ошибка на стороне сервера' : 'Вы ошиблись' }}: {{ this.flowFailed.message }}
+            {{
+              this.flowFailed.http_code
+                ? "Произошла ошибка на стороне сервера"
+                : "Вы ошиблись"
+            }}: {{ this.flowFailed.message }}
           </div>
         </div>
       </md-card-content>
@@ -53,8 +90,8 @@
 </template>
 
 <script>
-import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
-import { validationMixin } from 'vuelidate'
+import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
+import { validationMixin } from "vuelidate";
 import config from "../config/api.js";
 import axios from "axios";
 {
@@ -66,9 +103,9 @@ export default {
   data() {
     return {
       form: {
-        email: 'test@yandex.ru',
-        password: '123456789123456789',
-        repeatPassword: '123456789123456789'
+        email: "test@yandex.ru",
+        password: "123456789123456789",
+        repeatPassword: "123456789123456789"
       },
       isLoading: false,
       isFlowFailed: null,
@@ -86,19 +123,19 @@ export default {
         minLength: minLength(16)
       },
       repeatPassword: {
-        sameAsPassword: sameAs('password')
+        sameAsPassword: sameAs("password")
       }
     }
   },
 
   methods: {
-    getValidationClass (fieldName) {
+    getValidationClass(fieldName) {
       const field = this.$v.form[fieldName];
 
       if (field) {
         return {
-          'md-invalid': field.$invalid && field.$dirty
-        }
+          "md-invalid": field.$invalid && field.$dirty
+        };
       }
     },
     submit() {
@@ -110,31 +147,32 @@ export default {
         return;
       }
 
-      axios.post(`${config.apiPrefix}/users/register`, {
-        email: this.form.email,
-        password: this.form.password
-      })
-      .then((response) => {
-        this.isLoading = false;
-        this.isFlowFailed = false;
+      axios
+        .post(`${config.apiPrefix}/users/register`, {
+          email: this.form.email,
+          password: this.form.password
+        })
+        .then(response => {
+          this.isLoading = false;
+          this.isFlowFailed = false;
 
-        this.$store.commit('set_jwt', response.data.jwt);
+          this.$store.commit("set_jwt", response.data.jwt);
 
-        return response;
-      })
-      .catch((error) => {
-        this.isFlowFailed = true;
+          return response;
+        })
+        .catch(error => {
+          this.isFlowFailed = true;
 
-        const data = error.response.data;
+          const data = error.response.data;
 
-        this.flowFailed = {
-          http_code: error.response.code,
-          internal_code: data.code,
-          message: this.get_error_message(data.code),
-        };
+          this.flowFailed = {
+            http_code: error.response.code,
+            internal_code: data.code,
+            message: this.get_error_message(data.code)
+          };
 
-        this.isLoading = false;
-      });
+          this.isLoading = false;
+        });
     }
   }
 };
@@ -151,8 +189,7 @@ export default {
   color: red;
 }
 
-div.md-field.md-theme-default
-{
+div.md-field.md-theme-default {
   &.md-invalid .md-error {
     -webkit-text-fill-color: red;
     color: red;
@@ -173,5 +210,4 @@ div.md-field.md-theme-default
 .md-icon.md-theme-default.md-icon-font {
   filter: invert(1);
 }
-
 </style>

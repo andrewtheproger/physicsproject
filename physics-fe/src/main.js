@@ -15,7 +15,7 @@ import {
   MdAutocomplete,
   MdMenu,
   MdList,
-    MdCard
+  MdCard
 } from "vue-material/dist/components";
 import VueMathjax from "vue-mathjax";
 import gallery from "img-vuer";
