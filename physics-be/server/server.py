@@ -474,6 +474,22 @@ def get_user(user_id):
     return jsonify(users_helpers.to_model(db_user, app.config['SECRET_JWT_KEY']))
 
 
+@app.route('/api/users/me', methods=['GET'])
+def get_me_as_user():
+    bearer_token = request.headers.get('Authorization')
+
+    if not bearer_token:
+        abort(403)
+
+    bearer_value = bearer_token.split()[1]
+    db_user = db.session.query(User).filter_by(auth_token=f'{bearer_value}').first()
+
+    if db_user is None:
+        abort(404)
+
+    return jsonify(users_helpers.to_model(db_user, app.config['SECRET_JWT_KEY']))
+
+
 @app.route('/api/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     if not is_in_active_role(request, ['admin']):

@@ -15,7 +15,8 @@ import {
   MdAutocomplete,
   MdMenu,
   MdList,
-  MdCard
+  MdCard,
+    MdCheckbox
 } from "vue-material/dist/components";
 import VueMathjax from "vue-mathjax";
 import gallery from "img-vuer";
@@ -32,6 +33,7 @@ Vue.use(MdAutocomplete);
 Vue.use(MdMenu);
 Vue.use(MdList);
 Vue.use(MdCard);
+Vue.use(MdCheckbox);
 Vue.use(gallery);
 
 Vue.config.productionTip = false;
