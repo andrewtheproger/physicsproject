@@ -42,6 +42,10 @@
           </form>
 
           <md-progress-bar md-mode="indeterminate" v-if="this.isLoading"></md-progress-bar>
+
+          <div class="ph-failure" v-if="flowFailed">
+            {{ this.flowFailed.http_code ? 'Произошла ошибка на стороне сервера' : 'Вы ошиблись' }}: {{ this.flowFailed.message }}
+          </div>
         </div>
       </md-card-content>
     </md-card>
@@ -51,18 +55,24 @@
 <script>
 import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
 import { validationMixin } from 'vuelidate'
-
+import config from "../config/api.js";
+import axios from "axios";
+{
+  axios;
+}
 export default {
   name: "Reg",
   mixins: [validationMixin],
   data() {
     return {
       form: {
-        login: null,
-        password: null,
-        repeatPassword: null
+        email: 'test@yandex.ru',
+        password: '123456789123456789',
+        repeatPassword: '123456789123456789'
       },
-      isLoading: false
+      isLoading: false,
+      isFlowFailed: null,
+      flowFailed: null
     };
   },
   validations: {
@@ -80,6 +90,7 @@ export default {
       }
     }
   },
+
   methods: {
     getValidationClass (fieldName) {
       const field = this.$v.form[fieldName];
@@ -98,6 +109,32 @@ export default {
         this.isLoading = false;
         return;
       }
+
+      axios.post(`${config.apiPrefix}/users/register`, {
+        email: this.form.email,
+        password: this.form.password
+      })
+      .then((response) => {
+        this.isLoading = false;
+        this.isFlowFailed = false;
+
+        this.$store.commit('set_jwt', response.data.jwt);
+
+        return response;
+      })
+      .catch((error) => {
+        this.isFlowFailed = true;
+
+        const data = error.response.data;
+
+        this.flowFailed = {
+          http_code: error.response.code,
+          internal_code: data.code,
+          message: this.get_error_message(data.code),
+        };
+
+        this.isLoading = false;
+      });
     }
   }
 };
@@ -108,6 +145,10 @@ export default {
 .ph-registration-submit-controls {
   display: flex;
   flex-direction: row-reverse;
+}
+
+.ph-failure {
+  color: red;
 }
 
 div.md-field.md-theme-default

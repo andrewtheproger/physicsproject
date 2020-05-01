@@ -25,7 +25,7 @@ def to_model(user, secret):
         'id': user.id,
         'created_date': user.created_date,
         'updated_date': user.updated_date,
-        'login': user.login,
+        'email': user.email,
         'role': user.role.value if user.role else None,
         'is_token_expired': is_token_expired
     }
@@ -37,20 +37,20 @@ def from_register_model(model):
     id = get_or_none(model, 'id')
     created_date = get_or_none(model, 'created_date')
     updated_date = get_or_none(model, 'updated_date')
-    login = get_or_none(model, 'login')
+    email = get_or_none(model, 'email')
     password = get_or_none(model, 'password')
     role = get_or_none(model, 'role')
 
     return User(id=id,
                 created_date=created_date,
                 updated_date=updated_date,
-                login=login,
+                email=email,
                 role=role),\
         password
 
 
-def does_login_exists(session, login):
-    q = session.query(User).filter_by(login=login)
+def does_email_exists(session, email):
+    q = session.query(User).filter_by(email=email)
     res = session.query(q.exists()).scalar()
 
     return res

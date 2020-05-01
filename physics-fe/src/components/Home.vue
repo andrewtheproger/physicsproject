@@ -92,6 +92,7 @@ export default {
 
     async submit() {
       this.sending = true;
+      console.log(this.$store.getters.get_jwt);
       await this.getTaskByNumber(this.number);
       this.sending = false;
     },
