@@ -43,10 +43,11 @@ print(f'Using {SQLALCHEMY_DATABASE_URI}')
 errors = {
     'developer': 1,
     'task_not_exists': 2,
-    'task_business_id_conflict': 3,
+    'task_alreay_exists': 3,
     'hint_not_exists': 4,
     'user_not_exists': 5,
-    'images_not_exists': 6
+    'user_already_exists': 6,
+    'images_not_exists': 7
 }
 
 
@@ -255,7 +256,7 @@ def upsert_task():
 
     if should_insert:
         if tasks_helpers.does_task_exists(db.session, task.base_number, task.task_number):
-            abort(409, errors['task_business_id_conflict'])
+            abort(409, errors['task_alreay_exists'])
 
         task.created_date = now
         task.updated_date = now
@@ -515,7 +516,7 @@ def register_user():
     now = int(time.time() * 1000)  # ms
 
     if users_helpers.does_email_exists(db.session, user.email):
-        abort(409)
+        abort(409, errors['user_already_exists'])
 
     user.auth_token = user.encode_auth_token(user.id, app.config['SECRET_JWT_KEY']).decode()
     user.created_date = now
@@ -542,7 +543,7 @@ def login():
     user = db.session.query(User).filter_by(email=user.email).first()
 
     if user is None:
-        abort(404)
+        abort(404, errors['user_not_exists'])
 
     if not user.check_password(password):
         abort(403)

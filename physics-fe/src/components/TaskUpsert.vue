@@ -241,7 +241,7 @@ export default {
               this.flowFailed = {
                 http_code: error.response.code,
                 internal_code: data.code,
-                message: this.get_error_message(data.code)
+                message: http_helper.get_error_message(data.code)
               };
 
               this.isLoading = false;
@@ -255,7 +255,7 @@ export default {
           this.flowFailed = {
             http_code: error.response.code,
             internal_code: data.code,
-            message: this.get_error_message(data.code)
+            message: http_helper.get_error_message(data.code)
           };
 
           this.isLoading = false;

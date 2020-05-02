@@ -44,6 +44,7 @@
 import config from "../config/api";
 import axios from "axios";
 import Task from "./Task";
+import http_helper from'../lib/http'
 
 export default {
   name: "Home",
@@ -101,15 +102,6 @@ export default {
       this.sending = false;
     },
 
-    get_error_message(code) {
-      switch (code) {
-        case 1:
-          return 'разработчик сделал что-то не так';
-        default:
-          throw 'This should not happens';
-      }
-    },
-
     async getTaskByNumber(number) {
       let url = config.apiPrefix + "/tasks";
 
@@ -135,7 +127,7 @@ export default {
           this.httpFailed = {
             http_code: error.response.code,
             internal_code: data.code,
-            message: this.get_error_message(data.code),
+            message: http_helper.get_error_message(data.code),
           };
           this.tasks = [];
         }

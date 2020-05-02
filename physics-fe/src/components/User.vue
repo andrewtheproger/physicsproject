@@ -6,14 +6,14 @@
     </md-tabs>
 
     <Login v-if="this.$store.getters.get_user.is_token_expired && this.tabs.isLogin"></Login>
-    <Reg v-if="this.$store.getters.get_user.is_token_expired && this.tabs.isRegistration"></Reg>
+    <Registration v-if="this.$store.getters.get_user.is_token_expired && this.tabs.isRegistration"></Registration>
 
     <Userpage v-if="!this.$store.getters.get_user.is_token_expired"></Userpage>
   </div>
 </template>
 
 <script>
-import Reg from './Reg'
+import Registration from './Registration'
 import Login from './Login'
 import Userpage from './Userpage'
 import http_helper from '../lib/http'
@@ -21,7 +21,7 @@ import http_helper from '../lib/http'
 export default {
   name: "User",
   components: {
-    Reg,
+    Registration,
     Login,
     Userpage
   },

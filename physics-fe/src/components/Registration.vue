@@ -84,11 +84,12 @@ import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
 import { validationMixin } from "vuelidate";
 import config from "../config/api.js";
 import axios from "axios";
+import http_helper from'../lib/http'
 {
   axios;
 }
 export default {
-  name: "Reg",
+  name: "Registration",
   mixins: [validationMixin],
   data() {
     return {
@@ -153,6 +154,7 @@ export default {
         })
         .catch(error => {
           this.isFlowFailed = true;
+          console.log(error.response)
 
           try {
             const data = error.response.data;
@@ -160,13 +162,13 @@ export default {
             this.flowFailed = {
               http_code: error.response.code,
               internal_code: data.code,
-              message: this.get_error_message(data.code)
+              message: http_helper.get_error_message(data.code)
             };
           } catch {
             this.flowFailed = {
               http_code: null,
               internal_code: 1,
-              message: this.get_error_message(1)
+              message: http_helper.get_error_message(1)
             };
           }
 
@@ -201,6 +203,7 @@ div.md-field.md-theme-default {
   display: flex;
   align-content: center;
   justify-content: center;
+  flex-wrap: wrap;
 
   form {
     width: 70%;

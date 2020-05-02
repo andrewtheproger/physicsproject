@@ -66,6 +66,7 @@
     import { required, email, minLength } from "vuelidate/lib/validators";
     import { validationMixin } from "vuelidate";
     import config from "../config/api.js";
+    import http_helper from '../lib/http';
     import axios from "axios";
     {
         axios;
@@ -138,7 +139,7 @@
                         this.flowFailed = {
                             http_code: error.response.code,
                             internal_code: data.code,
-                            message: this.get_error_message(data.code)
+                            message: http_helper.get_error_message(data.code)
                         };
 
                         this.isLoading = false;
@@ -170,6 +171,7 @@
         display: flex;
         align-content: center;
         justify-content: center;
+        flex-wrap: wrap;
 
         form {
             width: 70%;
