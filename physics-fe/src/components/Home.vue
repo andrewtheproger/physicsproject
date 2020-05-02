@@ -1,7 +1,12 @@
 <template>
   <div>
     <form class="ph-search-form" v-on:submit.prevent="submit">
-      <md-autocomplete v-model="number" :md-options="existing_numbers" md-dense :disabled="this.sending">
+      <md-autocomplete
+        v-model="number"
+        :md-options="existing_numbers"
+        md-dense
+        :disabled="this.sending"
+      >
         <transition name="slide-fade" mode="out-in">
           <label :key="numberExample">{{ numberExample }}</label>
         </transition>
@@ -78,7 +83,6 @@ export default {
   beforeDestroy() {
     clearInterval(this.numberExampleInterval);
   },
-
   methods: {
     getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min) + min);
@@ -92,6 +96,7 @@ export default {
 
     async submit() {
       this.sending = true;
+      console.log(this.$store.getters.get_jwt);
       await this.getTaskByNumber(this.number);
       this.sending = false;
     },

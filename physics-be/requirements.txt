@@ -20,6 +20,7 @@ py
 pyparsing
 pyrsistent
 pytest
+PyJWT
 python-dateutil
 python-editor
 six
@@ -29,3 +30,5 @@ cloudinary
 requests
 Werkzeug==0.16.1
 flask_restful
+jwt
+email_validator

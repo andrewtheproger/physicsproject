@@ -9,21 +9,24 @@ from cloudinary.utils import cloudinary_url
 import json
 
 from flask import Flask, jsonify, abort, request, Response
-from flask_restful import HTTPException, Api
+from flask_restful import HTTPException
 from flask_migrate import Migrate
 from flask_jsonschema_validator import JSONSchemaValidator
 from flask_cors import CORS
 from sqlalchemy.sql import text
 
-from .models import db, Task, Hint, HintStatus, Image
-from .config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO, DISCORD_WEBHOOK
-from . import tasks_helpers, hints_helpers, images_helpers
+from .models import db, Task, Hint, HintStatus, Image, User
+from .config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO, DISCORD_WEBHOOK, \
+                    SECRET_JWT_KEY, SECURITY_PASSWORD_SALT
+from . import tasks_helpers, hints_helpers, images_helpers, users_helpers
 
 app = Flask(__name__)
 JSONSchemaValidator(app=app, root="schemas")
 
 app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_MIGRATE_REPO"] = SQLALCHEMY_MIGRATE_REPO
+app.config['SECRET_JWT_KEY'] = SECRET_JWT_KEY
+app.config['SECURITY_PASSWORD_SALT'] = SECURITY_PASSWORD_SALT
 
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -42,6 +45,7 @@ errors = {
     'task_not_exists': 2,
     'task_business_id_conflict': 3,
     'hint_not_exists': 4,
+    'user_not_exists': 5
 }
 
 
@@ -57,6 +61,25 @@ def notify(msg):
     requests.post(DISCORD_WEBHOOK, data={'content': msg})
 
 
+def is_in_active_role(request, roles):
+    bearer_token = request.headers.get('Authorization')
+
+    if not bearer_token:
+        return False
+
+    bearer_value = bearer_token.split()[1]
+
+    user = db.session.query(User).filter_by(auth_token=f'{bearer_value}').first()
+
+    if user is None:
+        return False
+
+    if users_helpers.check_is_token_expired(user, app.config['SECRET_JWT_KEY']):
+        return False
+
+    return user.role.value in roles
+
+
 @app.route('/api/health', methods=['GET'])
 def health():
     return {'status': 'ok'}
@@ -67,7 +90,7 @@ def on_validation_error(e):
     return Response(f'There was a request body validation error: {str(e)}', 400)
 
 
-def get_query_parameters(request):
+def get_query_parameters(request: object):
     get = lambda name, default, convert: convert(request.args.get(name)) if request.args.get(name) else default
 
     page = get('page', 0, int)
@@ -216,6 +239,9 @@ def predicate_tasks_number():
 @app.route('/api/tasks', methods=['POST'])
 @app.validate('task', 'upsert')
 def upsert_task():
+    if not is_in_active_role(request, ['user', 'admin']):
+        abort(403)
+
     body = request.json
 
     try:
@@ -269,6 +295,9 @@ def upsert_task():
 
 @app.route('/api/tasks/<int:task_id>', methods=['DELETE'])
 def delete_task(task_id):
+    if not is_in_active_role(request, ['admin']):
+        abort(403)
+
     task = db.session.query(Task).filter(Task.id == task_id).first()
 
     if not task:
@@ -287,6 +316,9 @@ def delete_task(task_id):
 
 @app.route('/api/tasks/<int:task_id>/hints', methods=['GET'])
 def get_hints(task_id):
+    if not is_in_active_role(request, ['user', 'admin']):
+        abort(403)
+
     tasks = db.session.query(Hint).filter_by(task_id=task_id).all()
 
     return jsonify(hints_helpers.to_models_list(tasks))
@@ -294,6 +326,9 @@ def get_hints(task_id):
 
 @app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>', methods=['DELETE'])
 def delete_hint(task_id, hint_id):
+    if not is_in_active_role(request, ['admin']):
+        abort(403)
+
     db.session.query(Hint).filter(Hint.id == hint_id).delete(synchronize_session=False)
     db.session.commit()
 
@@ -310,12 +345,18 @@ def upsert_hint(task_id):
     now = int(time.time() * 1000)  # ms
 
     if should_insert:
+        if not is_in_active_role(request, ['user', 'admin']):
+            abort(403)
+
         hint.created_date = now
         hint.updated_date = now
         hint.status = HintStatus.pending
 
         db.session.add(hint)
     else:
+        if not is_in_active_role(request, ['admin']):
+            abort(403)
+
         db_hint = db.session.query(Hint).filter_by(id=hint.id).first()
 
         if db_hint is None:
@@ -342,6 +383,9 @@ def upsert_hint(task_id):
 
 @app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/approve', methods=['POST'])
 def enable_hint(task_id, hint_id):
+    if not is_in_active_role(request, ['admin']):
+        abort(403)
+
     now = int(time.time() * 1000)  # ms
     db_hint = db.session.query(Hint).filter(Hint.id == hint_id).filter(Hint.status != HintStatus.approved).first()
 
@@ -358,6 +402,9 @@ def enable_hint(task_id, hint_id):
 
 @app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/decline', methods=['POST'])
 def disable_hint(task_id, hint_id):
+    if not is_in_active_role(request, ['admin']):
+        abort(403)
+
     now = int(time.time() * 1000)  # ms
     db_hint = db.session.query(Hint).filter(Hint.id == hint_id).filter(Hint.status != HintStatus.declined).first()
 
@@ -370,6 +417,162 @@ def disable_hint(task_id, hint_id):
     db.session.commit()
 
     return jsonify({'id': hint_id})
+
+
+# users
+
+
+@app.route('/api/users', methods=['GET'])
+def get_users():
+    if not is_in_active_role(request, ['admin']):
+        abort(403)
+
+    filter_email = request.args.get('filter_by_email')
+
+    if filter_email:
+        users = db.session.query(User).filter_by(email=filter_email).all()
+        return jsonify(users_helpers.to_models_list(users))
+
+    users = db.session.query(User).all()
+    return jsonify(users_helpers.to_models_list(users, app.config['SECRET_JWT_KEY']))
+
+
+@app.route('/api/users/<int:user_id>', methods=['POST'])
+@app.validate('user', 'update')
+def update_user(user_id):
+    if not is_in_active_role(request, ['admin']):
+        abort(403)
+
+    body = request.json
+    user, _ = users_helpers.from_register_model(body)
+    db_user = db.session.query(User).filter_by(id=user_id).first()
+
+    if db_user is None:
+        abort(404)
+
+    if user.email:
+        db_user.email = user.email
+
+    if user.role:
+        db_user.role = user.role
+
+    db.session.commit()
+
+    return jsonify({'id': db_user.id})
+
+
+@app.route('/api/users/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    if not is_in_active_role(request, ['admin']):
+        abort(403)
+
+    db_user = db.session.query(User).filter_by(id=user_id).first()
+
+    if db_user is None:
+        abort(404)
+
+    return jsonify(users_helpers.to_model(db_user, app.config['SECRET_JWT_KEY']))
+
+
+@app.route('/api/users/me', methods=['GET'])
+def get_me_as_user():
+    bearer_token = request.headers.get('Authorization')
+
+    if not bearer_token:
+        abort(403)
+
+    bearer_value = bearer_token.split()[1]
+    db_user = db.session.query(User).filter_by(auth_token=f'{bearer_value}').first()
+
+    if db_user is None:
+        return jsonify({})
+
+    return jsonify(users_helpers.to_model(db_user, app.config['SECRET_JWT_KEY']))
+
+
+@app.route('/api/users/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    if not is_in_active_role(request, ['admin']):
+        abort(403)
+
+    db.session.query(User).filter(User.id == user_id).delete(synchronize_session=False)
+    db.session.commit()
+
+    return jsonify({'id': user_id})
+
+
+@app.route('/api/users/register', methods=['POST'])
+@app.validate('user', 'register')
+def register_user():
+    body = request.json
+    user, password = users_helpers.from_register_model(body)
+
+    now = int(time.time() * 1000)  # ms
+
+    if users_helpers.does_email_exists(db.session, user.email):
+        abort(409)
+
+    user.auth_token = user.encode_auth_token(user.id, app.config['SECRET_JWT_KEY']).decode()
+    user.created_date = now
+    user.updated_date = now
+    user.role = 'user'
+    user.set_password_hash(password)
+
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify({
+        'id': user.id,
+        'token': user.auth_token
+    })
+
+
+@app.route('/api/users/login', methods=['POST'])
+@app.validate('user', 'register')
+def login():
+    body = request.json
+    user, password = users_helpers.from_register_model(body)
+    now = int(time.time() * 1000)  # ms
+
+    user = db.session.query(User).filter_by(email=user.email).first()
+
+    if user is None:
+        abort(404)
+
+    if not user.check_password(password):
+        abort(403)
+
+    auth_token = user.encode_auth_token(user.id, app.config['SECRET_JWT_KEY']).decode()
+    user.auth_token = auth_token  # todo add last login time and ip
+    user.updated_date = now
+    db.session.commit()
+
+    return jsonify({
+        'id': user.id,
+        'token': auth_token
+    })
+
+
+@app.route('/api/users/logout', methods=['POST'])
+def logout():
+    bearer_token = request.headers.get('Authorization')
+
+    if not bearer_token:
+        abort(403)
+
+    bearer_value = bearer_token.split()[1]
+    now = int(time.time() * 1000)  # ms
+
+    db_user = db.session.query(User).filter_by(auth_token=f'{bearer_value}').first()
+
+    if db_user is None:
+        return abort(404, errors['user_not_exists'])
+
+    db_user.auth_token = None
+    db_user.updated_date = now
+    db.session.commit()
+
+    return jsonify({'id': db_user.id})
 
 
 if __name__ == '__main__':

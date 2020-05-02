@@ -3,9 +3,10 @@ import VueRouter from "vue-router";
 import Home from "../components/Home";
 import About from "../components/About";
 import User from "../components/User";
-import Reg from "../components/Reg";
+//import Reg from "../components/Reg";
+import Logout from "../components/Logout";
 import TaskUpsert from "../components/TaskUpsert";
-import UserComponent from "../components/UserComponent"
+//import UserComponent from "../components/UserComponent"
 Vue.use(VueRouter);
 
 const routes = [
@@ -30,14 +31,9 @@ const routes = [
     component: User
   },
   {
-    path: "/reg",
-    name: "Reg",
-    component: Reg
-  },
-  {
-    path: "/regorlog",
-    name: "UserComponent",
-    component: UserComponent
+    path: "/logout",
+    name: "Logout",
+    component: Logout
   }
 ];
 
