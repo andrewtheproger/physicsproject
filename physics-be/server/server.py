@@ -45,7 +45,8 @@ errors = {
     'task_not_exists': 2,
     'task_business_id_conflict': 3,
     'hint_not_exists': 4,
-    'user_not_exists': 5
+    'user_not_exists': 5,
+    'images_not_exists': 6
 }
 
 
@@ -216,7 +217,7 @@ def get_tasks():
 
 @app.route('/api/tasks/<int:task_id>', methods=['GET'])
 def get_task(task_id):
-    task = db.session.query(Task).filter_by(Task.id == task_id).first()
+    task = db.session.query(Task).filter_by(id=task_id).first()
 
     if not task:
         abort(404, errors['task_not_exists'])
@@ -264,6 +265,10 @@ def upsert_task():
         image_ids = json.loads(task.image_ids_json)
         for image_id in image_ids:
             image = db.session.query(Image).filter_by(id=image_id).first()
+
+            if not image:
+                abort(404, errors['images_not_exists'])
+
             image.task_id = task.id
 
     else:
