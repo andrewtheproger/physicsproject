@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :style="getClass_body">
     <header>
       <md-tabs class="ph-menu" md-sync-route>
         <md-tab id="tab-home" md-label="3800" to="/" exact></md-tab>
@@ -40,10 +40,18 @@ export default {
     return {
       isApiOk: null,
       user: {
-        is_token_expired: null
+        is_token_expired: null,
+          color_background_primary: null
       }
     };
   },
+    computed: {
+        getClass_body() {
+            return {
+                '--bg-color': this.user.color_background_primary
+            }
+        }
+    },
   methods: {
     checkApiOk() {
       axios({
@@ -120,12 +128,12 @@ div.md-tabs.md-theme-default {
   }
 }
 
-body {
+#app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background-color: $primary-bg-color;
+  background-color: var(--bg-color);
   color: $primary-fg-color;
 
   position: relative;
