@@ -175,10 +175,6 @@ export default {
         console.log(error);
       }
     );
-
-    http_helper
-      .getMeAsUser(this.$store.getters.get_jwt)
-      .then(response => this.$store.commit("set_user", response.data));
   },
   methods: {
     onNumberChange() {

@@ -174,7 +174,13 @@ div.md-field.md-theme-default {
   flex-wrap: wrap;
 
   form {
-    width: 70%;
+    padding: 0 3em;
+    width: 100%;
+
+    @media (min-width: 756px) {
+      padding: 0 7em;
+
+    }
 
     .md-icon.md-theme-default.md-icon-font.md-icon-image {
       filter: invert(1);

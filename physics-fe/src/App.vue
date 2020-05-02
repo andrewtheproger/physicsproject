@@ -4,7 +4,7 @@
       <md-tabs class="ph-menu" md-sync-route>
         <md-tab id="tab-home" md-label="3800" to="/" exact></md-tab>
         <md-tab
-          :md-disabled="this.$store.getters.get_user.is_token_expired"
+          :md-disabled="user.is_token_expired"
           id="tab-add"
           md-label="Добавить задачу"
           to="/add"
@@ -38,7 +38,10 @@ export default {
 
   data() {
     return {
-      isApiOk: null
+      isApiOk: null,
+      user: {
+        is_token_expired: null
+      }
     };
   },
   methods: {
@@ -62,7 +65,7 @@ export default {
     this.checkApiOk();
     http_helper
       .getMeAsUser(this.$store.getters.get_jwt)
-      .then(response => this.$store.commit("set_user", response.data));
+      .then(response => this.user = response.data);
   }
 };
 </script>

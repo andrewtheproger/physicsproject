@@ -14,14 +14,14 @@
                 name="form-email"
                 id="form-email"
                 autocomplete="given-name"
-                v-model="this.$store.getters.get_user.email"
+                v-model="user.email"
                 :disabled="true"
               />
             </md-field>
 
             <md-checkbox
-              v-if="this.$store.getters.get_user.isAdmin"
-              v-model="this.$store.getters.get_user.isAdmin"
+              v-if="user.isAdmin"
+              v-model="user.isAdmin"
               disabled
               >Админ</md-checkbox
             >
@@ -55,6 +55,7 @@ import axios from "axios";
   axios;
 }
 import Logout from "./Logout";
+import http_helper from "../lib/http";
 
 export default {
   name: "Userpage",
@@ -65,8 +66,17 @@ export default {
     return {
       isLoading: false,
       isFlowFailed: null,
-      flowFailed: null
+      flowFailed: null,
+      user: {
+        email: null,
+        isAdmin: false
+      }
     };
+  },
+  mounted() {
+    http_helper
+            .getMeAsUser(this.$store.getters.get_jwt)
+            .then(response => this.user = response.data);
   },
   methods: {}
 };
