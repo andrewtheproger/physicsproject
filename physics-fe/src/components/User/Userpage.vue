@@ -1,9 +1,26 @@
 <template>
   <div class="ph-userpage">
+    <div class="ph-failure" v-if="flowFailed">
+      {{
+      this.flowFailed.http_code
+      ? "Произошла ошибка на стороне сервера"
+      : "Вы ошиблись"
+      }}: {{ this.flowFailed.message }}
+    </div>
+
+    <md-progress-bar
+        md-mode="indeterminate"
+        v-if="this.isLoading"
+    ></md-progress-bar>
+
     <md-card>
       <md-card-header>
         <div class="md-title">Вы</div>
       </md-card-header>
+
+      <md-card-actions>
+        <Logout></Logout>
+      </md-card-actions>
 
       <md-card-content>
           <div class="md-layout-item md-small-size-100">
@@ -26,30 +43,31 @@
             >
           </div>
 
-            <div>
-                <material value="#333"></material>
-            </div>
+            <form class="ph-color-fields" @submit.prevent="onSubmit">
+              <color-field @color_changed="color_changed" @color_changing="color_changing" id="background_primary" title="Главный цвет фона" :value="this.user.color_background_primary"></color-field>
+              <color-field @color_changed="color_changed" @color_changing="color_changing" id="background_secondary" title="Дополнительный цвет фона" :value="this.user.color_background_secondary"></color-field>
+              <color-field @color_changed="color_changed" @color_changing="color_changing" id="foreground_primary" title="Главный цвет шрифта" :value="this.user.color_foreground_primary"></color-field>
+              <color-field @color_changed="color_changed" @color_changing="color_changing" id="foreground_secondary" title="Дополнительный цвет шрифта" :value="this.user.color_foreground_secondary"></color-field>
+
+              <div class="ph-user-submit-controls">
+                <md-progress-spinner
+                    v-if="!this.allowSubmit"
+                    md-mode="indeterminate"
+                    :md-diameter="30">
+                </md-progress-spinner>
+
+                <md-button
+                    type="submit"
+                    class="md-raised md-primary"
+                    v-if="this.allowSubmit"
+                    :disabled="this.isLoading || !this.allowSubmit"
+                >
+                  Сохранить
+                </md-button>
+              </div>
+            </form>
       </md-card-content>
-
-      <md-card-actions>
-        <Logout></Logout>
-      </md-card-actions>
     </md-card>
-
-    <div class="ph-failure" v-if="flowFailed">
-      {{
-        this.flowFailed.http_code
-          ? "Произошла ошибка на стороне сервера"
-          : "Вы ошиблись"
-      }}: {{ this.flowFailed.message }}
-    </div>
-
-
-
-    <md-progress-bar
-      md-mode="indeterminate"
-      v-if="this.isLoading"
-    ></md-progress-bar>
   </div>
 </template>
 
@@ -59,23 +77,29 @@ import axios from "axios";
   axios;
 }
 import Logout from "./Logout";
+import Color_Field from "./Color_Field";
 import http_helper from "../../lib/http";
-import Material from 'vue-color/src/components/Chrome.vue';
+import config from "../../config/api.js";
 
 export default {
   name: "Userpage",
   components: {
     Logout,
-    Material,
+      'color-field': Color_Field
   },
   data() {
     return {
       isLoading: false,
       isFlowFailed: null,
       flowFailed: null,
+      allowSubmit: true, // todo to dict [child_id, locks_count]
       user: {
         email: null,
-        isAdmin: false
+        isAdmin: false,
+        color_background_primary: null,
+        color_background_secondary: null,
+        color_foreground_primary: null,
+        color_foreground_secondary: null,
       }
     };
   },
@@ -84,16 +108,78 @@ export default {
             .getMeAsUser(this.$store.getters.get_jwt)
             .then(response => this.user = response.data);
   },
-  methods: {}
+  methods: {
+      color_changing() {
+          this.allowSubmit = false;
+      },
+      color_changed({id, hex}) {
+          switch (id) {
+              case 'background_primary':
+                  this.user.color_background_primary = hex;
+                  break;
+              case 'background_secondary':
+                  this.user.color_background_secondary = hex;
+                  break;
+              case 'foreground_primary':
+                  this.user.color_foreground_primary = hex;
+                  break;
+              case 'foreground_secondary':
+                  this.user.color_foreground_secondary = hex;
+                  break;
+              default:
+                  throw 'This should not happens'
+          }
+
+          this.allowSubmit = true;
+      },
+      onSubmit() {
+          const url = config.apiPrefix + "/users/me";
+
+          axios({
+              url: url,
+              method: "POST",
+              data: {
+                  color_background_primary: this.user.color_background_primary,
+                  color_background_secondary: this.user.color_background_secondary,
+                  color_foreground_primary: this.user.color_foreground_primary,
+                  color_foreground_secondary: this.user.color_foreground_secondary,
+              },
+              headers: {
+                  Authorization: this.$store.getters.get_jwt
+              }
+          }).then(
+              result => {
+                  console.log(result)
+              },
+              error => {
+                  console.log(error);
+              }
+          );
+      }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../../config/variables.scss";
 
+.ph-user-submit-controls {
+  display: flex;
+  width: 100%;
+  flex-direction: row-reverse;
+  align-items: baseline;
+}
+
 .md-card-content {
   display: flex;
   flex-direction: column;
+}
+
+.ph-color-fields {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .md-checkbox {
