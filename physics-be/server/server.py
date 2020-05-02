@@ -462,6 +462,18 @@ def update_user(user_id):
     if user.role:
         db_user.role = user.role
 
+    if user.color_background_primary:
+        db_user.color_background_primary = user.color_background_primary
+
+    if user.color_background_secondary:
+        db_user.color_background_secondary = user.color_background_secondary
+
+    if user.color_foreground_primary:
+        db_user.color_foreground_primary = user.color_foreground_primary
+
+    if user.color_foreground_secondary:
+        db_user.color_foreground_secondary = user.color_foreground_secondary
+
     db.session.commit()
 
     return jsonify({'id': db_user.id})
@@ -481,7 +493,7 @@ def get_user(user_id):
 
 
 @app.route('/api/users/me', methods=['GET'])
-def get_me_as_user():
+def get_me():
     bearer_token = request.headers.get('Authorization')
 
     if not bearer_token:
@@ -492,6 +504,44 @@ def get_me_as_user():
 
     if db_user is None:
         return jsonify({})
+
+    return jsonify(users_helpers.to_model(db_user, app.config['SECRET_JWT_KEY']))
+
+
+@app.route('/api/users/me', methods=['POST'])
+def update_me():
+    bearer_token = request.headers.get('Authorization')
+
+    if not bearer_token:
+        abort(403)
+
+    body = request.json
+    user, _ = users_helpers.from_register_model(body)
+    bearer_value = bearer_token.split()[1]
+    db_user = db.session.query(User).filter_by(auth_token=f'{bearer_value}').first()
+
+    if db_user is None:
+        return jsonify({})
+
+    if user.email:
+        db_user.email = user.email
+
+    if user.role:
+        db_user.role = user.role
+
+    if user.color_background_primary:
+        db_user.color_background_primary = user.color_background_primary
+
+    if user.color_background_secondary:
+        db_user.color_background_secondary = user.color_background_secondary
+
+    if user.color_foreground_primary:
+        db_user.color_foreground_primary = user.color_foreground_primary
+
+    if user.color_foreground_secondary:
+        db_user.color_foreground_secondary = user.color_foreground_secondary
+
+    db.session.commit()
 
     return jsonify(users_helpers.to_model(db_user, app.config['SECRET_JWT_KEY']))
 
