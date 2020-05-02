@@ -83,7 +83,6 @@ export default {
   beforeDestroy() {
     clearInterval(this.numberExampleInterval);
   },
-
   methods: {
     getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min) + min);

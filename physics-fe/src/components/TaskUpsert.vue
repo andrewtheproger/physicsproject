@@ -176,7 +176,7 @@ export default {
       }
     );
 
-    http_helper.getMeAsUser(this.$store.getters.get_jwt).then(user => this.$store.commit("set_user", user));
+    http_helper.getMeAsUser(this.$store.getters.get_jwt).then(response => this.$store.commit("set_user", response.data));
   },
   methods: {
     onNumberChange() {
@@ -266,13 +266,18 @@ export default {
       const base_number = numbers[0];
       const task_number = numbers[1];
 
-      return axios
-        .post(`${config.apiPrefix}/tasks`, {
-          base_number: base_number,
-          task_number: task_number,
-          body: {
-            latex: this.form.latex,
-            image_ids: images_ids
+      return axios({
+          url: `${config.apiPrefix}/tasks`,
+          method: 'POST',
+          data: {
+            base_number: base_number,
+            task_number: task_number,
+            body: {
+              latex: this.form.latex,
+              image_ids: images_ids
+            }
+          }, headers: {
+            'Authorization': this.$store.getters.get_jwt
           }
         })
         .then(function(response) {

@@ -32,6 +32,10 @@ export default new Vuex.Store({
   },
   mutations: {
     set_jwt(state, jwt) {
+      if (jwt && !jwt.includes('Bearer')) {
+        jwt = 'Bearer ' + jwt;
+      }
+
       state.jwt = jwt;
     },
     set_user(state, user) {

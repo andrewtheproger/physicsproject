@@ -12,26 +12,27 @@ export default {
                 url: url,
                 method: 'GET',
                 headers: {
-                    'Authorization': 'Bearer ' + jwt
+                    'Authorization': jwt
                 }
             }).then(
                 (response) => {
-                    response.data = {
-                        ...response.data,
-                        isAdmin: response.data.role === 'admin'
-                    };
+                    if (response.data.email) {
+                        response.data = {
+                            ...response.data,
+                            isAdmin: response.data.role === 'admin'
+                        };
+                    } else {
+                        response.data = {
+                            isAdmin: false,
+                            is_token_expired: true,
+                            role: null
+                        }
+                    }
 
                     return response;
                 },
                 error => {
-                    if (!error.response || ![404, 403].includes(error.response.status)) {
-                        throw error;
-                    }
-                    return Promise.resolve({
-                        isAdmin: false,
-                        is_token_expired: true,
-                        role: null
-                    })
+                    console.log(error);
                 }
             )
         }

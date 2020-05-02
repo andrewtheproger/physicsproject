@@ -39,13 +39,13 @@
                     url: url,
                     method: 'POST',
                     headers: {
-                        'Authorization': 'Bearer ' + this.$store.getters.get_jwt
+                        'Authorization': this.$store.getters.get_jwt
                     }
                 }).then(
                     () => {
                         this.isLoading = false;
                         this.$store.commit("set_jwt", null);
-                        this.$router.push('/');
+                        window.location.reload();
                     },
                     error => {
                         this.isLoading = false;
@@ -54,7 +54,7 @@
                         if (data.code === 5) {
                             this.$store.commit("set_jwt", null);
 
-                            this.$router.push('/');
+                            window.location.reload();
                             return;
                         }
 

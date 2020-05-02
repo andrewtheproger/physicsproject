@@ -61,7 +61,7 @@ export default {
   },
   mounted() {
     this.checkApiOk();
-    http_helper.getMeAsUser(this.$store.getters.get_jwt).then(user => this.$store.commit("set_user", user));
+    http_helper.getMeAsUser(this.$store.getters.get_jwt).then(response => this.$store.commit("set_user", response.data));
   }
 };
 </script>

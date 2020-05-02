@@ -485,7 +485,7 @@ def get_me_as_user():
     db_user = db.session.query(User).filter_by(auth_token=f'{bearer_value}').first()
 
     if db_user is None:
-        abort(404)
+        return jsonify({})
 
     return jsonify(users_helpers.to_model(db_user, app.config['SECRET_JWT_KEY']))
 
