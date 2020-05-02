@@ -106,7 +106,7 @@ import axios from "axios";
 }
 import { required } from "vuelidate/lib/validators";
 import { validationMixin } from "vuelidate";
-import http_helper from '../lib/http'
+import http_helper from "../lib/http";
 
 export default {
   name: "User",
@@ -176,7 +176,9 @@ export default {
       }
     );
 
-    http_helper.getMeAsUser(this.$store.getters.get_jwt).then(response => this.$store.commit("set_user", response.data));
+    http_helper
+      .getMeAsUser(this.$store.getters.get_jwt)
+      .then(response => this.$store.commit("set_user", response.data));
   },
   methods: {
     onNumberChange() {
@@ -267,19 +269,20 @@ export default {
       const task_number = numbers[1];
 
       return axios({
-          url: `${config.apiPrefix}/tasks`,
-          method: 'POST',
-          data: {
-            base_number: base_number,
-            task_number: task_number,
-            body: {
-              latex: this.form.latex,
-              image_ids: images_ids
-            }
-          }, headers: {
-            'Authorization': this.$store.getters.get_jwt
+        url: `${config.apiPrefix}/tasks`,
+        method: "POST",
+        data: {
+          base_number: base_number,
+          task_number: task_number,
+          body: {
+            latex: this.form.latex,
+            image_ids: images_ids
           }
-        })
+        },
+        headers: {
+          Authorization: this.$store.getters.get_jwt
+        }
+      })
         .then(function(response) {
           return response;
         })

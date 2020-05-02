@@ -1,22 +1,32 @@
 <template>
   <div class="ph-user">
-    <md-tabs v-if="this.$store.getters.get_user.is_token_expired" @md-changed="onTabChange">
+    <md-tabs
+      v-if="this.$store.getters.get_user.is_token_expired"
+      @md-changed="onTabChange"
+    >
       <md-tab id="tab-login" md-label="Вход"></md-tab>
       <md-tab id="tab-registration" md-label="Регистрация"></md-tab>
     </md-tabs>
 
-    <Login v-if="this.$store.getters.get_user.is_token_expired && this.tabs.isLogin"></Login>
-    <Registration v-if="this.$store.getters.get_user.is_token_expired && this.tabs.isRegistration"></Registration>
+    <Login
+      v-if="this.$store.getters.get_user.is_token_expired && this.tabs.isLogin"
+    ></Login>
+    <Registration
+      v-if="
+        this.$store.getters.get_user.is_token_expired &&
+          this.tabs.isRegistration
+      "
+    ></Registration>
 
     <Userpage v-if="!this.$store.getters.get_user.is_token_expired"></Userpage>
   </div>
 </template>
 
 <script>
-import Registration from './Registration'
-import Login from './Login'
-import Userpage from './Userpage'
-import http_helper from '../lib/http'
+import Registration from "./Registration";
+import Login from "./Login";
+import Userpage from "./Userpage";
+import http_helper from "../lib/http";
 
 export default {
   name: "User",
@@ -28,21 +38,23 @@ export default {
   data() {
     return {
       tabs: {
-        isRegistration: null,
+        isRegistration: null
       }
-    }
+    };
   },
   mounted() {
-    http_helper.getMeAsUser(this.$store.getters.get_jwt).then(response => this.$store.commit("set_user", response.data));
+    http_helper
+      .getMeAsUser(this.$store.getters.get_jwt)
+      .then(response => this.$store.commit("set_user", response.data));
   },
   methods: {
     onTabChange(id) {
       switch (id) {
-        case 'tab-registration':
+        case "tab-registration":
           this.tabs.isRegistration = true;
           this.tabs.isLogin = false;
           break;
-        case 'tab-login':
+        case "tab-login":
           this.tabs.isRegistration = false;
           this.tabs.isLogin = true;
           break;
@@ -57,5 +69,4 @@ export default {
 
 <style lang="scss" scoped>
 @import "../config/variables.scss";
-
 </style>

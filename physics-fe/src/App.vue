@@ -4,16 +4,15 @@
       <md-tabs class="ph-menu" md-sync-route>
         <md-tab id="tab-home" md-label="3800" to="/" exact></md-tab>
         <md-tab
-              :md-disabled="this.$store.getters.get_user.is_token_expired"
-              id="tab-add"
-              md-label="Добавить задачу"
-              to="/add"
-              exact
+          :md-disabled="this.$store.getters.get_user.is_token_expired"
+          id="tab-add"
+          md-label="Добавить задачу"
+          to="/add"
+          exact
         ></md-tab>
         <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>
 
-        <md-tab id="tab-user" md-icon="face" to="/user" exact >
-        </md-tab>
+        <md-tab id="tab-user" md-icon="face" to="/user" exact> </md-tab>
       </md-tabs>
 
       <div>
@@ -32,7 +31,7 @@
 <script>
 import axios from "axios";
 import config from "./config/api";
-import http_helper from './lib/http'
+import http_helper from "./lib/http";
 
 export default {
   name: "App",
@@ -61,7 +60,9 @@ export default {
   },
   mounted() {
     this.checkApiOk();
-    http_helper.getMeAsUser(this.$store.getters.get_jwt).then(response => this.$store.commit("set_user", response.data));
+    http_helper
+      .getMeAsUser(this.$store.getters.get_jwt)
+      .then(response => this.$store.commit("set_user", response.data));
   }
 };
 </script>

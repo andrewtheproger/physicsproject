@@ -46,9 +46,7 @@
           name="form-repeatPassword"
           id="form-repeatPassword"
         />
-        <span
-          class="md-error"
-          v-if="!$v.form.repeatPassword.sameAsPassword"
+        <span class="md-error" v-if="!$v.form.repeatPassword.sameAsPassword"
           >Пароль не должен быть пустым</span
         >
       </md-field>
@@ -84,7 +82,7 @@ import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
 import { validationMixin } from "vuelidate";
 import config from "../config/api.js";
 import axios from "axios";
-import http_helper from'../lib/http'
+import http_helper from "../lib/http";
 {
   axios;
 }
@@ -154,7 +152,7 @@ export default {
         })
         .catch(error => {
           this.isFlowFailed = true;
-          console.log(error.response)
+          console.log(error.response);
 
           try {
             const data = error.response.data;
@@ -171,8 +169,6 @@ export default {
               message: http_helper.get_error_message(1)
             };
           }
-
-
 
           this.isLoading = false;
         });
