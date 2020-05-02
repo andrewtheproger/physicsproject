@@ -1,79 +1,61 @@
 <template>
-  <div class="ph-main">
-    <h1>Войти:</h1>
-    <div class="ph-reg">
-      <form v-on:submit.prevent="getTask">
-        <p>Введите логин:</p>
-        <md-field> <md-input type="text" v-model="login"/></md-field>
-        <p>Введите пароль</p>
-        <md-field>
-          <md-input type="password" v-model="password" />
-        </md-field>
-        <md-field>
-          <md-input type="submit" />
-        </md-field>
-      </form>
-    </div>
+  <div class="ph-user">
+    <md-tabs v-if="this.$store.getters.get_user.is_token_expired" @md-changed="onTabChange">
+      <md-tab id="tab-login" md-label="Вход"></md-tab>
+      <md-tab id="tab-registration" md-label="Регистрация"></md-tab>
+    </md-tabs>
+
+    <Login v-if="this.$store.getters.get_user.is_token_expired && this.tabs.isLogin"></Login>
+    <Reg v-if="this.$store.getters.get_user.is_token_expired && this.tabs.isRegistration"></Reg>
+
+    <Userpage v-if="!this.$store.getters.get_user.is_token_expired"></Userpage>
   </div>
 </template>
+
 <script>
-import { mapActions } from "vuex";
+import Reg from './Reg'
+import Login from './Login'
+import Userpage from './Userpage'
+import http_helper from '../lib/http'
+
 export default {
   name: "User",
+  components: {
+    Reg,
+    Login,
+    Userpage
+  },
   data() {
-    return { login: "", password: "" };
+    return {
+      tabs: {
+        isRegistration: null,
+      }
+    }
+  },
+  mounted() {
+    http_helper.getMeAsUser(this.$store.getters.get_jwt).then(response => this.$store.commit("set_user", response.data));
   },
   methods: {
-    ...mapActions(["getUser"]),
-    getTask() {
-      this.getUser(this.login, this.password);
+    onTabChange(id) {
+      switch (id) {
+        case 'tab-registration':
+          this.tabs.isRegistration = true;
+          this.tabs.isLogin = false;
+          break;
+        case 'tab-login':
+          this.tabs.isRegistration = false;
+          this.tabs.isLogin = true;
+          break;
+        default:
+          this.tabs.isRegistration = null;
+          this.tabs.isLogin = null;
+      }
     }
   }
 };
 </script>
+
 <style lang="scss" scoped>
 @import "../config/variables.scss";
-.md-field,
-.md-field.md-theme-default.md-focused,
-.md-field.md-theme-default.md-focused,
-.md-field.md-theme-default.md-has-value {
-  border-bottom: 1px solid $primary-fg-color;
 
-  input.md-input {
-    color: inherit;
-    -webkit-text-fill-color: $primary-fg-color;
-  }
-  textarea.md-textarea {
-    color: inherit;
-    -webkit-text-fill-color: $primary-fg-color;
-    border: 1px solid $primary-fg-color;
-  }
-  label {
-    padding-left: 1em;
-    color: $secondary-bg-color;
-  }
-}
-p {
-  color: white;
-}
-.ph-reg {
-  text-align: center;
-}
-h1 {
-  color: white;
-}
-input {
-  color: white;
-  border: 1px solid lightgray;
-  background-color: #252525;
-  margin: 5px;
-}
-.ph-main {
-  margin: auto;
-  margin-top: 150px;
-  width: 300px;
-  border: 1px solid lightgray;
-  width: 200px;
-  text-align: center;
-}
 </style>

@@ -2,33 +2,18 @@
   "register": {
     "type": "object",
     "properties": {
-      "id": {
-        "type": "integer",
-        "readonly": "True"
-      },
-      "created_date": {
-        "type": "integer",
-        "readonly": "True"
-      },
-      "updated_date": {
-        "type": "integer",
-        "readonly": "True"
-      },
-      "role": {
-        "type": "string",
-        "enum": ["user", "admin"]
-      },
-      "login": {
+      "email": {
         "type": "string",
         "maxLength": 256
       },
       "password": {
-        "type": "string"
+        "type": "string",
+        "minLength": 16
       }
     },
     "additionalProperties": false,
     "required": [
-      "login", "password"
+      "email", "password"
     ]
   },
   "update": {
@@ -50,7 +35,7 @@
         "type": "string",
         "enum": ["user", "admin"]
       },
-      "login": {
+      "email": {
         "type": "string",
         "maxLength": 256
       }

@@ -5,12 +5,8 @@
       <vue-mathjax :formula="task.body.latex"></vue-mathjax>
     </div>
     <ul class="ph-task-images">
-      <li v-for="image in task.body.images"
-          :key="image.id">
-        <img
-          v-gallery:task-images
-          :src="image.url"
-        />
+      <li v-for="image in task.body.images" :key="image.id">
+        <img v-gallery:task-images :src="image.url" />
       </li>
     </ul>
 

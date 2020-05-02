@@ -4,13 +4,16 @@
       <md-tabs class="ph-menu" md-sync-route>
         <md-tab id="tab-home" md-label="3800" to="/" exact></md-tab>
         <md-tab
-          id="tab-add"
-          md-label="Добавить задачу"
-          to="/add"
-          exact
+              :md-disabled="this.$store.getters.get_user.is_token_expired"
+              id="tab-add"
+              md-label="Добавить задачу"
+              to="/add"
+              exact
         ></md-tab>
         <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>
-        <md-tab id="tab-registration" md-icon="face" to="/reg" exact></md-tab>
+
+        <md-tab id="tab-user" md-icon="face" to="/user" exact >
+        </md-tab>
       </md-tabs>
 
       <div>
@@ -28,7 +31,8 @@
 
 <script>
 import axios from "axios";
-import config from "@/config/api";
+import config from "./config/api";
+import http_helper from './lib/http'
 
 export default {
   name: "App",
@@ -38,7 +42,6 @@ export default {
       isApiOk: null
     };
   },
-
   methods: {
     checkApiOk() {
       axios({
@@ -58,16 +61,13 @@ export default {
   },
   mounted() {
     this.checkApiOk();
+    http_helper.getMeAsUser(this.$store.getters.get_jwt).then(response => this.$store.commit("set_user", response.data));
   }
 };
 </script>
 
 <style lang="scss">
 @import "config/variables.scss";
-
-body {
-  color: $primary-fg-color;
-}
 
 .ph-hidden {
   display: none;
@@ -99,10 +99,6 @@ div.md-tabs.md-theme-default {
 
     .md-button {
       color: $primary-fg-color;
-
-      .md-icon {
-        color: $primary-fg-color;
-      }
     }
 
     .md-button.md-active {
@@ -110,6 +106,7 @@ div.md-tabs.md-theme-default {
 
       .md-icon {
         color: $primary-fg-color;
+        filter: none;
       }
     }
   }
@@ -125,6 +122,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   background-color: $primary-bg-color;
+  color: $primary-fg-color;
 
   position: relative;
 
@@ -135,6 +133,11 @@ body {
   right: 0;
   bottom: 0;
   left: 0;
+}
+
+div.md-card.md-theme-default {
+  color: inherit;
+  background-color: $secondary-bg-color;
 }
 
 div.md-field,
@@ -173,9 +176,12 @@ div.md-field.md-theme-default.md-has-value .md-textarea {
   -webkit-text-fill-color: $primary-fg-color;
 }
 
-.md-field.md-theme-default label,
-.md-icon.md-theme-default.md-icon-font {
+.md-field.md-theme-default label {
   color: inherit;
+}
+
+.md-icon-invert {
+  filter: invert(1);
 }
 
 .md-field.md-theme-default label {

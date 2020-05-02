@@ -87,7 +87,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_date = db.Column(db.BigInteger)
     updated_date = db.Column(db.BigInteger)
-    login = db.Column(db.String(256), unique=True)
+    email = db.Column(db.String(256), unique=True)
     password_hash = db.Column(db.String(128))  # hash stores as string
     role = db.Column(db.Enum(UserRole))
     auth_token = db.Column(db.String(512))  # jwt has no max length, but 512 is fine for now
@@ -97,7 +97,7 @@ class User(db.Model):
             'id': self.id,
             'created_date': self.created_date,
             'updated_date': self.updated_date,
-            'login': self.login,
+            'email': self.login,
             'role': self.role.value
         })
 

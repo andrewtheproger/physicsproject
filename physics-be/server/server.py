@@ -9,14 +9,15 @@ from cloudinary.utils import cloudinary_url
 import json
 
 from flask import Flask, jsonify, abort, request, Response
-from flask_restful import HTTPException, Api
+from flask_restful import HTTPException
 from flask_migrate import Migrate
 from flask_jsonschema_validator import JSONSchemaValidator
 from flask_cors import CORS
 from sqlalchemy.sql import text
 
 from .models import db, Task, Hint, HintStatus, Image, User
-from .config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO, DISCORD_WEBHOOK, SECRET_JWT_KEY, SECURITY_PASSWORD_SALT
+from .config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO, DISCORD_WEBHOOK, \
+                    SECRET_JWT_KEY, SECURITY_PASSWORD_SALT
 from . import tasks_helpers, hints_helpers, images_helpers, users_helpers
 
 app = Flask(__name__)
@@ -44,6 +45,7 @@ errors = {
     'task_not_exists': 2,
     'task_business_id_conflict': 3,
     'hint_not_exists': 4,
+    'user_not_exists': 5
 }
 
 
@@ -59,9 +61,12 @@ def notify(msg):
     requests.post(DISCORD_WEBHOOK, data={'content': msg})
 
 
-
 def is_in_active_role(request, roles):
     bearer_token = request.headers.get('Authorization')
+
+    if not bearer_token:
+        return False
+
     bearer_value = bearer_token.split()[1]
 
     user = db.session.query(User).filter_by(auth_token=f'{bearer_value}').first()
@@ -85,7 +90,7 @@ def on_validation_error(e):
     return Response(f'There was a request body validation error: {str(e)}', 400)
 
 
-def get_query_parameters(request):
+def get_query_parameters(request: object):
     get = lambda name, default, convert: convert(request.args.get(name)) if request.args.get(name) else default
 
     page = get('page', 0, int)
@@ -188,8 +193,6 @@ def upload_images():
 
 @app.route('/api/tasks', methods=['GET'])
 def get_tasks():
-    if not is_in_active_role(request, ['user', 'admin']):
-        abort(403)
     query_parameters = get_query_parameters(request)
     filter_base_number = request.args.get('filter_by_base_number')
     filter_task_number = request.args.get('filter_by_task_number')
@@ -213,8 +216,6 @@ def get_tasks():
 
 @app.route('/api/tasks/<int:task_id>', methods=['GET'])
 def get_task(task_id):
-    if not is_in_active_role(request, ['user', 'admin']):
-        abort(403)
     task = db.session.query(Task).filter_by(Task.id == task_id).first()
 
     if not task:
@@ -238,7 +239,7 @@ def predicate_tasks_number():
 @app.route('/api/tasks', methods=['POST'])
 @app.validate('task', 'upsert')
 def upsert_task():
-    if not is_in_active_role(request, ['admin']):
+    if not is_in_active_role(request, ['user', 'admin']):
         abort(403)
 
     body = request.json
@@ -426,10 +427,10 @@ def get_users():
     if not is_in_active_role(request, ['admin']):
         abort(403)
 
-    filter_login = request.args.get('filter_by_login')
+    filter_email = request.args.get('filter_by_email')
 
-    if filter_login:
-        users = db.session.query(User).filter_by(login=filter_login).all()
+    if filter_email:
+        users = db.session.query(User).filter_by(email=filter_email).all()
         return jsonify(users_helpers.to_models_list(users))
 
     users = db.session.query(User).all()
@@ -449,8 +450,8 @@ def update_user(user_id):
     if db_user is None:
         abort(404)
 
-    if user.login:
-        db_user.login = user.login
+    if user.email:
+        db_user.email = user.email
 
     if user.role:
         db_user.role = user.role
@@ -469,6 +470,22 @@ def get_user(user_id):
 
     if db_user is None:
         abort(404)
+
+    return jsonify(users_helpers.to_model(db_user, app.config['SECRET_JWT_KEY']))
+
+
+@app.route('/api/users/me', methods=['GET'])
+def get_me_as_user():
+    bearer_token = request.headers.get('Authorization')
+
+    if not bearer_token:
+        abort(403)
+
+    bearer_value = bearer_token.split()[1]
+    db_user = db.session.query(User).filter_by(auth_token=f'{bearer_value}').first()
+
+    if db_user is None:
+        return jsonify({})
 
     return jsonify(users_helpers.to_model(db_user, app.config['SECRET_JWT_KEY']))
 
@@ -492,7 +509,7 @@ def register_user():
 
     now = int(time.time() * 1000)  # ms
 
-    if users_helpers.does_login_exists(db.session, user.login):
+    if users_helpers.does_email_exists(db.session, user.email):
         abort(409)
 
     user.auth_token = user.encode_auth_token(user.id, app.config['SECRET_JWT_KEY']).decode()
@@ -517,7 +534,7 @@ def login():
     user, password = users_helpers.from_register_model(body)
     now = int(time.time() * 1000)  # ms
 
-    user = db.session.query(User).filter_by(login=user.login).first()
+    user = db.session.query(User).filter_by(email=user.email).first()
 
     if user is None:
         abort(404)
@@ -539,13 +556,17 @@ def login():
 @app.route('/api/users/logout', methods=['POST'])
 def logout():
     bearer_token = request.headers.get('Authorization')
+
+    if not bearer_token:
+        abort(403)
+
     bearer_value = bearer_token.split()[1]
     now = int(time.time() * 1000)  # ms
 
     db_user = db.session.query(User).filter_by(auth_token=f'{bearer_value}').first()
 
     if db_user is None:
-        return abort(404)
+        return abort(404, errors['user_not_exists'])
 
     db_user.auth_token = None
     db_user.updated_date = now
