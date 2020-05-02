@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import config from "../config/api.js";
+import config from "../../config/api.js";
 import axios from "axios";
 {
   axios;
@@ -66,5 +66,5 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "../config/variables.scss";
+@import "../../config/variables.scss";
 </style>

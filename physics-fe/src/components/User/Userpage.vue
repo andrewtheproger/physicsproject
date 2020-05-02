@@ -59,7 +59,7 @@ import axios from "axios";
   axios;
 }
 import Logout from "./Logout";
-import http_helper from "../lib/http";
+import http_helper from "../../lib/http";
 import Material from 'vue-color/src/components/Chrome.vue';
 
 export default {
@@ -89,7 +89,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../config/variables.scss";
+@import "../../config/variables.scss";
 
 .md-card-content {
   display: flex;

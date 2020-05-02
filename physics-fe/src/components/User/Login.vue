@@ -65,8 +65,8 @@
 <script>
 import { required, email, minLength } from "vuelidate/lib/validators";
 import { validationMixin } from "vuelidate";
-import config from "../config/api.js";
-import http_helper from "../lib/http";
+import config from "../../config/api.js";
+import http_helper from "../../lib/http";
 import axios from "axios";
 {
   axios;
@@ -149,7 +149,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "../config/variables.scss";
+@import "../../config/variables.scss";
 
 .ph-registration-submit-controls {
   display: flex;

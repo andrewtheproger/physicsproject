@@ -23,9 +23,9 @@
 </template>
 
 <script>
-import Registration from "./Registration";
-import Login from "./Login";
-import Userpage from "./Userpage";
+import Registration from "./User/Registration";
+import Login from "./User/Login";
+import Userpage from "./User/Userpage";
 import http_helper from "../lib/http";
 
 export default {
