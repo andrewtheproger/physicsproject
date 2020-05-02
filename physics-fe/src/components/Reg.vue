@@ -56,15 +56,11 @@ export default {
     color: $secondary-bg-color;
   }
 }
-p {
-  color: white;
-}
+
 .ph-reg {
   text-align: center;
 }
-h1 {
-  color: white;
-}
+
 input {
   color: white;
   border: 1px solid lightgray;
