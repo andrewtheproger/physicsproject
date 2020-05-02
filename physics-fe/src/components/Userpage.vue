@@ -6,7 +6,6 @@
       </md-card-header>
 
       <md-card-content>
-        <div class="md-layout md-gutter">
           <div class="md-layout-item md-small-size-100">
             <md-field>
               <label>Почта</label>
@@ -26,7 +25,10 @@
               >Админ</md-checkbox
             >
           </div>
-        </div>
+
+            <div>
+                <material value="#333"></material>
+            </div>
       </md-card-content>
 
       <md-card-actions>
@@ -42,6 +44,8 @@
       }}: {{ this.flowFailed.message }}
     </div>
 
+
+
     <md-progress-bar
       md-mode="indeterminate"
       v-if="this.isLoading"
@@ -56,11 +60,13 @@ import axios from "axios";
 }
 import Logout from "./Logout";
 import http_helper from "../lib/http";
+import Material from 'vue-color/src/components/Chrome.vue';
 
 export default {
   name: "Userpage",
   components: {
-    Logout
+    Logout,
+    Material,
   },
   data() {
     return {
@@ -84,6 +90,11 @@ export default {
 
 <style lang="scss" scoped>
 @import "../config/variables.scss";
+
+.md-card-content {
+  display: flex;
+  flex-direction: column;
+}
 
 .md-checkbox {
   display: flex;

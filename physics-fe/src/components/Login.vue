@@ -179,7 +179,6 @@ div.md-field.md-theme-default {
 
     @media (min-width: 756px) {
       padding: 0 7em;
-
     }
 
     .md-icon.md-theme-default.md-icon-font.md-icon-image {
