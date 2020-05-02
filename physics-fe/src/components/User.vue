@@ -1,14 +1,14 @@
 <template>
   <div class="ph-user">
-    <md-tabs v-if="!this.$store.getters.get_jwt" @md-changed="onTabChange">
+    <md-tabs v-if="this.$store.getters.get_user.is_token_expired" @md-changed="onTabChange">
       <md-tab id="tab-login" md-label="Вход"></md-tab>
       <md-tab id="tab-registration" md-label="Регистрация"></md-tab>
     </md-tabs>
 
-    <Login v-if="!this.$store.getters.get_jwt && this.tabs.isLogin"></Login>
-    <Reg v-if="!this.$store.getters.get_jwt && this.tabs.isRegistration"></Reg>
+    <Login v-if="this.$store.getters.get_user.is_token_expired && this.tabs.isLogin"></Login>
+    <Reg v-if="this.$store.getters.get_user.is_token_expired && this.tabs.isRegistration"></Reg>
 
-    <Userpage v-if="this.$store.getters.get_jwt"></Userpage>
+    <Userpage v-if="!this.$store.getters.get_user.is_token_expired"></Userpage>
   </div>
 </template>
 
@@ -16,6 +16,7 @@
 import Reg from './Reg'
 import Login from './Login'
 import Userpage from './Userpage'
+import http_helper from '../lib/http'
 
 export default {
   name: "User",
@@ -30,6 +31,9 @@ export default {
         isRegistration: null,
       }
     }
+  },
+  mounted() {
+    http_helper.getMeAsUser(this.$store.getters.get_jwt).then(user => this.$store.commit("set_user", user));
   },
   methods: {
     onTabChange(id) {

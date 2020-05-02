@@ -126,7 +126,7 @@
                         this.isFlowFailed = false;
 
                         this.$store.commit("set_jwt", response.data.token);
-                        this.$router.replace({ path: '/' });
+                        this.$router.push('/');
 
                         return response;
                     })

@@ -147,7 +147,7 @@ export default {
           this.isFlowFailed = false;
 
           this.$store.commit("set_jwt", response.data.token);
-          this.$router.replace('/');
+          this.$router.push('/');
 
           return response;
         })

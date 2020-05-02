@@ -45,7 +45,7 @@
                     () => {
                         this.isLoading = false;
                         this.$store.commit("set_jwt", null);
-                        this.$router.replace({ path: '/' });
+                        this.$router.push('/');
                     },
                     error => {
                         this.isLoading = false;
@@ -54,7 +54,7 @@
                         if (data.code === 5) {
                             this.$store.commit("set_jwt", null);
 
-                            this.$router.replace({ path: '/' });
+                            this.$router.push('/');
                             return;
                         }
 

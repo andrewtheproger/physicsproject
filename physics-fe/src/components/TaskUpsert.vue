@@ -106,6 +106,7 @@ import axios from "axios";
 }
 import { required } from "vuelidate/lib/validators";
 import { validationMixin } from "vuelidate";
+import http_helper from '../lib/http'
 
 export default {
   name: "User",
@@ -174,6 +175,8 @@ export default {
         console.log(error);
       }
     );
+
+    http_helper.getMeAsUser(this.$store.getters.get_jwt).then(user => this.$store.commit("set_user", user));
   },
   methods: {
     onNumberChange() {

@@ -4,10 +4,11 @@
       <md-tabs class="ph-menu" md-sync-route>
         <md-tab id="tab-home" md-label="3800" to="/" exact></md-tab>
         <md-tab
-          id="tab-add"
-          md-label="Добавить задачу"
-          to="/add"
-          exact
+              :md-disabled="this.$store.getters.get_user.is_token_expired"
+              id="tab-add"
+              md-label="Добавить задачу"
+              to="/add"
+              exact
         ></md-tab>
         <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>
 
@@ -30,7 +31,8 @@
 
 <script>
 import axios from "axios";
-import config from "@/config/api";
+import config from "./config/api";
+import http_helper from './lib/http'
 
 export default {
   name: "App",
@@ -40,7 +42,6 @@ export default {
       isApiOk: null
     };
   },
-
   methods: {
     checkApiOk() {
       axios({
@@ -60,6 +61,7 @@ export default {
   },
   mounted() {
     this.checkApiOk();
+    http_helper.getMeAsUser(this.$store.getters.get_jwt).then(user => this.$store.commit("set_user", user));
   }
 };
 </script>
