@@ -51,63 +51,54 @@ export default {
     computed: {
         getClass_body() {
             const parse = require('parse-color');
-            const default_rgb = {
-                r: null,
-                b: null,
-                c: null
+
+            const toColor = (color) => {
+                if (!color) {
+                    return {
+                        rgb: null,
+                        r: null,
+                        b: null,
+                        c: null
+                    };
+                }
+
+                const rgb = parse(color).rgb;
+                return {
+                    rgb: color,
+                    r: rgb[0],
+                    g: rgb[1],
+                    b: rgb[2]
+                };
             };
-            let background_primary_rgb = default_rgb;
-            let background_secondary_rgb = default_rgb;
-            let foreground_primary_rgb = default_rgb;
-            let foreground_secondary_rgb = default_rgb;
-            if (this.user.color_background_primary) {
-                background_primary_rgb = parse(this.user.color_background_primary).rgb;
-            }
 
-            if (this.user.color_background_secondary) {
-                background_secondary_rgb = parse(this.user.color_background_secondary).rgb;
-            }
+            const patchWithCssVariables = (slave, colorName, colorValue) => {
+                const color = toColor(colorValue);
 
-            if (this.user.color_foreground_primary) {
-                foreground_primary_rgb = parse(this.user.color_foreground_primary).rgb;
-            }
+                slave[colorName] = color.rgb;
+                slave[`${colorName}-r`] = color.r;
+                slave[`${colorName}-g`] = color.g;
+                slave[`${colorName}-b`] = color.b;
 
-            if (this.user.color_foreground_secondary) {
-                foreground_secondary_rgb = parse(this.user.color_foreground_secondary).rgb;
-            }
-            console.log(background_primary_rgb);
-            console.log(background_secondary_rgb);
-            console.log(foreground_primary_rgb);
-            console.log(foreground_secondary_rgb);
+                return slave;
+            };
 
-            return {
-                '--background-primary-color': this.user.color_background_primary,
-                '--background-primary-color-r': background_primary_rgb[0],
-                '--background-primary-color-g': background_primary_rgb[1],
-                '--background-primary-color-b': background_primary_rgb[2],
-
-                '--background-secondary-color': this.user.color_background_secondary,
-                '--background-secondary-color-r': background_secondary_rgb[0],
-                '--background-secondary-color-g': background_secondary_rgb[1],
-                '--background-secondary-color-b': background_secondary_rgb[2],
-
-                '--foreground-primary-color': this.user.color_foreground_primary,
-                '--foreground-primary-color-r': foreground_primary_rgb[0],
-                '--foreground-primary-color-g': foreground_primary_rgb[1],
-                '--foreground-primary-color-b': foreground_primary_rgb[2],
-
-                '--foreground-secondary-color': this.user.color_foreground_secondary,
-                '--foreground-secondary-color-r': foreground_secondary_rgb[0],
-                '--foreground-secondary-color-g': foreground_secondary_rgb[1],
-                '--foreground-secondary-color-b': foreground_secondary_rgb[2],
-
+            const styles = {
                 '--background-success-color': '#050',
                 '--background-warning-color': '#550',
                 '--background-error-color': '#500',
+                '--background-action-color': '#448aff',
                 '--foreground-success-color': '#0f0',
                 '--foreground-warning-color': '#ff0',
                 '--foreground-error-color': '#f00',
-            }
+                '--foreground-action-color': '#fff',
+            };
+
+            patchWithCssVariables(styles, '--background-primary-color', this.user.color_background_primary);
+            patchWithCssVariables(styles, '--background-secondary-color', this.user.color_background_secondary);
+            patchWithCssVariables(styles, '--foreground-primary-color', this.user.color_foreground_primary);
+            patchWithCssVariables(styles, '--foreground-secondary-color', this.user.color_foreground_secondary);
+
+            return styles;
         }
     },
   methods: {
@@ -225,6 +216,11 @@ div.md-card.md-theme-default {
 
 i.md-icon.md-theme-default.md-icon-font {
   color: var(--foreground-secondary-color);
+}
+
+button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
+  color: var(--foreground-action-color);
+  background-color: var(--background-action-color);
 }
 
 div.md-field,
