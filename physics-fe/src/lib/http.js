@@ -41,6 +41,22 @@ export default {
             ...response.data,
             isAdmin: response.data.role === "admin"
           };
+
+          if (!response.data.color_background_primary) {
+            response.data.color_background_primary = "#252525";
+          }
+
+          if (!response.data.color_background_secondary) {
+            response.data.color_background_secondary = "#555";
+          }
+
+          if (!response.data.color_foreground_primary) {
+            response.data.color_foreground_primary = "#ccc";
+          }
+
+          if (!response.data.color_foreground_secondary) {
+            response.data.color_foreground_secondary = "#ccf";
+          }
         } else {
           response.data = {
             isAdmin: false,
