@@ -26,13 +26,20 @@
     <div class="ph-error-message" v-if="isHttpFailed">
       Произошла ошибка: {{ this.flowFailed.message }}
     </div>
-    <div v-if="this.tasks && this.tasks.length !== 0">
-      <Task :task="tasks[currentPage - 1]" />
+
+    <nav v-if="this.tasks && this.tasks.length > 1">
       <v-pagination
-        v-model="currentPage"
-        :page-count="this.tasks.length"
+          v-model="page.currentPage"
+          :page-count="Math.floor(this.tasks.length / this.page.itemsPerPage)"
+          :labels="page.paginationAnchorTexts"
       ></v-pagination>
-    </div>
+    </nav>
+
+    <ul class="ph-tasks" v-if="this.tasks">
+      <li v-for="task in this.paginate(this.tasks, this.page.itemsPerPage, this.page.currentPage)" :key="task.id">
+        <Task :task="task" />
+      </li>
+    </ul>
 
     <div class="ph-nothing-found" v-if="this.tasks && this.tasks.length === 0">
       Ничего не найдено.
@@ -66,7 +73,16 @@ export default {
       existing_numbers: [],
       isHttpFailed: false,
       httpFailed: null,
-      currentPage: 1,
+      page: {
+        currentPage: 1,
+        itemsPerPage: 5,
+        paginationAnchorTexts: {
+            first: 'Начало',
+            prev: 'Пред.',
+            next: 'След.',
+            last: 'Конец'
+        }
+      }
     };
   },
 
@@ -92,6 +108,9 @@ export default {
     clearInterval(this.numberExampleInterval);
   },
   methods: {
+    paginate(array, page_size, page_number) {
+      return array.slice((page_number - 1) * page_size, page_number * page_size);
+    },
     getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min) + min);
     },
@@ -104,18 +123,8 @@ export default {
 
     async submit() {
       this.sending = true;
-      console.log(this.$store.getters.get_jwt);
       await this.getTaskByNumber(this.number);
       this.sending = false;
-    },
-
-    get_error_message(code) {
-      switch (code) {
-        case 1:
-          return "разработчик сделал что-то не так";
-        default:
-          throw "This should not happens";
-      }
     },
 
     async getTaskByNumber(number) {
@@ -125,6 +134,9 @@ export default {
         const [base_number, task_number] = number.split(".");
         url += "?filter_by_base_number=" + base_number; // todo make it looks ok
         url += "&filter_by_task_number=" + task_number;
+        url += '&count=3800';
+      } else {
+          url += '?count=3800'
       }
 
       await axios({
@@ -152,6 +164,66 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+  @import "../config/variables.scss";
+  // for some reason the pagination could not access scoped classes
+  // todo
+  .pagination {
+    display: flex;
+    list-style: none;
+
+    .pagination-item {
+      min-width: 1.7em;
+      text-align: center;
+
+      &.pagination-item--active .pagination-link {
+        border-bottom-color: var(--foreground-secondary-color);
+      }
+
+      .pagination-link {
+        background-color: var(--background-secondary-color);
+        color: var(--foreground-primary-color);
+        padding: 0.5em;
+        border: none;
+        border-bottom: 1px solid var(--background-secondary-color);
+
+        &.pagination-link--disable {
+          background-color: var(--background-primary-color);
+          color: var(--foreground-primary-color);
+          cursor: not-allowed;
+        }
+
+        &:not(.pagination-link--disable):hover {
+          cursor: pointer;
+          background-color: alpha(var(--background-secondary-color), 0.2);
+        }
+      }
+
+      // dots in between
+      span.pagination-link.pagination-link--disable {
+        display: inline-block;
+        letter-spacing: normal;
+        line-height: normal;
+        background-color: var(--background-primary-color);
+
+        border: none;
+      }
+    }
+
+    .pagination-item:nth-child(1),
+    .pagination-item:nth-child(2),
+    .pagination-item:nth-last-child(1),
+    .pagination-item:nth-last-child(2) {
+      margin: 0 0.5em;
+      width: inherit;
+    }
+
+    .pagination-item:nth-child(1) {
+      margin-left: 0;
+    }
+  }
+</style>
 
 <style scoped lang="scss">
 @import "../config/variables.scss";
@@ -200,5 +272,6 @@ export default {
 
 .ph-tasks {
   list-style: none;
+  color: var(--foreground-primary-color);
 }
 </style>

@@ -96,7 +96,7 @@ def get_query_parameters(request: object):
     get = lambda name, default, convert: convert(request.args.get(name)) if request.args.get(name) else default
 
     page = get('page', 0, int)
-    count = get('count', 10, int)
+    count = get('count', 10, int)  # todo add count cap
     order = get('order', 'task_number', str)
     order_direction = get('order_direction', 'asc', str)
 
