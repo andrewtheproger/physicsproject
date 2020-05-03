@@ -304,16 +304,16 @@ export default {
 
   div.md-field.md-theme-default {
     &.md-invalid .md-error {
-      -webkit-text-fill-color: red;
-      color: red;
+      -webkit-text-fill-color: var(--foreground-error-color);
+      color: var(--foreground-error-color);
     }
 
     label.ph-task-exists {
-      -webkit-text-fill-color: red;
+      -webkit-text-fill-color: var(--foreground-error-color);
     }
 
     label.ph-task-not-exists {
-      -webkit-text-fill-color: green;
+      -webkit-text-fill-color: var(--foreground-success-color);
     }
   }
 
@@ -350,11 +350,11 @@ export default {
     align-items: baseline;
 
     .ph-success {
-      color: green;
+      color: var(--foreground-success-color);
     }
 
     .ph-failure {
-      color: red;
+      color: var(--foreground-error-color);
     }
   }
 
@@ -364,7 +364,7 @@ export default {
 
     textarea {
       border-right: none;
-      border-bottom: 2px dotted $secondary-bg-color;
+      border-bottom: 2px dotted var(--background-secondary-color);
     }
 
     textarea,
@@ -387,8 +387,8 @@ export default {
       display: flex;
       flex-direction: row;
 
-      textarea {
-        border-right: 2px dotted $secondary-bg-color;
+      textarea.md-textarea {
+        border-right: 2px dotted var(--background-secondary-color);
         border-bottom: none;
       }
 

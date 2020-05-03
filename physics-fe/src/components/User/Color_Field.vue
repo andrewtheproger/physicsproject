@@ -41,6 +41,10 @@
   display: flex;
   align-items: center;
 
+  background-color: var(--background-secondary-color);
+  color: var(--foreground-primary-color);
+
   margin-bottom: 2em;
+  padding-bottom: 1em;
 }
 </style>

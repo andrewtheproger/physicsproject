@@ -13,6 +13,7 @@
     "es6-promise": "^4.2.8",
     "img-vuer": "^0.19.2",
     "node-sass": "^4.13.1",
+    "parse-color": "^1.0.0",
     "sass-loader": "^8.0.2",
     "vue": "^2.6.11",
     "vue-color": "^2.7.1",

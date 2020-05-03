@@ -184,17 +184,6 @@ export default {
   flex-direction: row-reverse;
 }
 
-.ph-failure {
-  color: red;
-}
-
-div.md-field.md-theme-default {
-  &.md-invalid .md-error {
-    -webkit-text-fill-color: red;
-    color: red;
-  }
-}
-
 .ph-main {
   display: flex;
   align-content: center;
