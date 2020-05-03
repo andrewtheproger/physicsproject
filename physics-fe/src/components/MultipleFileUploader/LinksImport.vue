@@ -88,13 +88,13 @@ export default {
       margin: 3px;
       width: 30%;
       position: relative;
-      transition: all 1 easy;
+      transition: all 0.2s ease-out;
 
       &:after {
         display: none;
         content: "X";
         font-size: 3em;
-        color: #d00;
+        color: var(--foreground-error-color);
         cursor: pointer;
 
         position: absolute;
@@ -103,24 +103,15 @@ export default {
         bottom: 0;
         left: 0;
 
-        background-color: rgba(0, 0, 0, 0.2);
+        background-color: alpha(var(--background-primary-color), 0.3);
       }
 
-      &:hover {
-        &:after {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
+      &:hover:after {
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
     }
   }
-}
-
-.md-field,
-.md-field.md-theme-default,
-.md-field.md-theme-default.md-focused,
-.md-field.md-theme-default.md-has-value {
-  max-height: 3em;
 }
 </style>

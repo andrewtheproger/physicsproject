@@ -24,3 +24,5 @@ __pycache__
 venv
 
 physics-be/scripts/production.pem
+
+physics-be/server/server.db

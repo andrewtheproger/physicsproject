@@ -5,12 +5,8 @@
       <vue-mathjax :formula="task.body.latex"></vue-mathjax>
     </div>
     <ul class="ph-task-images">
-      <li v-for="image in task.body.images"
-          :key="image.id">
-        <img
-          v-gallery:task-images
-          :src="image.url"
-        />
+      <li v-for="image in task.body.images" :key="image.id">
+        <img v-gallery:task-images :src="image.url" />
       </li>
     </ul>
 
@@ -37,7 +33,7 @@
         </li>
       </ul>
     </div>
-    <div v-else>
+    <div class="ph-task-no-hints-available" v-else>
       Подсказок к решению пока нет.
     </div>
   </div>
@@ -58,9 +54,12 @@ export default {
 <style scoped lang="scss">
 @import "../config/variables.scss";
 
+.ph-task-no-hints-available {
+  font-size: 80%;
+}
+
 .ph-task-hints,
 .ph-task {
-  color: $primary-fg-color;
   padding-left: 0;
   list-style: none;
 

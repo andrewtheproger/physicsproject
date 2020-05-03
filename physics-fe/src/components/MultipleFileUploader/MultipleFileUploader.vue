@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="mfu-uploadBox"
-    role="form"
-    enctype="multipart/form-data"
-  >
+  <div class="mfu-uploadBox" role="form" enctype="multipart/form-data">
     <div class="mfu-files-input">
       <Dragndrop
         :files="this.files"
@@ -173,7 +169,7 @@ export default {
     },
     onSubmit() {
       if (this.filelist.length === 0) {
-        return Promise.resolve({status: 200, data: {ids: []}});
+        return Promise.resolve({ status: 200, data: { ids: [] } });
       }
 
       const formData = new FormData();
@@ -249,20 +245,14 @@ export default {
 .mfu-buttons-wrapper {
   display: flex;
   flex-direction: row-reverse;
-
-  button {
-    width: 10%;
-  }
 }
 
 .mfu-files-input {
   display: flex;
-  align-items: bottom;
 }
 
 .mfu-uploadBox {
-  background: $secondary-bg-color;
-  color: $primary-fg-color;
+  border: 1px solid var(--background-secondary-color);
   width: 100%;
 }
 </style>

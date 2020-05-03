@@ -2,9 +2,25 @@
   <div class="ph-task-upsert">
     <form class="ph-form" @submit.prevent="onSubmit">
       <div class="ph-params-wrapper">
-        <md-field>
-          <label :class="{'ph-task-exists': could_task_be_created === false, 'ph-task-not-exists': could_task_be_created === true}">Номер задачи...</label>
-          <md-input type="text" @change="onNumberChange" v-model="number" />
+        <md-field :class="getValidationClass('number')">
+          <label>Номер задачи...</label>
+
+          <md-input
+            type="text"
+            @change="onNumberChange"
+            v-model.trim="form.number"
+            name="form-number"
+            id="form-number"
+          />
+          <span class="md-error" v-if="!$v.form.number.required"
+            >У задачи должен быть номер</span
+          >
+          <span class="md-error" v-if="!$v.form.number.mustBeTaskNumber"
+            >Номер задачи должен быть записан через точку</span
+          >
+          <span class="md-error" v-if="!$v.form.number.mustBeUniqueNumber"
+            >Такая задача уже есть</span
+          >
 
           <span>
             <md-icon>help_outline</md-icon>
@@ -14,12 +30,32 @@
         </md-field>
       </div>
 
-      <md-field class="ph-task-upsert-latex">
+      <md-field
+        :class="getValidationClass('latex')"
+        class="ph-task-upsert-latex"
+      >
         <label>LaTeX...</label>
-        <md-textarea cols="30" rows="15" v-model="latex"> </md-textarea>
+        <md-textarea
+          cols="30"
+          rows="15"
+          v-model.trim="form.latex"
+          name="form-latex"
+          id="form-latex"
+        >
+        </md-textarea>
+
+        <span class="md-error" v-if="!$v.form.latex.required"
+          >Задача должна иметь условие</span
+        >
+        <span class="md-error" v-if="!$v.form.latex.mustSeemOk"
+          >В задаче из 3800 не может идти речь про LaTeX</span
+        >
 
         <div>
-          <vue-mathjax class="ph-mathjax" :formula="latex"></vue-mathjax>
+          <vue-mathjax
+            class="ph-mathjax"
+            :formula="this.form.latex"
+          ></vue-mathjax>
         </div>
       </md-field>
 
@@ -31,22 +67,30 @@
         errorMessagePath=""
       ></multiple-file-uploader>
 
-      <md-progress-bar md-mode="indeterminate" v-if="this.isLoading"></md-progress-bar>
+      <md-progress-bar
+        md-mode="indeterminate"
+        v-if="this.isLoading"
+      ></md-progress-bar>
 
       <div class="ph-task-upsert-submit-controls">
         <md-button
           type="submit"
           class="md-raised md-primary"
-          :disabled="this.isLoading">
+          :disabled="this.isLoading"
+        >
           Добавить
         </md-button>
 
-        <div class="ph-success" v-if="loadStatus == 200">
+        <div class="ph-success" v-if="isFlowFailed === false">
           Задача добавлена, спасибо
         </div>
 
-        <div class="ph-failure" v-if="loadStatus && loadStatus != 200">
-          Задача не была добавлена из-за ошибки сервера
+        <div class="ph-failure" v-if="flowFailed">
+          {{
+            this.flowFailed.http_code
+              ? "Произошла ошибка на стороне сервера"
+              : "Вы ошиблись"
+          }}: {{ this.flowFailed.message }}
         </div>
       </div>
     </form>
@@ -60,24 +104,55 @@ import axios from "axios";
 {
   axios;
 }
+import { required } from "vuelidate/lib/validators";
+import { validationMixin } from "vuelidate";
+import http_helper from "../lib/http";
+
 export default {
   name: "User",
+  mixins: [validationMixin],
   data() {
     return {
-      latex: "Привет, это текст на $ \\LaTeX $, да. ",
+      form: {
+        latex: "Привет, это текст на $ \\LaTeX $, да. ",
+        number: null,
+        isbn: null
+      },
       url: `${config.apiPrefix}/images`,
-      number: null,
-      isbn: null,
       isLoading: false,
-      loadStatus: null,
       existing_numbers: [],
-      could_task_be_created: null
+      isFlowFailed: null,
+      flowFailed: null
     };
   },
-  computed: {
-    classObject: function () {
-      return {
-        could_task_be_created: this.could_task_be_created !== null && this.could_task_be_created === true
+  validations: {
+    form: {
+      latex: {
+        required,
+        mustSeemOk(v) {
+          if (v) {
+            return !v.includes("LaTeX");
+          }
+
+          return true;
+        }
+      },
+      number: {
+        required,
+        mustBeTaskNumber(v) {
+          if (v) {
+            return !!v.match(/\d+[., ]\d+/);
+          }
+
+          return true;
+        },
+        mustBeUniqueNumber(v) {
+          if (v) {
+            return !this.existing_numbers.includes(v);
+          }
+
+          return true;
+        }
       }
     }
   },
@@ -89,81 +164,127 @@ export default {
 
     axios({
       url: url,
-      method: 'GET'
+      method: "GET"
     }).then(
       result => {
-        this.existing_numbers = result.data.map(x => x.base_number + '.' + x.task_number);
+        this.existing_numbers = result.data.map(
+          x => x.base_number + "." + x.task_number
+        );
       },
       error => {
         console.log(error);
       }
-    )
+    );
   },
   methods: {
     onNumberChange() {
-      if (this.number.includes('.')) {
-        if (this.existing_numbers.includes(this.number)) {
-          this.could_task_be_created = false;
-        } else {
-          this.could_task_be_created = true;
-        }
-
-        return;
+      if (!this.form.number.includes(".")) {
+        this.form.number = this.form.number
+          .replace(",", ".")
+          .replace(" ", ".")
+          .replace("-", ".");
       }
 
-      this.number = this.number.replace(',', '.').replace(' ', '.').replace('-', '.')
-      this.could_task_be_created = null;
+      this.$v.$touch();
     },
+
+    getValidationClass(fieldName) {
+      const field = this.$v.form[fieldName];
+
+      if (field) {
+        return {
+          "md-invalid": field.$invalid && field.$dirty
+        };
+      }
+    },
+
     reset() {
-      this.latex = "";
-      this.number = null;
-      this.isbn = null;
+      this.form.latex = "";
+      this.form.number = null;
+      this.form.isbn = null;
+      this.$v.$reset();
     },
     onSubmit() {
       this.isLoading = true;
-      this.$refs.multipleFileUploader.onSubmit()
+      this.$v.$touch();
+
+      if (this.$v.$invalid) {
+        this.isLoading = false;
+        return;
+      }
+
+      this.$refs.multipleFileUploader
+        .onSubmit()
         .then(result => {
-          if (result.status != 200) {
-            throw "General error";
+          if (result.status !== 200) {
+            throw new TypeError("General error");
           }
 
           this.send(result.data.ids)
             .then(result => {
               this.loadStatus = result.status;
               this.isLoading = false;
+              this.isFlowFailed = false;
+              this.existing_numbers = [
+                ...this.existing_numbers,
+                this.form.number
+              ];
               this.reset();
             })
             .catch(error => {
-              console.log(error);
-              this.loadStatus = "General error";
-              this.isLoading = false;    
-            })
+              this.isFlowFailed = true;
+
+              const data = error.response.data;
+
+              this.flowFailed = {
+                http_code: error.response.code,
+                internal_code: data.code,
+                message: http_helper.get_error_message(data.code)
+              };
+
+              this.isLoading = false;
+            });
         })
         .catch(error => {
-          console.log(error);
-          this.loadStatus = "General error";
+          this.isFlowFailed = true;
+
+          const data = error.response.data;
+
+          this.flowFailed = {
+            http_code: error.response.code,
+            internal_code: data.code,
+            message: http_helper.get_error_message(data.code)
+          };
+
           this.isLoading = false;
-        })
+        });
     },
     send(images_ids) {
-      const numbers = this.number.split('.')
+      const numbers = this.form.number.split(".");
       const base_number = numbers[0];
       const task_number = numbers[1];
 
-      return axios.post(`${config.apiPrefix}/tasks`, {
-        base_number: base_number,
-        task_number: task_number,
-        body: {
-          latex: this.latex,
-          image_ids: images_ids
+      return axios({
+        url: `${config.apiPrefix}/tasks`,
+        method: "POST",
+        data: {
+          base_number: base_number,
+          task_number: task_number,
+          body: {
+            latex: this.form.latex,
+            image_ids: images_ids
+          }
+        },
+        headers: {
+          Authorization: this.$store.getters.get_jwt
         }
       })
-      .then(function (response) {
-        return response;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+        .then(function(response) {
+          return response;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     }
   }
 };
@@ -181,12 +302,19 @@ export default {
 .ph-task-upsert {
   padding: 2em;
 
-  div.md-field.md-theme-default label.ph-task-exists {
-    -webkit-text-fill-color: red;
-  }
+  div.md-field.md-theme-default {
+    &.md-invalid .md-error {
+      -webkit-text-fill-color: var(--foreground-error-color);
+      color: var(--foreground-error-color);
+    }
 
-  div.md-field.md-theme-default label.ph-task-not-exists {
-    -webkit-text-fill-color: green;
+    label.ph-task-exists {
+      -webkit-text-fill-color: var(--foreground-error-color);
+    }
+
+    label.ph-task-not-exists {
+      -webkit-text-fill-color: var(--foreground-success-color);
+    }
   }
 
   .ph-form {
@@ -220,14 +348,6 @@ export default {
     width: 100%;
     flex-direction: row-reverse;
     align-items: baseline;
-
-    .ph-success {
-      color: green;
-    }
-
-    .ph-failure {
-      color: red;
-    }
   }
 
   .ph-task-upsert-latex {
@@ -236,7 +356,7 @@ export default {
 
     textarea {
       border-right: none;
-      border-bottom: 2px dotted $secondary-bg-color;
+      border-bottom: 2px dotted var(--background-secondary-color);
     }
 
     textarea,
@@ -259,8 +379,8 @@ export default {
       display: flex;
       flex-direction: row;
 
-      textarea {
-        border-right: 2px dotted $secondary-bg-color;
+      textarea.md-textarea {
+        border-right: 2px dotted var(--background-secondary-color);
         border-bottom: none;
       }
 

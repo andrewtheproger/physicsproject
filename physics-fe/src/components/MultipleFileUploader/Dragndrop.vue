@@ -31,7 +31,7 @@
         <ol>
           <li
             class="mfu-file-name"
-            v-for="(file, i) in files" 
+            v-for="(file, i) in files"
             :key="`${file.name}-${i}`"
             :data-name="file.name"
             @click="removeFile">
@@ -39,7 +39,7 @@
           </li>
         </ol>
       </p>
-      
+
 
       <p>
         <strong>{{ fileSizeMessage }}</strong>
@@ -53,7 +53,7 @@
           </li>
         </ol>
       </p>
-     
+
       <p>
         <strong>{{ totalFileMessage }}</strong> {{ files.length }}
       </p>
@@ -113,7 +113,7 @@ export default {
     addFile(e) {
       this.successMsg = "";
       this.errorMsg = "";
-      this.dragging = false; // that doesn't work on element, idk why
+      this.dragging = false;
 
       const inputFilelist = e.target.files || e.dataTransfer.files;
 
@@ -131,11 +131,13 @@ export default {
 <style lang="scss" scoped>
 @import "../../config/variables.scss";
 
-.mfu-uploadBoxMain,
-.mfu-filelink-input {
+.mfu-uploadBoxMain {
   width: 50%;
 }
-
+.mfu-uploadBoxMain {
+  width: 100%;
+  height: 100%;
+}
 .mfu-file-name {
   position: relative;
 
@@ -143,68 +145,39 @@ export default {
     display: none;
     content: 'X';
     font-size: 2em;
-    color: #d00;
+    color: var(--foreground-error-color);
     cursor: pointer;
 
     position: absolute;
     top: 0;
-    right: 0;
+    right: -1em;
     bottom: 0;
     left: 0;
-    
-    background-color: rgba(0,0,0,0.2);
+
+    background-color: alpha(var(--background-primary-color), 0.2);
   }
 
   &:hover {
     &:after {
       display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-direction: row-reverse;
     }
   }
 }
 
-.md-field,
-.md-field.md-theme-default.md-focused,
-.md-field.md-theme-default.md-has-value {
-  .md-input,
-  label {
-    color: inherit;
-    -webkit-text-fill-color: inherit;
-  }
-
-
-  &:hover:after {
-    background-color: $secondary-fg-color;
-    transition: all .3s;
-  }
-
-  max-height: 3em;
-}
-
-.md-field.md-theme-default label,
-.md-icon.md-theme-default.md-icon-font {
-  color: inherit;
-}
-
-.md-field.md-theme-default label {
-  padding-left: 1em;
-}
-
-
-
 .mfu-dropArea {
   text-align: center;
   padding: 1em;
-  background-color: $secondary-bg-color;
-  
+  background-color: var(--background-secondary-color);
+  color: var(--foreground-primary-color);
+
   &::before,
   &::after {
-      cursor: pointer;
+    cursor: pointer;
   }
 
   &:hover {
-    background-color: lighten($secondary-bg-color, 10%);
+    background-color: alpha(var(--background-secondary-color), 0.7);
   }
 
   input {
@@ -219,14 +192,14 @@ export default {
 }
 
 .mfu-dropAreaDragging {
-  background-color: lighten($secondary-bg-color, 10%);
+  background-color: alpha(var(--background-secondary-color), 0.7)
 }
 
 .mfu-animatedBorders {
   position: relative;
 
   box-sizing: border-box;
-  box-shadow: inset 0 0 0 2px lighten($primary-bg-color, 40%);
+  box-shadow: inset 0 0 0 2px alpha(var(--background-primary-color), 0.7);
 
   transition: color 0.25s;
 
@@ -235,8 +208,6 @@ export default {
     box-sizing: inherit;
     content: '';
     position: absolute;
-    width: 100%;
-    height: 100%;
     pointer-events: none;
 
     border: 2px solid transparent;
@@ -253,9 +224,9 @@ export default {
     bottom: 0;
     right: 0;
   }
-  
+
   &:hover {
-    color: $secondary-fg-color;
+    color: var(--foreground-primary-color);
   }
 
   &:hover::before,
@@ -265,17 +236,17 @@ export default {
   }
 
   &:hover::before {
-    border-top-color: $secondary-fg-color;
-    border-right-color: $secondary-fg-color;
+    border-top-color: var(--background-secondary-color);
+    border-right-color: var(--background-secondary-color);
     transition:
       width 0.25s ease-out,
       height 0.25s ease-out 0.25s;
   }
 
   &:hover::after {
-    border-bottom-color: $secondary-fg-color;
-    border-left-color: $secondary-fg-color;
-    
+    border-bottom-color: var(--background-secondary-color);
+    border-left-color: var(--background-secondary-color);
+
     transition:
       border-color 0s ease-out 0.5s,
       width 0.25s ease-out 0.5s,

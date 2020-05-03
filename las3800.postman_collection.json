@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "cb699722-99dd-4ec1-868b-9bd6e35c7590",
+		"_postman_id": "c2932510-330d-4cf1-b617-acf975625404",
 		"name": "las3800",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -13,7 +13,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{admin_bearer}}",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -29,7 +29,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"number\": \"2.15\",\n\t\"body\": {\n\t\t\"latex\": \"long latex\",\n\t\t\"image_hrefs\": [\"href1\", \"href2\"]\n\t}\n}",
+					"raw": "{\n\t\"base_number\": \"2\",\n\t\"task_number\": \"25\",\n\t\"body\": {\n\t\t\"latex\": \"long \\\\LaTeX\",\n\t\t\"image_ids\": []\n\t}\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -50,6 +50,24 @@
 			"response": []
 		},
 		{
+			"name": "Predicate task numbers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{prefix}}/tasks/predicate_numbers",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"tasks",
+						"predicate_numbers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get tasks",
 			"request": {
 				"auth": {
@@ -57,7 +75,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{user_bearer}}",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -65,7 +83,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{prefix}}/tasks?page=0&count=10&order=number",
+					"raw": "{{prefix}}/tasks?page=0&count=10&order=base_number&filter_by_base_number=2&filter_by_task_number=25",
 					"host": [
 						"{{prefix}}"
 					],
@@ -83,12 +101,15 @@
 						},
 						{
 							"key": "order",
-							"value": "number"
+							"value": "base_number"
 						},
 						{
-							"key": "filter_by_number",
-							"value": "2.25",
-							"disabled": true
+							"key": "filter_by_base_number",
+							"value": "2"
+						},
+						{
+							"key": "filter_by_task_number",
+							"value": "25"
 						}
 					]
 				},
@@ -104,7 +125,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{user_bearer}}",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -132,7 +153,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{admin_bearer}}",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -160,7 +181,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{user_bearer}}",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -206,7 +227,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{user_bearer}}",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -249,7 +270,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{admin_bearer}}",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -280,7 +301,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{admin_bearer}}",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -311,7 +332,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{admin_bearer}}",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -328,6 +349,270 @@
 						"1",
 						"hints",
 						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get users",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{prefix}}/users?page=0&count=10&order=number",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "count",
+							"value": "10"
+						},
+						{
+							"key": "order",
+							"value": "number"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get me as user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{prefix}}/users/me",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register user",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"snowinmars@yandex.ru\",\n\t\"password\": \"snowinmars@yandex.ru\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{prefix}}/users/register",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"users",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "875cb95c-f31c-4e85-80f2-f697a431d56b",
+						"exec": [
+							"const response = pm.response.json()",
+							"",
+							"pm.environment.set(\"token\", response.token)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"snowinmars@yandex.ru\",\n\t\"password\": \"snowinmars@yandex.ru\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{prefix}}/users/login",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{prefix}}/users/logout",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"users",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{prefix}}/users/2",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"role\": \"user\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{prefix}}/users/2",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"users",
+						"2"
 					]
 				}
 			},
