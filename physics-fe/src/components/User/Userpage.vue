@@ -42,7 +42,7 @@
               >Админ</md-checkbox
             >
           </div>
-
+        <span>Чтобы изменить цвета, сохраните изменения и перезагрузите страницу.</span>
             <form class="ph-color-fields" @submit.prevent="onSubmit">
               <color-field @color_changed="color_changed" @color_changing="color_changing" id="background_primary" title="Главный цвет фона" :value="this.user.color_background_primary"></color-field>
               <color-field @color_changed="color_changed" @color_changing="color_changing" id="background_secondary" title="Дополнительный цвет фона" :value="this.user.color_background_secondary"></color-field>
