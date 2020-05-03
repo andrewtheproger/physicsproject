@@ -239,4 +239,14 @@
   .md-field.md-theme-default label {
     padding-left: 1em;
   }
+
+  .ph-success {
+    background-color: var(--background-success-color);
+    color: var(--foreground-success-color);
+  }
+
+  .ph-failure {
+    background-color: var(--background-error-color);
+    color: var(--foreground-error-color);
+  }
 </style>

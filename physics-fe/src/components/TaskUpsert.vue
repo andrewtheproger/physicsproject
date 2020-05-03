@@ -348,14 +348,6 @@ export default {
     width: 100%;
     flex-direction: row-reverse;
     align-items: baseline;
-
-    .ph-success {
-      color: var(--foreground-success-color);
-    }
-
-    .ph-failure {
-      color: var(--foreground-error-color);
-    }
   }
 
   .ph-task-upsert-latex {
