@@ -20,7 +20,7 @@ import {
 } from "vue-material/dist/components";
 import VueMathjax from "vue-mathjax";
 import gallery from "img-vuer";
-import { Photoshop } from 'vue-color'
+import { Photoshop } from "vue-color";
 
 Vue.use(VueMathjax);
 Vue.use(MdTabs);
@@ -44,6 +44,6 @@ new Vue({
   store,
   render: h => h(App),
   components: {
-    'photoshop-picker': Photoshop
+    "photoshop-picker": Photoshop
   }
 }).$mount("#app");

@@ -46,10 +46,10 @@ export default {
             isAdmin: false,
             is_token_expired: true,
             role: null,
-            color_background_primary: '#252525',
-            color_background_secondary: '#555',
-            color_foreground_primary: '#ccc',
-            color_foreground_secondary: '#ccf'
+            color_background_primary: "#252525",
+            color_background_secondary: "#555",
+            color_foreground_primary: "#ccc",
+            color_foreground_secondary: "#ccf"
           };
         }
 

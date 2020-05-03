@@ -41,66 +41,82 @@ export default {
       isApiOk: null,
       user: {
         is_token_expired: null,
-        color_background_primary: '#252525',
-        color_background_secondary: '#555',
-        color_foreground_primary: '#ccc',
-        color_foreground_secondary: '#ccf'
+        color_background_primary: "#252525",
+        color_background_secondary: "#555",
+        color_foreground_primary: "#ccc",
+        color_foreground_secondary: "#ccf"
       }
     };
   },
-    computed: {
-        getClass_body() {
-            const parse = require('parse-color');
+  computed: {
+    getClass_body() {
+      const parse = require("parse-color");
 
-            const toColor = (color) => {
-                if (!color) {
-                    return {
-                        rgb: null,
-                        r: null,
-                        b: null,
-                        c: null
-                    };
-                }
-
-                const rgb = parse(color).rgb;
-                return {
-                    rgb: color,
-                    r: rgb[0],
-                    g: rgb[1],
-                    b: rgb[2]
-                };
-            };
-
-            const patchWithCssVariables = (slave, colorName, colorValue) => {
-                const color = toColor(colorValue);
-
-                slave[colorName] = color.rgb;
-                slave[`${colorName}-r`] = color.r;
-                slave[`${colorName}-g`] = color.g;
-                slave[`${colorName}-b`] = color.b;
-
-                return slave;
-            };
-
-            const styles = {
-                '--background-success-color': '#050',
-                '--background-warning-color': '#550',
-                '--background-error-color': '#500',
-                '--background-action-color': '#448aff',
-                '--foreground-success-color': '#0f0',
-                '--foreground-warning-color': '#ff0',
-                '--foreground-error-color': '#f00',
-                '--foreground-action-color': '#fff',
-            };
-
-            patchWithCssVariables(styles, '--background-primary-color', this.user.color_background_primary);
-            patchWithCssVariables(styles, '--background-secondary-color', this.user.color_background_secondary);
-            patchWithCssVariables(styles, '--foreground-primary-color', this.user.color_foreground_primary);
-            patchWithCssVariables(styles, '--foreground-secondary-color', this.user.color_foreground_secondary);
-
-            return styles;
+      const toColor = color => {
+        if (!color) {
+          return {
+            rgb: null,
+            r: null,
+            b: null,
+            c: null
+          };
         }
-    },
+
+        const rgb = parse(color).rgb;
+        return {
+          rgb: color,
+          r: rgb[0],
+          g: rgb[1],
+          b: rgb[2]
+        };
+      };
+
+      const patchWithCssVariables = (slave, colorName, colorValue) => {
+        const color = toColor(colorValue);
+
+        slave[colorName] = color.rgb;
+        slave[`${colorName}-r`] = color.r;
+        slave[`${colorName}-g`] = color.g;
+        slave[`${colorName}-b`] = color.b;
+
+        return slave;
+      };
+
+      const styles = {
+        "--background-success-color": "#050",
+        "--background-warning-color": "#550",
+        "--background-error-color": "#500",
+        "--background-action-color": "#448aff",
+        "--foreground-success-color": "#0f0",
+        "--foreground-warning-color": "#ff0",
+        "--foreground-error-color": "#f00",
+        "--foreground-action-color": "#fff"
+      };
+
+      patchWithCssVariables(
+        styles,
+        "--background-primary-color",
+        this.user.color_background_primary
+      );
+      patchWithCssVariables(
+        styles,
+        "--background-secondary-color",
+        this.user.color_background_secondary
+      );
+      patchWithCssVariables(
+        styles,
+        "--foreground-primary-color",
+        this.user.color_foreground_primary
+      );
+      patchWithCssVariables(
+        styles,
+        "--foreground-secondary-color",
+        this.user.color_foreground_secondary
+      );
+
+      return styles;
+    }
+  },
   methods: {
     checkApiOk() {
       axios({
@@ -122,7 +138,7 @@ export default {
     this.checkApiOk();
     http_helper
       .getMeAsUser(this.$store.getters.get_jwt)
-      .then(response => this.user = response.data);
+      .then(response => (this.user = response.data));
   }
 };
 </script>
@@ -140,7 +156,6 @@ export default {
   background-color: var(--background-warning-color);
   color: var(--foreground-warning-color);
 }
-
 
 .ph-failure {
   color: var(--foreground-error-color);
@@ -256,7 +271,7 @@ div.md-field.md-theme-default.md-has-value textarea.md-textarea {
   }
 
   .md-icon.md-theme-default.md-icon-font svg {
-    fill: var(--foreground-primary-color);;
+    fill: var(--foreground-primary-color);
   }
 }
 

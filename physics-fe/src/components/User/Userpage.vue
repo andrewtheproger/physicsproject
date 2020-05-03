@@ -2,15 +2,15 @@
   <div class="ph-userpage">
     <div class="ph-failure" v-if="flowFailed">
       {{
-      this.flowFailed.http_code
-      ? "Произошла ошибка на стороне сервера"
-      : "Вы ошиблись"
+        this.flowFailed.http_code
+          ? "Произошла ошибка на стороне сервера"
+          : "Вы ошиблись"
       }}: {{ this.flowFailed.message }}
     </div>
 
     <md-progress-bar
-        md-mode="indeterminate"
-        v-if="this.isLoading"
+      md-mode="indeterminate"
+      v-if="this.isLoading"
     ></md-progress-bar>
 
     <md-card>
@@ -23,49 +23,74 @@
       </md-card-actions>
 
       <md-card-content>
-          <div class="md-layout-item md-small-size-100">
-            <md-field>
-              <label>Почта</label>
-              <md-input
-                name="form-email"
-                id="form-email"
-                autocomplete="given-name"
-                v-model="user.email"
-                :disabled="true"
-              />
-            </md-field>
+        <div class="md-layout-item md-small-size-100">
+          <md-field>
+            <label>Почта</label>
+            <md-input
+              name="form-email"
+              id="form-email"
+              autocomplete="given-name"
+              v-model="user.email"
+              :disabled="true"
+            />
+          </md-field>
 
-            <md-checkbox
-              v-if="user.isAdmin"
-              v-model="user.isAdmin"
-              disabled
-              >Админ</md-checkbox
+          <md-checkbox v-if="user.isAdmin" v-model="user.isAdmin" disabled
+            >Админ</md-checkbox
+          >
+        </div>
+        <span
+          >Чтобы изменить цвета, сохраните изменения и перезагрузите
+          страницу.</span
+        >
+        <form class="ph-color-fields" @submit.prevent="onSubmit">
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            id="background_primary"
+            title="Главный цвет фона"
+            :value="this.user.color_background_primary"
+          ></color-field>
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            id="background_secondary"
+            title="Дополнительный цвет фона"
+            :value="this.user.color_background_secondary"
+          ></color-field>
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            id="foreground_primary"
+            title="Главный цвет шрифта"
+            :value="this.user.color_foreground_primary"
+          ></color-field>
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            id="foreground_secondary"
+            title="Дополнительный цвет шрифта"
+            :value="this.user.color_foreground_secondary"
+          ></color-field>
+
+          <div class="ph-user-submit-controls">
+            <md-progress-spinner
+              v-if="!this.allowSubmit"
+              md-mode="indeterminate"
+              :md-diameter="30"
             >
+            </md-progress-spinner>
+
+            <md-button
+              type="submit"
+              class="md-raised md-primary"
+              v-if="this.allowSubmit"
+              :disabled="this.isLoading || !this.allowSubmit"
+            >
+              Сохранить
+            </md-button>
           </div>
-        <span>Чтобы изменить цвета, сохраните изменения и перезагрузите страницу.</span>
-            <form class="ph-color-fields" @submit.prevent="onSubmit">
-              <color-field @color_changed="color_changed" @color_changing="color_changing" id="background_primary" title="Главный цвет фона" :value="this.user.color_background_primary"></color-field>
-              <color-field @color_changed="color_changed" @color_changing="color_changing" id="background_secondary" title="Дополнительный цвет фона" :value="this.user.color_background_secondary"></color-field>
-              <color-field @color_changed="color_changed" @color_changing="color_changing" id="foreground_primary" title="Главный цвет шрифта" :value="this.user.color_foreground_primary"></color-field>
-              <color-field @color_changed="color_changed" @color_changing="color_changing" id="foreground_secondary" title="Дополнительный цвет шрифта" :value="this.user.color_foreground_secondary"></color-field>
-
-              <div class="ph-user-submit-controls">
-                <md-progress-spinner
-                    v-if="!this.allowSubmit"
-                    md-mode="indeterminate"
-                    :md-diameter="30">
-                </md-progress-spinner>
-
-                <md-button
-                    type="submit"
-                    class="md-raised md-primary"
-                    v-if="this.allowSubmit"
-                    :disabled="this.isLoading || !this.allowSubmit"
-                >
-                  Сохранить
-                </md-button>
-              </div>
-            </form>
+        </form>
       </md-card-content>
     </md-card>
   </div>
@@ -85,7 +110,7 @@ export default {
   name: "Userpage",
   components: {
     Logout,
-      'color-field': Color_Field
+    "color-field": Color_Field
   },
   data() {
     return {
@@ -99,63 +124,63 @@ export default {
         color_background_primary: null,
         color_background_secondary: null,
         color_foreground_primary: null,
-        color_foreground_secondary: null,
+        color_foreground_secondary: null
       }
     };
   },
   mounted() {
     http_helper
-            .getMeAsUser(this.$store.getters.get_jwt)
-            .then(response => this.user = response.data);
+      .getMeAsUser(this.$store.getters.get_jwt)
+      .then(response => (this.user = response.data));
   },
   methods: {
-      color_changing() {
-          this.allowSubmit = false;
-      },
-      color_changed({id, hex}) {
-          switch (id) {
-              case 'background_primary':
-                  this.user.color_background_primary = hex;
-                  break;
-              case 'background_secondary':
-                  this.user.color_background_secondary = hex;
-                  break;
-              case 'foreground_primary':
-                  this.user.color_foreground_primary = hex;
-                  break;
-              case 'foreground_secondary':
-                  this.user.color_foreground_secondary = hex;
-                  break;
-              default:
-                  throw 'This should not happens'
-          }
-
-          this.allowSubmit = true;
-      },
-      onSubmit() {
-          const url = config.apiPrefix + "/users/me";
-
-          axios({
-              url: url,
-              method: "POST",
-              data: {
-                  color_background_primary: this.user.color_background_primary,
-                  color_background_secondary: this.user.color_background_secondary,
-                  color_foreground_primary: this.user.color_foreground_primary,
-                  color_foreground_secondary: this.user.color_foreground_secondary,
-              },
-              headers: {
-                  Authorization: this.$store.getters.get_jwt
-              }
-          }).then(
-              response => {
-                  console.log(response);
-              },
-              error => {
-                  console.log(error);
-              }
-          );
+    color_changing() {
+      this.allowSubmit = false;
+    },
+    color_changed({ id, hex }) {
+      switch (id) {
+        case "background_primary":
+          this.user.color_background_primary = hex;
+          break;
+        case "background_secondary":
+          this.user.color_background_secondary = hex;
+          break;
+        case "foreground_primary":
+          this.user.color_foreground_primary = hex;
+          break;
+        case "foreground_secondary":
+          this.user.color_foreground_secondary = hex;
+          break;
+        default:
+          throw "This should not happens";
       }
+
+      this.allowSubmit = true;
+    },
+    onSubmit() {
+      const url = config.apiPrefix + "/users/me";
+
+      axios({
+        url: url,
+        method: "POST",
+        data: {
+          color_background_primary: this.user.color_background_primary,
+          color_background_secondary: this.user.color_background_secondary,
+          color_foreground_primary: this.user.color_foreground_primary,
+          color_foreground_secondary: this.user.color_foreground_secondary
+        },
+        headers: {
+          Authorization: this.$store.getters.get_jwt
+        }
+      }).then(
+        response => {
+          console.log(response);
+        },
+        error => {
+          console.log(error);
+        }
+      );
+    }
   }
 };
 </script>
