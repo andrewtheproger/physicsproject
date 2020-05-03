@@ -32,4 +32,3 @@ Werkzeug==0.16.1
 flask_restful
 email_validator
 colour
-sqlalchemy_utils

@@ -1,5 +1,4 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy_utils import ColorType
 import jwt
 import datetime
 import enum
@@ -58,10 +57,10 @@ class User(db.Model):
     password_hash = db.Column(db.String(128))  # hash stores as string
     role = db.Column(db.Enum(UserRole))
     auth_token = db.Column(db.String(512))  # jwt has no max length, but 512 is fine for now
-    color_background_primary = db.Column(ColorType)
-    color_background_secondary = db.Column(ColorType)
-    color_foreground_primary = db.Column(ColorType)
-    color_foreground_secondary = db.Column(ColorType)
+    color_background_primary = db.Column(db.String(16))  # sqlalchemy ColorType is fine but
+    color_background_secondary = db.Column(db.String(16))  # sqlalchemy breaks the `flask db upgrade` flow
+    color_foreground_primary = db.Column(db.String(16))  # see https://github.com/miguelgrinberg/Flask-Migrate/issues/62
+    color_foreground_secondary = db.Column(db.String(16))
 
     def set_password_hash(self, password):
         self.password_hash = generate_password_hash(password)
