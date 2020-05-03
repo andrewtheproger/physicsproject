@@ -46,9 +46,7 @@
           name="form-repeatPassword"
           id="form-repeatPassword"
         />
-        <span
-          class="md-error"
-          v-if="!$v.form.repeatPassword.sameAsPassword"
+        <span class="md-error" v-if="!$v.form.repeatPassword.sameAsPassword"
           >Пароль не должен быть пустым</span
         >
       </md-field>
@@ -169,8 +167,6 @@ export default {
               message: this.get_error_message(1)
             };
           }
-
-
 
           this.isLoading = false;
         });

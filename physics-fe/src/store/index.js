@@ -20,7 +20,7 @@ export default new Vuex.Store({
       isAdmin: false,
       is_token_expired: true,
       role: null
-    }  
+    }
   },
   getters: {
     get_jwt: state => {
@@ -32,8 +32,8 @@ export default new Vuex.Store({
   },
   mutations: {
     set_jwt(state, jwt) {
-      if (jwt && !jwt.includes('Bearer')) {
-        jwt = 'Bearer ' + jwt;
+      if (jwt && !jwt.includes("Bearer")) {
+        jwt = "Bearer " + jwt;
       }
 
       state.jwt = jwt;

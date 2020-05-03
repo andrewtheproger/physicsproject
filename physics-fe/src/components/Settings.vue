@@ -8,14 +8,14 @@ export default {
   methods: {
     toggle() {
       this.$emit("changeTheme");
-    },
+    }
   },
   data() {
     return {
-      theme: Boolean,
+      theme: Boolean
     };
   },
-  props: ["theme"],
+  props: ["theme"]
 };
 </script>
 <style lang="scss" scoped></style>

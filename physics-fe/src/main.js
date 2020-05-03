@@ -16,7 +16,7 @@ import {
   MdMenu,
   MdList,
   MdCard,
-    MdCheckbox
+  MdCheckbox
 } from "vue-material/dist/components";
 import VueMathjax from "vue-mathjax";
 import gallery from "img-vuer";
