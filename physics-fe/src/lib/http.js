@@ -21,8 +21,10 @@ export default {
         return "пользователь с такой почтой уже есть";
       case 7:
         return "изображение не найдено";
+      case 8:
+        return "неверный пароль";
       default:
-        throw "This should not happens";
+        throw `This should not happens ${code}`;
     }
   },
   getMeAsUser(jwt) {

@@ -92,9 +92,9 @@ export default {
   data() {
     return {
       form: {
-        email: "test@yandex.ru",
-        password: "123456789123456789",
-        repeatPassword: "123456789123456789"
+        email: null,
+        password: null,
+        repeatPassword: null
       },
       isLoading: false,
       isFlowFailed: null,
@@ -191,8 +191,11 @@ export default {
   flex-wrap: wrap;
 
   form {
-    width: 70%;
-
+    padding: 0 3em;
+    width: 100%;
+    @media (min-width: 756px) {
+      padding: 0 7em;
+    }
     .md-icon.md-theme-default.md-icon-font.md-icon-image {
       filter: invert(1);
     }

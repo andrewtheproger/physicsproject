@@ -47,7 +47,8 @@ errors = {
     'hint_not_exists': 4,
     'user_not_exists': 5,
     'user_already_exists': 6,
-    'images_not_exists': 7
+    'images_not_exists': 7,
+    'user_password_is_wrong': 8
 }
 
 
@@ -596,7 +597,7 @@ def login():
         abort(404, errors['user_not_exists'])
 
     if not user.check_password(password):
-        abort(403)
+        abort(403, errors['user_password_is_wrong'])
 
     auth_token = user.encode_auth_token(user.id, app.config['SECRET_JWT_KEY']).decode()
     user.auth_token = auth_token  # todo add last login time and ip

@@ -77,8 +77,8 @@
         data() {
             return {
                 form: {
-                    email: "test@yandex.ru",
-                    password: "123456789123456789"
+                    email: null,
+                    password: null
                 },
                 isLoading: false,
                 isFlowFailed: null,
