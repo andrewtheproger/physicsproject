@@ -89,6 +89,9 @@
             >
               Сохранить
             </md-button>
+
+            <span class="ph-success" v-if="isFlowFailed === false">Изменения сохранены</span>
+            <span class="ph-success" v-if="isFlowFailed === true">Произошла ошибка, и изменения не сохранились</span>
           </div>
         </form>
       </md-card-content>
@@ -159,6 +162,8 @@ export default {
     },
     onSubmit() {
       const url = config.apiPrefix + "/users/me";
+      this.isLoading = true;
+      this.allowSubmit = false;
 
       axios({
         url: url,
@@ -174,9 +179,18 @@ export default {
         }
       }).then(
         response => {
+          this.isLoading = false;
+          this.isFlowFailed = false;
+          this.flowFailed = null;
+          this.allowSubmit = true;
           console.log(response);
         },
         error => {
+          this.isLoading = false;
+          this.isFlowFailed = true;
+          this.flowFailed = null;  // todo
+          this.allowSubmit = true;
+
           console.log(error);
         }
       );

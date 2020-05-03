@@ -134,7 +134,10 @@ export default {
 .mfu-uploadBoxMain {
   width: 50%;
 }
-
+.mfu-uploadBoxMain {
+  width: 100%;
+  height: 100%;
+}
 .mfu-file-name {
   position: relative;
 

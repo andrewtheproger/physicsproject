@@ -33,7 +33,7 @@
         </li>
       </ul>
     </div>
-    <div v-else>
+    <div class="ph-task-no-hints-available" v-else>
       Подсказок к решению пока нет.
     </div>
   </div>
@@ -53,6 +53,10 @@ export default {
 
 <style scoped lang="scss">
 @import "../config/variables.scss";
+
+.ph-task-no-hints-available {
+  font-size: 80%;
+}
 
 .ph-task-hints,
 .ph-task {

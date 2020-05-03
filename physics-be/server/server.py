@@ -17,7 +17,7 @@ from sqlalchemy.sql import text
 
 from .models import db, Task, Hint, HintStatus, Image, User
 from .config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO, DISCORD_WEBHOOK, \
-                    SECRET_JWT_KEY, SECURITY_PASSWORD_SALT
+    SECRET_JWT_KEY, SECURITY_PASSWORD_SALT
 from . import tasks_helpers, hints_helpers, images_helpers, users_helpers
 
 app = Flask(__name__)
@@ -96,7 +96,7 @@ def get_query_parameters(request: object):
     get = lambda name, default, convert: convert(request.args.get(name)) if request.args.get(name) else default
 
     page = get('page', 0, int)
-    count = get('count', 10, int)
+    count = get('count', 10, int)  # todo add count cap
     order = get('order', 'task_number', str)
     order_direction = get('order_direction', 'asc', str)
 

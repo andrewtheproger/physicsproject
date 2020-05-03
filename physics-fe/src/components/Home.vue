@@ -27,8 +27,16 @@
       Произошла ошибка: {{ this.flowFailed.message }}
     </div>
 
+    <nav v-if="this.tasks && this.tasks.length > 1">
+      <v-pagination
+          v-model="page.currentPage"
+          :page-count="Math.floor(this.tasks.length / this.page.itemsPerPage)"
+          :labels="page.paginationAnchorTexts"
+      ></v-pagination>
+    </nav>
+
     <ul class="ph-tasks" v-if="this.tasks">
-      <li v-for="task in this.tasks" :key="task.id">
+      <li v-for="task in this.paginate(this.tasks, this.page.itemsPerPage, this.page.currentPage)" :key="task.id">
         <Task :task="task" />
       </li>
     </ul>
@@ -41,6 +49,8 @@
 
 <script>
 /* eslint-disable */
+
+import vPagination from "vue-plain-pagination";
 import config from "../config/api";
 import axios from "axios";
 import Task from "./Task";
@@ -50,6 +60,7 @@ export default {
   name: "Home",
   components: {
     Task,
+    vPagination,
   },
 
   data() {
@@ -61,7 +72,17 @@ export default {
       sending: false,
       existing_numbers: [],
       isHttpFailed: false,
-      httpFailed: null
+      httpFailed: null,
+      page: {
+        currentPage: 1,
+        itemsPerPage: 5,
+        paginationAnchorTexts: {
+            first: 'Начало',
+            prev: 'Пред.',
+            next: 'След.',
+            last: 'Конец'
+        }
+      }
     };
   },
 
@@ -71,20 +92,25 @@ export default {
 
     axios({
       url: url,
-      method: 'GET'
+      method: "GET",
     }).then(
-      result => {
-        this.existing_numbers = result.data.map(x => x.base_number + '.' + x.task_number);
+      (result) => {
+        this.existing_numbers = result.data.map(
+          (x) => x.base_number + "." + x.task_number
+        );
       },
-      error => {
+      (error) => {
         console.log(error);
       }
-    )
+    );
   },
   beforeDestroy() {
     clearInterval(this.numberExampleInterval);
   },
   methods: {
+    paginate(array, page_size, page_number) {
+      return array.slice((page_number - 1) * page_size, page_number * page_size);
+    },
     getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min) + min);
     },
@@ -97,7 +123,6 @@ export default {
 
     async submit() {
       this.sending = true;
-      console.log(this.$store.getters.get_jwt);
       await this.getTaskByNumber(this.number);
       this.sending = false;
     },
@@ -106,9 +131,12 @@ export default {
       let url = config.apiPrefix + "/tasks";
 
       if (number) {
-        const [base_number, task_number] = number.split('.');
+        const [base_number, task_number] = number.split(".");
         url += "?filter_by_base_number=" + base_number; // todo make it looks ok
         url += "&filter_by_task_number=" + task_number;
+        url += '&count=3800';
+      } else {
+          url += '?count=3800'
       }
 
       await axios({
@@ -136,6 +164,66 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+  @import "../config/variables.scss";
+  // for some reason the pagination could not access scoped classes
+  // todo
+  .pagination {
+    display: flex;
+    list-style: none;
+
+    .pagination-item {
+      min-width: 1.7em;
+      text-align: center;
+
+      &.pagination-item--active .pagination-link {
+        border-bottom-color: var(--foreground-secondary-color);
+      }
+
+      .pagination-link {
+        background-color: var(--background-secondary-color);
+        color: var(--foreground-primary-color);
+        padding: 0.5em;
+        border: none;
+        border-bottom: 1px solid var(--background-secondary-color);
+
+        &.pagination-link--disable {
+          background-color: var(--background-primary-color);
+          color: var(--foreground-primary-color);
+          cursor: not-allowed;
+        }
+
+        &:not(.pagination-link--disable):hover {
+          cursor: pointer;
+          background-color: alpha(var(--background-secondary-color), 0.2);
+        }
+      }
+
+      // dots in between
+      span.pagination-link.pagination-link--disable {
+        display: inline-block;
+        letter-spacing: normal;
+        line-height: normal;
+        background-color: var(--background-primary-color);
+
+        border: none;
+      }
+    }
+
+    .pagination-item:nth-child(1),
+    .pagination-item:nth-child(2),
+    .pagination-item:nth-last-child(1),
+    .pagination-item:nth-last-child(2) {
+      margin: 0 0.5em;
+      width: inherit;
+    }
+
+    .pagination-item:nth-child(1) {
+      margin-left: 0;
+    }
+  }
+</style>
 
 <style scoped lang="scss">
 @import "../config/variables.scss";
@@ -184,5 +272,6 @@ export default {
 
 .ph-tasks {
   list-style: none;
+  color: var(--foreground-primary-color);
 }
 </style>
