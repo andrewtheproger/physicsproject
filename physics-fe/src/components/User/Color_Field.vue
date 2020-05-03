@@ -27,7 +27,7 @@
                 }
 
                 this.$emit('color_changing');
-                this.timer = setTimeout(() => this.$emit('color_changed', {id: this.id, hex: color.hex}), 2000)
+                this.timer = setTimeout(() => this.$emit('color_changed', {id: this.id, hex: color.hex}), 500)
             }
         }
     };

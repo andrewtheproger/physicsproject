@@ -72,4 +72,10 @@ export default {
 
 <style lang="scss" scoped>
 @import "../config/variables.scss";
+
+.ph-user {
+  .md-tabs {
+    background-color: var(--background-secondary-color);
+  }
+}
 </style>

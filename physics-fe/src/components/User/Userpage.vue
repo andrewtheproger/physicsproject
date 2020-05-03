@@ -148,8 +148,8 @@ export default {
                   Authorization: this.$store.getters.get_jwt
               }
           }).then(
-              result => {
-                  console.log(result)
+              response => {
+                  console.log(response);
               },
               error => {
                   console.log(error);

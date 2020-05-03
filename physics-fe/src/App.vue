@@ -48,7 +48,10 @@ export default {
     computed: {
         getClass_body() {
             return {
-                '--bg-color': this.user.color_background_primary
+                '--background-primary-color': this.user.color_background_primary,
+                '--background-secondary-color': this.user.color_background_secondary,
+                '--foreground-primary-color': this.user.color_foreground_primary,
+                '--foreground-secondary-color': this.user.color_foreground_secondary
             }
         }
     },
@@ -133,7 +136,7 @@ div.md-tabs.md-theme-default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background-color: var(--bg-color);
+  background-color: var(--background-primary-color);
   color: $primary-fg-color;
 
   position: relative;
