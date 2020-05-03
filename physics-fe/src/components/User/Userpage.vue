@@ -15,7 +15,11 @@
 
     <md-card>
       <md-card-header>
-        <div class="md-title">Вы</div>
+        <span class="md-title">Вы</span>
+
+        <md-checkbox v-if="user.isAdmin" v-model="user.isAdmin" disabled>
+          Админ
+        </md-checkbox>
       </md-card-header>
 
       <md-card-actions>
@@ -34,10 +38,6 @@
               :disabled="true"
             />
           </md-field>
-
-          <md-checkbox v-if="user.isAdmin" v-model="user.isAdmin" disabled
-            >Админ</md-checkbox
-          >
         </div>
         <span
           >Чтобы изменить цвета, сохраните изменения и перезагрузите
@@ -187,6 +187,14 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../config/variables.scss";
+
+.md-card-header {
+  display: flex;
+
+  .md-checkbox {
+    margin-left: 3em;
+  }
+}
 
 .ph-user-submit-controls {
   display: flex;
