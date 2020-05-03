@@ -56,7 +56,6 @@ export default {
 
 .ph-task-hints,
 .ph-task {
-  color: $primary-fg-color;
   padding-left: 0;
   list-style: none;
 

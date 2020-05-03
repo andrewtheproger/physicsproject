@@ -65,8 +65,8 @@
 <script>
 import { required, email, minLength } from "vuelidate/lib/validators";
 import { validationMixin } from "vuelidate";
-import config from "../config/api.js";
-import http_helper from "../lib/http";
+import config from "../../config/api.js";
+import http_helper from "../../lib/http";
 import axios from "axios";
 {
   axios;
@@ -149,22 +149,11 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "../config/variables.scss";
+@import "../../config/variables.scss";
 
 .ph-registration-submit-controls {
   display: flex;
   flex-direction: row-reverse;
-}
-
-.ph-failure {
-  color: red;
-}
-
-div.md-field.md-theme-default {
-  &.md-invalid .md-error {
-    -webkit-text-fill-color: red;
-    color: red;
-  }
 }
 
 .ph-main {
@@ -174,7 +163,12 @@ div.md-field.md-theme-default {
   flex-wrap: wrap;
 
   form {
-    width: 70%;
+    padding: 0 3em;
+    width: 100%;
+
+    @media (min-width: 756px) {
+      padding: 0 7em;
+    }
 
     .md-icon.md-theme-default.md-icon-font.md-icon-image {
       filter: invert(1);

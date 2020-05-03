@@ -80,9 +80,9 @@
 <script>
 import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
 import { validationMixin } from "vuelidate";
-import config from "../config/api.js";
+import config from "../../config/api.js";
 import axios from "axios";
-import http_helper from "../lib/http";
+import http_helper from "../../lib/http";
 {
   axios;
 }
@@ -177,22 +177,11 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "../config/variables.scss";
+@import "../../config/variables.scss";
 
 .ph-registration-submit-controls {
   display: flex;
   flex-direction: row-reverse;
-}
-
-.ph-failure {
-  color: red;
-}
-
-div.md-field.md-theme-default {
-  &.md-invalid .md-error {
-    -webkit-text-fill-color: red;
-    color: red;
-  }
 }
 
 .ph-main {

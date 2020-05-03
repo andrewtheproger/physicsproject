@@ -25,9 +25,6 @@ export default new Vuex.Store({
   getters: {
     get_jwt: state => {
       return state.jwt;
-    },
-    get_user: state => {
-      return state.user;
     }
   },
   mutations: {
@@ -37,9 +34,6 @@ export default new Vuex.Store({
       }
 
       state.jwt = jwt;
-    },
-    set_user(state, user) {
-      state.user = user;
     }
   },
   plugins: [vuexLocal.plugin]

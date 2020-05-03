@@ -245,20 +245,14 @@ export default {
 .mfu-buttons-wrapper {
   display: flex;
   flex-direction: row-reverse;
-
-  button {
-    width: 10%;
-  }
 }
 
 .mfu-files-input {
   display: flex;
-  align-items: bottom;
 }
 
 .mfu-uploadBox {
-  background: $secondary-bg-color;
-  color: $primary-fg-color;
+  border: 1px solid var(--background-secondary-color);
   width: 100%;
 }
 </style>
