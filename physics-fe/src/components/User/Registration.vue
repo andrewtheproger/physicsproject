@@ -80,13 +80,14 @@
 <script>
 import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
 import { validationMixin } from "vuelidate";
-import config from "../config/api.js";
+import config from "../../config/api.js";
 import axios from "axios";
+import http_helper from "../../lib/http";
 {
   axios;
 }
 export default {
-  name: "Reg",
+  name: "Registration",
   mixins: [validationMixin],
   data() {
     return {
@@ -151,6 +152,7 @@ export default {
         })
         .catch(error => {
           this.isFlowFailed = true;
+          console.log(error.response);
 
           try {
             const data = error.response.data;
@@ -158,13 +160,13 @@ export default {
             this.flowFailed = {
               http_code: error.response.code,
               internal_code: data.code,
-              message: this.get_error_message(data.code)
+              message: http_helper.get_error_message(data.code)
             };
           } catch {
             this.flowFailed = {
               http_code: null,
               internal_code: 1,
-              message: this.get_error_message(1)
+              message: http_helper.get_error_message(1)
             };
           }
 
@@ -175,28 +177,18 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "../config/variables.scss";
+@import "../../config/variables.scss";
 
 .ph-registration-submit-controls {
   display: flex;
   flex-direction: row-reverse;
 }
 
-.ph-failure {
-  color: red;
-}
-
-div.md-field.md-theme-default {
-  &.md-invalid .md-error {
-    -webkit-text-fill-color: red;
-    color: red;
-  }
-}
-
 .ph-main {
   display: flex;
   align-content: center;
   justify-content: center;
+  flex-wrap: wrap;
 
   form {
     width: 70%;

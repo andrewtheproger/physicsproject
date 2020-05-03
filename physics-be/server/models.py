@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-import json
+from sqlalchemy_utils import ColorType
 import jwt
 import datetime
 import enum
@@ -16,16 +16,6 @@ class Image(db.Model):
     thumbnail_url = db.Column(db.String(256))
     task_id = db.Column(db.Integer, db.ForeignKey('task.id'), nullable=True)
 
-    def __repr__(self):
-        return json.dumps({
-            'id': self.id,
-            'created_date': self.created_date,
-            'updated_date': self.updated_date,
-            'url': self.url,
-            'thumbnail_url': self.thumbnail_url,
-            'task_id': self.task_id
-        })
-
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -37,18 +27,6 @@ class Task(db.Model):
     hints = db.relationship('Hint', backref='task', lazy='dynamic')
     image_ids_json = db.Column(db.String(4096))
     images = db.relationship('Image', lazy=True)
-
-    def __repr__(self):
-        return json.dumps({
-            'id': self.id,
-            'created_date': self.created_date,
-            'updated_date': self.updated_date,
-            'base_number': self.base_number,
-            'task_number': self.task_number,
-            'latex': self.latex,
-            'image_ids_json': self.image_ids_json,
-            'hints': self.hints
-        })
 
 
 class HintStatus(enum.Enum):
@@ -71,17 +49,6 @@ class Hint(db.Model):
     image_ids_json = db.Column(db.String(4096))
     status = db.Column(db.Enum(HintStatus))
 
-    def __repr__(self):
-        return json.dumps({
-            'id': self.id,
-            'created_date': self.created_date,
-            'updated_date': self.updated_date,
-            'task_id': self.task_id,
-            'latex': self.latex,
-            'status': self.status,
-            'image_ids_json': self.image_ids_json
-        })
-
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -91,15 +58,10 @@ class User(db.Model):
     password_hash = db.Column(db.String(128))  # hash stores as string
     role = db.Column(db.Enum(UserRole))
     auth_token = db.Column(db.String(512))  # jwt has no max length, but 512 is fine for now
-
-    def __repr__(self):
-        return json.dumps({
-            'id': self.id,
-            'created_date': self.created_date,
-            'updated_date': self.updated_date,
-            'email': self.login,
-            'role': self.role.value
-        })
+    color_background_primary = db.Column(ColorType)
+    color_background_secondary = db.Column(ColorType)
+    color_foreground_primary = db.Column(ColorType)
+    color_foreground_secondary = db.Column(ColorType)
 
     def set_password_hash(self, password):
         self.password_hash = generate_password_hash(password)

@@ -17,7 +17,7 @@ from sqlalchemy.sql import text
 
 from .models import db, Task, Hint, HintStatus, Image, User
 from .config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO, DISCORD_WEBHOOK, \
-                    SECRET_JWT_KEY, SECURITY_PASSWORD_SALT
+    SECRET_JWT_KEY, SECURITY_PASSWORD_SALT
 from . import tasks_helpers, hints_helpers, images_helpers, users_helpers
 
 app = Flask(__name__)
@@ -43,9 +43,11 @@ print(f'Using {SQLALCHEMY_DATABASE_URI}')
 errors = {
     'developer': 1,
     'task_not_exists': 2,
-    'task_business_id_conflict': 3,
+    'task_alreay_exists': 3,
     'hint_not_exists': 4,
-    'user_not_exists': 5
+    'user_not_exists': 5,
+    'user_already_exists': 6,
+    'images_not_exists': 7
 }
 
 
@@ -216,7 +218,7 @@ def get_tasks():
 
 @app.route('/api/tasks/<int:task_id>', methods=['GET'])
 def get_task(task_id):
-    task = db.session.query(Task).filter_by(Task.id == task_id).first()
+    task = db.session.query(Task).filter_by(id=task_id).first()
 
     if not task:
         abort(404, errors['task_not_exists'])
@@ -254,7 +256,7 @@ def upsert_task():
 
     if should_insert:
         if tasks_helpers.does_task_exists(db.session, task.base_number, task.task_number):
-            abort(409, errors['task_business_id_conflict'])
+            abort(409, errors['task_alreay_exists'])
 
         task.created_date = now
         task.updated_date = now
@@ -264,6 +266,10 @@ def upsert_task():
         image_ids = json.loads(task.image_ids_json)
         for image_id in image_ids:
             image = db.session.query(Image).filter_by(id=image_id).first()
+
+            if not image:
+                abort(404, errors['images_not_exists'])
+
             image.task_id = task.id
 
     else:
@@ -456,6 +462,18 @@ def update_user(user_id):
     if user.role:
         db_user.role = user.role
 
+    if user.color_background_primary:
+        db_user.color_background_primary = user.color_background_primary
+
+    if user.color_background_secondary:
+        db_user.color_background_secondary = user.color_background_secondary
+
+    if user.color_foreground_primary:
+        db_user.color_foreground_primary = user.color_foreground_primary
+
+    if user.color_foreground_secondary:
+        db_user.color_foreground_secondary = user.color_foreground_secondary
+
     db.session.commit()
 
     return jsonify({'id': db_user.id})
@@ -475,7 +493,7 @@ def get_user(user_id):
 
 
 @app.route('/api/users/me', methods=['GET'])
-def get_me_as_user():
+def get_me():
     bearer_token = request.headers.get('Authorization')
 
     if not bearer_token:
@@ -486,6 +504,44 @@ def get_me_as_user():
 
     if db_user is None:
         return jsonify({})
+
+    return jsonify(users_helpers.to_model(db_user, app.config['SECRET_JWT_KEY']))
+
+
+@app.route('/api/users/me', methods=['POST'])
+def update_me():
+    bearer_token = request.headers.get('Authorization')
+
+    if not bearer_token:
+        abort(403)
+
+    body = request.json
+    user, _ = users_helpers.from_register_model(body)
+    bearer_value = bearer_token.split()[1]
+    db_user = db.session.query(User).filter_by(auth_token=f'{bearer_value}').first()
+
+    if db_user is None:
+        return jsonify({})
+
+    if user.email:
+        db_user.email = user.email
+
+    if user.role:
+        db_user.role = user.role
+
+    if user.color_background_primary:
+        db_user.color_background_primary = user.color_background_primary
+
+    if user.color_background_secondary:
+        db_user.color_background_secondary = user.color_background_secondary
+
+    if user.color_foreground_primary:
+        db_user.color_foreground_primary = user.color_foreground_primary
+
+    if user.color_foreground_secondary:
+        db_user.color_foreground_secondary = user.color_foreground_secondary
+
+    db.session.commit()
 
     return jsonify(users_helpers.to_model(db_user, app.config['SECRET_JWT_KEY']))
 
@@ -510,7 +566,7 @@ def register_user():
     now = int(time.time() * 1000)  # ms
 
     if users_helpers.does_email_exists(db.session, user.email):
-        abort(409)
+        abort(409, errors['user_already_exists'])
 
     user.auth_token = user.encode_auth_token(user.id, app.config['SECRET_JWT_KEY']).decode()
     user.created_date = now
@@ -537,7 +593,7 @@ def login():
     user = db.session.query(User).filter_by(email=user.email).first()
 
     if user is None:
-        abort(404)
+        abort(404, errors['user_not_exists'])
 
     if not user.check_password(password):
         abort(403)

@@ -1,6 +1,7 @@
 from .models import User
 import time
 import jwt
+from colour import Color
 
 
 def to_models_list(users, secret):
@@ -20,6 +21,7 @@ def check_is_token_expired(user, secret):
 
 def to_model(user, secret):
     is_token_expired = check_is_token_expired(user, secret)
+    str_or_none = lambda x: str(x) if x else None
 
     return {
         'id': user.id,
@@ -27,7 +29,11 @@ def to_model(user, secret):
         'updated_date': user.updated_date,
         'email': user.email,
         'role': user.role.value if user.role else None,
-        'is_token_expired': is_token_expired
+        'is_token_expired': is_token_expired,
+        'color_background_primary': str_or_none(user.color_background_primary),
+        'color_background_secondary': str_or_none(user.color_background_secondary),
+        'color_foreground_primary': str_or_none(user.color_foreground_primary),
+        'color_foreground_secondary': str_or_none(user.color_foreground_secondary),
     }
 
 
@@ -40,12 +46,20 @@ def from_register_model(model):
     email = get_or_none(model, 'email')
     password = get_or_none(model, 'password')
     role = get_or_none(model, 'role')
+    color_background_primary = get_or_none(model, 'color_background_primary')
+    color_background_secondary = get_or_none(model, 'color_background_secondary')
+    color_foreground_primary = get_or_none(model, 'color_foreground_primary')
+    color_foreground_secondary = get_or_none(model, 'color_foreground_secondary')
 
     return User(id=id,
                 created_date=created_date,
                 updated_date=updated_date,
                 email=email,
-                role=role),\
+                role=role,
+                color_background_primary=color_background_primary,
+                color_background_secondary=color_background_secondary,
+                color_foreground_primary=color_foreground_primary,
+                color_foreground_secondary=color_foreground_secondary),\
         password
 
 

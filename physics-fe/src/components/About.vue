@@ -164,6 +164,7 @@ export default {
 <style lang="scss" scoped>
 .ph-about {
   padding: 1em;
+  color: var(--foreground-primary-color);
 
   .ph-github-icon {
     filter: invert(100%);
@@ -174,11 +175,11 @@ export default {
   list-style: none;
 
   .md-icon.md-theme-default.md-icon-font.ph-target-done {
-    color: green;
+    color: var(--foreground-success-color);
   }
 
   .md-icon.md-theme-default.md-icon-font.ph-target-in-progress {
-    color: red;
+    color: var(--foreground-error-color);
   }
 }
 }

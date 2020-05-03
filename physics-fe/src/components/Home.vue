@@ -47,6 +47,7 @@ import vPagination from "vue-plain-pagination";
 import config from "../config/api";
 import axios from "axios";
 import Task from "./Task";
+import http_helper from'../lib/http'
 
 export default {
   name: "Home",
@@ -142,7 +143,7 @@ export default {
           this.httpFailed = {
             http_code: error.response.code,
             internal_code: data.code,
-            message: this.get_error_message(data.code),
+            message: http_helper.get_error_message(data.code),
           };
           this.tasks = [];
         }
@@ -175,11 +176,10 @@ export default {
 
 .ph-nothing-found {
   margin: 1em;
-  color: $primary-fg-color;
 }
 
 .ph-error-message {
-  color: red;
+  color: var(--foreground-error-color);
   margin: 0 1em;
 }
 
@@ -187,28 +187,13 @@ export default {
   margin: 2em 1em 0 1em;
   display: flex;
 
-  .md-button.md-primary {
-    background-color: $secondary-bg-color;
-
-    i {
-      color: $secondary-fg-color;
-    }
-  }
-
   .md-field,
   .md-field.md-theme-default.md-focused,
   .md-field.md-theme-default.md-focused,
   .md-field.md-theme-default.md-has-value {
-    border-bottom: 1px solid $primary-fg-color;
-
-    input.md-input {
-      color: inherit;
-      -webkit-text-fill-color: $primary-fg-color;
-    }
 
     label {
       padding-left: 1em;
-      color: $secondary-bg-color;
     }
   }
 }
