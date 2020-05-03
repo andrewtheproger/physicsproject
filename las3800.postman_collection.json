@@ -617,6 +617,50 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Update me as user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"color_background_primary\": \"#554555\",\n    \"color_background_secondary\": null,\n    \"color_foreground_primary\": null,\n    \"color_foreground_secondary\": null\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{prefix}}/users/me",
+					"host": [
+						"{{prefix}}"
+					],
+					"path": [
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
