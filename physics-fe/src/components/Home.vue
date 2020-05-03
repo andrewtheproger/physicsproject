@@ -26,12 +26,13 @@
     <div class="ph-error-message" v-if="isHttpFailed">
       Произошла ошибка: {{ this.flowFailed.message }}
     </div>
-
-    <ul class="ph-tasks" v-if="this.tasks">
-      <li v-for="task in this.tasks" :key="task.id">
-        <Task :task="task" />
-      </li>
-    </ul>
+    <div v-if="this.tasks && this.tasks.length !== 0">
+      <Task :task="tasks[currentPage - 1]" />
+      <v-pagination
+        v-model="currentPage"
+        :page-count="this.tasks.length"
+      ></v-pagination>
+    </div>
 
     <div class="ph-nothing-found" v-if="this.tasks && this.tasks.length === 0">
       Ничего не найдено.
@@ -41,6 +42,8 @@
 
 <script>
 /* eslint-disable */
+
+import vPagination from "vue-plain-pagination";
 import config from "../config/api";
 import axios from "axios";
 import Task from "./Task";
@@ -49,6 +52,7 @@ export default {
   name: "Home",
   components: {
     Task,
+    vPagination,
   },
 
   data() {
@@ -60,7 +64,8 @@ export default {
       sending: false,
       existing_numbers: [],
       isHttpFailed: false,
-      httpFailed: null
+      httpFailed: null,
+      currentPage: 1,
     };
   },
 
@@ -70,15 +75,17 @@ export default {
 
     axios({
       url: url,
-      method: 'GET'
+      method: "GET",
     }).then(
-      result => {
-        this.existing_numbers = result.data.map(x => x.base_number + '.' + x.task_number);
+      (result) => {
+        this.existing_numbers = result.data.map(
+          (x) => x.base_number + "." + x.task_number
+        );
       },
-      error => {
+      (error) => {
         console.log(error);
       }
-    )
+    );
   },
   beforeDestroy() {
     clearInterval(this.numberExampleInterval);
@@ -104,9 +111,9 @@ export default {
     get_error_message(code) {
       switch (code) {
         case 1:
-          return 'разработчик сделал что-то не так';
+          return "разработчик сделал что-то не так";
         default:
-          throw 'This should not happens';
+          throw "This should not happens";
       }
     },
 
@@ -114,7 +121,7 @@ export default {
       let url = config.apiPrefix + "/tasks";
 
       if (number) {
-        const [base_number, task_number] = number.split('.');
+        const [base_number, task_number] = number.split(".");
         url += "?filter_by_base_number=" + base_number; // todo make it looks ok
         url += "&filter_by_task_number=" + task_number;
       }

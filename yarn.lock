@@ -2,3 +2,21 @@
 # yarn lockfile v1
 
 
+vue-plain-pagination@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/vue-plain-pagination/-/vue-plain-pagination-0.3.0.tgz#f2f03550d2090508f9f6e18fba41930b25464c1e"
+  integrity sha512-zyzmRdrnG0qYCy31CqZ+TN+6WQAQSoGjvb/UZqtR69IG/4wAaU2r9UJjOTahnKcYdyuAz3WYcTRQxPFH2R7imQ==
+  dependencies:
+    vue "^2.5.17"
+
+vue-sliding-pagination@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/vue-sliding-pagination/-/vue-sliding-pagination-1.0.6.tgz#b3ba166b95bb125945374b538879eeffb2652f4b"
+  integrity sha512-gabG318POwmb4a6ajo0elESFo3JZ0GmuEIfobqV8gbfsnCIe7Ye3fcdRto7isRmiKaTnMUDSpTkxM8/4zzxEzQ==
+  dependencies:
+    vue ">=2.4"
+
+vue@>=2.4, vue@^2.5.17:
+  version "2.6.11"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.11.tgz#76594d877d4b12234406e84e35275c6d514125c5"
+  integrity sha512-VfPwgcGABbGAue9+sfrD4PuwFar7gPb1yl1UK1MwXoQPAw0BKSqWfoYCT/ThFrdEVWoI51dBuyCoiNU9bZDZxQ==

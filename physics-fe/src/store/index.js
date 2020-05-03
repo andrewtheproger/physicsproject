@@ -20,7 +20,7 @@ export default new Vuex.Store({
       isAdmin: false,
       is_token_expired: true,
       role: null
-    }
+    }  
   },
   getters: {
     get_jwt: state => {
