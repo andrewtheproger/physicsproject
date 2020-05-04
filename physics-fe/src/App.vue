@@ -17,7 +17,7 @@
 
       <div>
         <ul class="ph-warnings">
-          <li :class="this.isApiOk ? 'ph-hidden' : ''">
+          <li :class="getApiInfoClass">
             Что-то не работает, мы уже чиним.
           </li>
         </ul>
@@ -47,6 +47,13 @@
             };
         },
         computed: {
+            getApiInfoClass() {
+                if (this.isApiOk === null) {
+                    return 'ph-hidden';
+                }
+
+                return this.isApiOk ? 'ph-hidden' : 'fart';
+            },
             getClass_body() {
                 const parse = require("parse-color");
                 const toColor = color => {
@@ -108,6 +115,7 @@
             }
         },
         methods: {
+
             checkApiOk() {
                 axios({
                     url: config.apiPrefix + "/health",

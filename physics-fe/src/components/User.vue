@@ -10,7 +10,7 @@
       v-if="user.is_token_expired && this.tabs.isRegistration"
     ></Registration>
 
-    <Userpage v-if="!user.is_token_expired"></Userpage>
+    <Userpage v-if="user.is_token_expired === false"></Userpage>
   </div>
 </template>
 
