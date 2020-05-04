@@ -73,7 +73,7 @@ class User(db.Model):
         now = datetime.datetime.utcnow()
 
         payload = {
-            'exp': now + datetime.timedelta(days=0, seconds=500),
+            'exp': now + datetime.timedelta(days=0, seconds=2 * 3600),  # todo increase login time by adding salt to the user_id
             'iat': now,
             'sub': user_id
         }

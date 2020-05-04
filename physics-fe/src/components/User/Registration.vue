@@ -38,7 +38,7 @@
       </md-field>
 
       <md-field :class="getValidationClass('repeatPassword')">
-        <label>Пароль</label>
+        <label>Повторите пароль</label>
 
         <md-input
           type="password"
@@ -47,7 +47,7 @@
           id="form-repeatPassword"
         />
         <span class="md-error" v-if="!$v.form.repeatPassword.sameAsPassword"
-          >Пароль не должен быть пустым</span
+          >Пароли не совпадают</span
         >
       </md-field>
 
