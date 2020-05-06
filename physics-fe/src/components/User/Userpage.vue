@@ -47,6 +47,7 @@
           <color-field
             @color_changed="color_changed"
             @color_changing="color_changing"
+            @reset="reset"
             id="background_primary"
             title="Главный цвет фона"
             :value="this.user.color_background_primary"
@@ -54,6 +55,7 @@
           <color-field
             @color_changed="color_changed"
             @color_changing="color_changing"
+            @reset="reset"
             id="background_secondary"
             title="Дополнительный цвет фона"
             :value="this.user.color_background_secondary"
@@ -61,6 +63,7 @@
           <color-field
             @color_changed="color_changed"
             @color_changing="color_changing"
+            @reset="reset"
             id="foreground_primary"
             title="Главный цвет шрифта"
             :value="this.user.color_foreground_primary"
@@ -68,6 +71,7 @@
           <color-field
             @color_changed="color_changed"
             @color_changing="color_changing"
+            @reset="reset"
             id="foreground_secondary"
             title="Дополнительный цвет шрифта"
             :value="this.user.color_foreground_secondary"
@@ -137,6 +141,24 @@ export default {
       .then(response => (this.user = response.data));
   },
   methods: {
+    reset(id) {
+        switch (id) {
+            case "background_primary":
+                this.user.color_background_primary = "#252525";
+                break;
+            case "background_secondary":
+                this.user.color_background_secondary = "#555555";
+                break;
+            case "foreground_primary":
+                this.user.color_foreground_primary = "#cccccc";
+                break;
+            case "foreground_secondary":
+                this.user.color_foreground_secondary = "#ccccff";
+                break;
+            default:
+                throw "This should not happens";
+        }
+    },
     color_changing() {
       this.allowSubmit = false;
     },
