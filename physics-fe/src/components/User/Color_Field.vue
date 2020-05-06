@@ -1,6 +1,15 @@
 <template>
   <div class="ph-color-field">
-    <h4>{{ title }}</h4>
+    <div class="ph-header">
+      <h4>
+        {{ title }}
+      </h4>
+      <md-button class="md-icon-button" @click="reset">
+        <md-icon>
+          replay
+        </md-icon>
+      </md-button>
+    </div>
     <color-picker :value="value || '#000'" @input="update"></color-picker>
   </div>
 </template>
@@ -10,7 +19,7 @@ import ColorPicker from "vue-color/src/components/Chrome.vue";
 
 export default {
   name: "ColorField",
-  props: ["title", "id", "value"],
+  props: ["title", "id", "value", "default"],
   components: {
     ColorPicker
   },
@@ -21,6 +30,9 @@ export default {
     };
   },
   methods: {
+    reset() {
+      this.$emit("reset", this.id);
+    },
     update(color) {
       if (this.timer) {
         clearTimeout(this.timer);
@@ -49,5 +61,11 @@ export default {
 
   margin-bottom: 2em;
   padding-bottom: 1em;
+
+  .ph-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 </style>
