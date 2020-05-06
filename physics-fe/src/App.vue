@@ -10,6 +10,7 @@
             to="/add"
             exact
         ></md-tab>
+        <md-tab id="tab-latex" md-label="Редактор LaTeX" to="/latex" exact></md-tab>
         <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>
 
         <md-tab id="tab-user" md-icon="face" to="/user" exact> </md-tab>
