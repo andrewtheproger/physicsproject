@@ -24,6 +24,11 @@ const routes = [
     component: TaskUpsert
   },
   {
+    path: "/edit/:id",
+    name: "Edit",
+    component: TaskUpsert
+  },
+  {
     path: "/user",
     name: "User",
     component: User

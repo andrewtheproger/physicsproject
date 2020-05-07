@@ -5,6 +5,21 @@ import axios from "axios";
 }
 
 export default {
+  predicate_numbers() {
+      const url = config.apiPrefix + "/tasks/predicate_numbers";
+
+      return axios({
+        url: url,
+        method: "GET"
+      }).then(
+          result => {
+            return result.data;
+          },
+          error => {
+            console.log(error);
+          }
+      );
+    },
   get_error_message(code) {
     switch (code) {
       case 1:

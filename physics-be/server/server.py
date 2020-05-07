@@ -219,7 +219,10 @@ def get_tasks():
 
 @app.route('/api/tasks/<int:task_id>', methods=['GET'])
 def get_task(task_id):
-    task = db.session.query(Task).filter_by(id=task_id).first()
+    task = db.session.query(Task) \
+        .outerjoin(Image, Task.id == Image.task_id) \
+        .filter(Task.id == task_id) \
+        .first()
 
     if not task:
         abort(404, errors['task_not_exists'])

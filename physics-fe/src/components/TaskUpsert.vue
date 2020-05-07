@@ -65,6 +65,7 @@
         ref="multipleFileUploader"
         successMessagePath=""
         errorMessagePath=""
+        :links="this.form.images.map(x => x.url)"
       ></multiple-file-uploader>
 
       <md-progress-bar
@@ -72,7 +73,7 @@
         v-if="this.isLoading"
       ></md-progress-bar>
 
-      <div class="ph-task-upsert-submit-controls">
+      <div v-if="!this.$route.params.id" class="ph-task-upsert-submit-controls">
         <md-button
           type="submit"
           class="md-raised md-primary"
@@ -90,6 +91,28 @@
             this.flowFailed.http_code
               ? "Произошла ошибка на стороне сервера"
               : "Вы ошиблись"
+          }}: {{ this.flowFailed.message }}
+        </div>
+      </div>
+
+      <div v-if="this.$route.params.id" class="ph-task-upsert-submit-controls">
+        <md-button
+          type="submit"
+          class="md-raised md-primary"
+          :disabled="this.isLoading"
+        >
+          Сохранить
+        </md-button>
+
+        <div class="ph-success" v-if="isFlowFailed === false">
+          Изменения сохранены
+        </div>
+
+        <div class="ph-failure" v-if="flowFailed">
+          {{
+          this.flowFailed.http_code
+          ? "Произошла ошибка на стороне сервера"
+          : "Вы ошиблись"
           }}: {{ this.flowFailed.message }}
         </div>
       </div>
@@ -120,6 +143,7 @@ export default {
       },
       url: `${config.apiPrefix}/images`,
       isLoading: false,
+      id: null,
       existing_numbers: [],
       isFlowFailed: null,
       flowFailed: null
@@ -148,7 +172,7 @@ export default {
         },
         mustBeUniqueNumber(v) {
           if (v) {
-            return !this.existing_numbers.includes(v);
+            return this.$route.params.id || !this.existing_numbers.includes(v);
           }
 
           return true;
@@ -160,21 +184,31 @@ export default {
     MultipleFileUploader
   },
   created() {
-    const url = config.apiPrefix + "/tasks/predicate_numbers";
+      http_helper.predicate_numbers().then(numbers => {
+          this.existing_numbers = numbers.map(
+              x => x.base_number + "." + x.task_number
+          );
+      });
 
-    axios({
-      url: url,
-      method: "GET"
-    }).then(
-      result => {
-        this.existing_numbers = result.data.map(
-          x => x.base_number + "." + x.task_number
-        );
-      },
-      error => {
-        console.log(error);
+      if (this.$route.params.id) {
+          const url = config.apiPrefix + "/tasks/" + this.$route.params.id;
+
+          return axios({
+              url: url,
+              method: "GET"
+          }).then(
+              result => {
+                  const data = result.data;
+
+                  this.form.latex = data.body.latex;
+                  this.form.number = `${data.base_number}.${data.task_number}`;
+                  this.form.images = data.body.images;
+              },
+              error => {
+                  console.log(error);
+              }
+          );
       }
-    );
   },
   methods: {
     onNumberChange() {
