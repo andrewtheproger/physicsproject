@@ -76,7 +76,14 @@
             title="Дополнительный цвет шрифта"
             :value="this.user.color_foreground_secondary"
           ></color-field>
-
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            @reset="reset"
+            id="link"
+            title="Цвет ссылок"
+            :value="this.user.color_link"
+          ></color-field>
           <div class="ph-user-submit-controls">
             <md-progress-spinner
               v-if="!this.allowSubmit"
@@ -131,7 +138,8 @@ export default {
         color_background_primary: null,
         color_background_secondary: null,
         color_foreground_primary: null,
-        color_foreground_secondary: null
+        color_foreground_secondary: null,
+        color_link: null,
       }
     };
   },
@@ -155,6 +163,9 @@ export default {
             case "foreground_secondary":
                 this.user.color_foreground_secondary = "#ccccff";
                 break;
+            case "link":
+                this.user.color_link = "#F74800";
+                break;
             default:
                 throw "This should not happens";
         }
@@ -176,6 +187,9 @@ export default {
         case "foreground_secondary":
           this.user.color_foreground_secondary = hex;
           break;
+        case "link":
+          this.user.color_link = hex;
+          break;
         default:
           throw "This should not happens";
       }
@@ -194,7 +208,8 @@ export default {
           color_background_primary: this.user.color_background_primary,
           color_background_secondary: this.user.color_background_secondary,
           color_foreground_primary: this.user.color_foreground_primary,
-          color_foreground_secondary: this.user.color_foreground_secondary
+          color_foreground_secondary: this.user.color_foreground_secondary,
+          color_link: this.user.color_link
         },
         headers: {
           Authorization: this.$store.getters.get_jwt

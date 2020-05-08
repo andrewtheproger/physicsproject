@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :style="getClass_body">
+  <div id="app" :style="getClass_body" >
     <header>
       <md-tabs class="ph-menu" md-sync-route>
         <md-tab id="tab-home" md-label="3800" to="/" exact></md-tab>
@@ -43,7 +43,8 @@
                     color_background_primary: "#252525",
                     color_background_secondary: "#555",
                     color_foreground_primary: "#ccc",
-                    color_foreground_secondary: "#ccf"
+                    color_foreground_secondary: "#ccf",
+                    link_color: "black"
                 }
             };
         },
@@ -90,7 +91,8 @@
                     "--foreground-success-color": "#0f0",
                     "--foreground-warning-color": "#ff0",
                     "--foreground-error-color": "#f00",
-                    "--foreground-action-color": "#fff"
+                    "--foreground-action-color": "#fff",
+                    "--link-color": "#4479BD"
                 };
                 patchWithCssVariables(
                     styles,
@@ -111,6 +113,11 @@
                     styles,
                     "--foreground-secondary-color",
                     this.user.color_foreground_secondary
+                );
+                patchWithCssVariables(
+                    styles,
+                    "--link-color",
+                    this.user.link_color
                 );
                 return styles;
             }
@@ -144,6 +151,9 @@
 
 <style lang="scss">
   @import "config/variables.scss";
+  a {
+    color: var(--link-color) !important;
+  }
   .ph-hidden {
     display: none;
   }
