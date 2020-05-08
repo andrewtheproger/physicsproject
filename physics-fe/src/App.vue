@@ -152,7 +152,7 @@
 <style lang="scss">
   @import "config/variables.scss";
   a {
-    color: var(--link-color) !important;
+    color: black  ;
   }
   .ph-hidden {
     display: none;
