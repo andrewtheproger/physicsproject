@@ -152,7 +152,7 @@
 <style lang="scss">
   @import "config/variables.scss";
   a {
-    color: black  ;
+    color: var(--link-color);
   }
   .ph-hidden {
     display: none;
@@ -185,7 +185,7 @@
       }
       background-color: var(--background-secondary-color);
       .md-button {
-        color: var(--foreground-primary-color);
+        color: var(--foreground-primary-color); 
         .md-icon {
           color: var(--foreground-primary-color);
         }
