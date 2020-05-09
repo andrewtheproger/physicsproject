@@ -84,6 +84,14 @@
             title="Цвет ссылок"
             :value="this.user.color_link"
           ></color-field>
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            @reset="reset"
+            id="icon"
+            title="Цвет иконок"
+            :value="this.user.icon_link"
+          ></color-field>
           <div class="ph-user-submit-controls">
             <md-progress-spinner
               v-if="!this.allowSubmit"
@@ -101,8 +109,12 @@
               Сохранить
             </md-button>
 
-            <span class="ph-success" v-if="isFlowFailed === false">Изменения сохранены</span>
-            <span class="ph-success" v-if="isFlowFailed === true">Произошла ошибка, и изменения не сохранились</span>
+            <span class="ph-success" v-if="isFlowFailed === false"
+              >Изменения сохранены</span
+            >
+            <span class="ph-success" v-if="isFlowFailed === true"
+              >Произошла ошибка, и изменения не сохранились</span
+            >
           </div>
         </form>
       </md-card-content>
@@ -124,7 +136,7 @@ export default {
   name: "Userpage",
   components: {
     Logout,
-    "color-field": Color_Field
+    "color-field": Color_Field,
   },
   data() {
     return {
@@ -140,35 +152,39 @@ export default {
         color_foreground_primary: null,
         color_foreground_secondary: null,
         color_link: null,
-      }
+        color_icon: null,
+      },
     };
   },
   mounted() {
     http_helper
       .getMeAsUser(this.$store.getters.get_jwt)
-      .then(response => (this.user = response.data));
+      .then((response) => (this.user = response.data));
   },
   methods: {
     reset(id) {
-        switch (id) {
-            case "background_primary":
-                this.user.color_background_primary = "#252525";
-                break;
-            case "background_secondary":
-                this.user.color_background_secondary = "#555555";
-                break;
-            case "foreground_primary":
-                this.user.color_foreground_primary = "#cccccc";
-                break;
-            case "foreground_secondary":
-                this.user.color_foreground_secondary = "#ccccff";
-                break;
-            case "link":
-                this.user.color_link = "#F74800";
-                break;
-            default:
-                throw "This should not happens";
-        }
+      switch (id) {
+        case "background_primary":
+          this.user.color_background_primary = "#252525";
+          break;
+        case "background_secondary":
+          this.user.color_background_secondary = "#555555";
+          break;
+        case "foreground_primary":
+          this.user.color_foreground_primary = "#cccccc";
+          break;
+        case "foreground_secondary":
+          this.user.color_foreground_secondary = "#ccccff";
+          break;
+        case "link":
+          this.user.color_link = "#F74800";
+          break;
+        case "icon":
+          this.user.color_icon = "#FFDD00";
+          break;
+        default:
+          throw "This should not happens";
+      }
     },
     color_changing() {
       this.allowSubmit = false;
@@ -190,6 +206,9 @@ export default {
         case "link":
           this.user.color_link = hex;
           break;
+        case "icon":
+          this.user.icon_icon =  hex;
+          break;
         default:
           throw "This should not happens";
       }
@@ -209,30 +228,31 @@ export default {
           color_background_secondary: this.user.color_background_secondary,
           color_foreground_primary: this.user.color_foreground_primary,
           color_foreground_secondary: this.user.color_foreground_secondary,
-          color_link: this.user.color_link
+          color_link: this.user.color_link,
+          color_icon: this.user.color_icon
         },
         headers: {
-          Authorization: this.$store.getters.get_jwt
-        }
+          Authorization: this.$store.getters.get_jwt,
+        },
       }).then(
-        response => {
+        (response) => {
           this.isLoading = false;
           this.isFlowFailed = false;
           this.flowFailed = null;
           this.allowSubmit = true;
           console.log(response);
         },
-        error => {
+        (error) => {
           this.isLoading = false;
           this.isFlowFailed = true;
-          this.flowFailed = null;  // todo
+          this.flowFailed = null; // todo
           this.allowSubmit = true;
 
           console.log(error);
         }
       );
-    }
-  }
+    },
+  },
 };
 </script>
 

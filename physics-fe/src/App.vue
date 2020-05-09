@@ -49,7 +49,8 @@ export default {
         color_background_secondary: "#555",
         color_foreground_primary: "#ccc",
         color_foreground_secondary: "#ccf",
-        link_color: "black",
+        link_color: "violet",
+        icon_color: "yellow",
       },
     };
   },
@@ -97,7 +98,6 @@ export default {
         "--foreground-warning-color": "#ff0",
         "--foreground-error-color": "#f00",
         "--foreground-action-color": "#fff",
-        "--link-color": "#4479BD",
       };
       patchWithCssVariables(
         styles,
@@ -119,7 +119,9 @@ export default {
         "--foreground-secondary-color",
         this.user.color_foreground_secondary
       );
-      patchWithCssVariables(styles, "--link-color", this.user.link_color);
+      patchWithCssVariables(styles, "--link-color", "violet");
+
+      patchWithCssVariables(styles, "--icon-color", "yellow");
       return styles;
     },
   },
@@ -151,8 +153,28 @@ export default {
 
 <style lang="scss">
 @import "config/variables.scss";
+@import "~vue-material/dist/theme/engine"; // Import the theme engine
+
+@include md-register-theme(
+  "default",
+  (
+    primary: yellow // The primary color of your application,,
+  )
+);
+
+@import "~vue-material/dist/components/MdButton/theme";
+@import "~vue-material/dist/components/MdIcon/theme";
 a {
-  color: var(--link-color);
+  color: violet !important;
+  .md-tab-nav-button {
+    color: var(--foreground-primary-color) !important;
+  }
+}
+
+.md-button {
+  background-color: var(--icon-color) !important;;
+  color: var(--foreground-primary-color);
+  
 }
 .ph-hidden {
   display: none;
@@ -171,6 +193,7 @@ div.md-field.md-theme-default {
     color: var(--foreground-error-color);
   }
 }
+
 div.md-tabs.md-theme-default {
   .md-tabs {
     width: 100%;
@@ -185,7 +208,9 @@ div.md-tabs.md-theme-default {
     }
     background-color: var(--background-secondary-color);
     .md-button {
-      color: var(--foreground-primary-color);
+      color: var(--foreground-primary-color) !important;
+
+      background-color: var(--background-secondary-color) !important;
       .md-icon {
         color: var(--foreground-primary-color);
       }
