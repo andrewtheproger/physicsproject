@@ -180,7 +180,7 @@ export default {
           this.user.color_link = "#F74800";
           break;
         case "icon":
-          this.user.color_icon = "#FFDD00";
+          this.user.color_icon = "blue";
           break;
         default:
           throw "This should not happens";

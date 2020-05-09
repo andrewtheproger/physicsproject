@@ -49,7 +49,7 @@ export default {
         color_background_secondary: "#555",
         color_foreground_primary: "#ccc",
         color_foreground_secondary: "#ccf",
-        link_color: "violet",
+        link_color: "yellow",
         icon_color: "yellow",
       },
     };
@@ -119,9 +119,14 @@ export default {
         "--foreground-secondary-color",
         this.user.color_foreground_secondary
       );
-      patchWithCssVariables(styles, "--link-color", "violet");
+      patchWithCssVariables(
+        styles,
+        "--link-color",
+        this.user.color_link
+      );
 
-      patchWithCssVariables(styles, "--icon-color", "yellow");
+      patchWithCssVariables(styles, "--icon-color", 
+        this.user.color_icon);
       return styles;
     },
   },
@@ -158,14 +163,14 @@ export default {
 @include md-register-theme(
   "default",
   (
-    primary: yellow // The primary color of your application,,,,
+    primary: var(--icon-color) // The primary color of your application,,,,,
   )
 );
 
 @import "~vue-material/dist/components/MdButton/theme";
 @import "~vue-material/dist/components/MdIcon/theme";
 a {
-  color: violet !important;
+  color: var(--link-color) !important;
   .md-tab-nav-button {
     color: var(--foreground-primary-color) !important;
   }
