@@ -40,13 +40,13 @@
 </template>
 
 <script>
-/* eslint-disable */
-import config from '../config/api'
-import axios from "axios";
-import Task from './Task'
+import VueMathjax from "./VueMathJax/vueMathJax";
 
 export default {
   name: "Task",
+  components: {
+      VueMathjax
+  },
   props: ['task']
 };
 </script>
