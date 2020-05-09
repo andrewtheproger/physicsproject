@@ -160,7 +160,7 @@ export default {
   }
 }
 </script>
-
+ 
 <style lang="scss" scoped>
 .ph-about {
   padding: 1em;

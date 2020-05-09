@@ -21,12 +21,12 @@ export default {
   name: "ColorField",
   props: ["title", "id", "value", "default"],
   components: {
-    ColorPicker
+    ColorPicker,
   },
   data() {
     return {
       color: null,
-      timer: null
+      timer: null,
     };
   },
   methods: {
@@ -43,8 +43,8 @@ export default {
         () => this.$emit("color_changed", { id: this.id, hex: color.hex }),
         500
       );
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

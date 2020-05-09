@@ -158,7 +158,7 @@ export default {
 @include md-register-theme(
   "default",
   (
-    primary: yellow // The primary color of your application,,
+    primary: yellow // The primary color of your application,,,,
   )
 );
 
@@ -172,9 +172,8 @@ a {
 }
 
 .md-button {
-  background-color: var(--icon-color) !important;;
+  background-color: var(--icon-color) !important;
   color: var(--foreground-primary-color);
-  
 }
 .ph-hidden {
   display: none;

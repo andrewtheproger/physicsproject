@@ -207,7 +207,7 @@ export default {
           this.user.color_link = hex;
           break;
         case "icon":
-          this.user.icon_icon =  hex;
+          this.user.icon_icon = hex;
           break;
         default:
           throw "This should not happens";
@@ -229,7 +229,7 @@ export default {
           color_foreground_primary: this.user.color_foreground_primary,
           color_foreground_secondary: this.user.color_foreground_secondary,
           color_link: this.user.color_link,
-          color_icon: this.user.color_icon
+          color_icon: this.user.color_icon,
         },
         headers: {
           Authorization: this.$store.getters.get_jwt,
@@ -253,7 +253,7 @@ export default {
       );
     },
   },
-};
+}; 
 </script>
 
 <style lang="scss" scoped>
