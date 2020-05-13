@@ -21,6 +21,7 @@ export default {
       );
     },
   get_error_message(code) {
+
     switch (code) {
       case 1:
         return "разработчик сделал что-то не так";
@@ -38,6 +39,8 @@ export default {
         return "изображение не найдено";
       case 8:
         return "неверный пароль";
+      case 9:
+        return "недостаточно прав. Проверьте, что вы залогинены";
       default:
         throw `This should not happens ${code}`;
     }

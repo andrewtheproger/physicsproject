@@ -86,7 +86,7 @@
           Задача добавлена, спасибо
         </div>
 
-        <div class="ph-failure" v-if="flowFailed">
+        <div class="ph-failure" v-if="isFlowFailed === true">
           {{
             this.flowFailed.http_code
               ? "Произошла ошибка на стороне сервера"
@@ -108,7 +108,7 @@
           Изменения сохранены
         </div>
 
-        <div class="ph-failure" v-if="flowFailed">
+        <div class="ph-failure" v-if="isFlowFailed === true">
           {{
           this.flowFailed.http_code
           ? "Произошла ошибка на стороне сервера"
@@ -256,7 +256,9 @@ export default {
 
           this.send(result.data.ids)
             .then(result => {
-              this.loadStatus = result.status;
+
+              console.log(result);
+
               this.isLoading = false;
               this.isFlowFailed = false;
               this.existing_numbers = [
@@ -265,33 +267,8 @@ export default {
               ];
               this.reset();
             })
-            .catch(error => {
-              this.isFlowFailed = true;
-
-              const data = error.response.data;
-
-              this.flowFailed = {
-                http_code: error.response.code,
-                internal_code: data.code,
-                message: http_helper.get_error_message(data.code)
-              };
-
-              this.isLoading = false;
-            });
+            .catch(error => this.handleError(error));
         })
-        .catch(error => {
-          this.isFlowFailed = true;
-
-          const data = error.response.data;
-
-          this.flowFailed = {
-            http_code: error.response.code,
-            internal_code: data.code,
-            message: http_helper.get_error_message(data.code)
-          };
-
-          this.isLoading = false;
-        });
     },
     send(images_ids) {
       const numbers = this.form.number.split(".");
@@ -313,12 +290,24 @@ export default {
           Authorization: this.$store.getters.get_jwt
         }
       })
-        .then(function(response) {
-          return response;
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+      .then(response => response)
+      .catch(error => this.handleError(error));
+    },
+    handleError(error) {
+      this.isFlowFailed = true;
+      debugger;
+
+      const data = error.response.data;
+
+      this.flowFailed = {
+          http_code: error.response.status,
+          internal_code: data.code,
+          message: http_helper.get_error_message(data.code)
+      };
+
+      this.isLoading = false;
+
+      throw error;
     }
   }
 };
