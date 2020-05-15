@@ -105,6 +105,9 @@
               class="md-raised md-primary"
               v-if="this.allowSubmit"
               :disabled="this.isLoading || !this.allowSubmit"
+              style="button {
+  background-color: var(--background-secondary-color) ;
+}"
             >
               Сохранить
             </md-button>
@@ -253,12 +256,17 @@ export default {
       );
     },
   },
-}; 
+};
 </script>
 
 <style lang="scss" scoped>
 @import "../../config/variables.scss";
 
+
+button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
+  
+  background-color: var(--background-secondary-color) ;
+}
 .md-card-header {
   display: flex;
 

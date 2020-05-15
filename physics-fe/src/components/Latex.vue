@@ -33,5 +33,8 @@ export default {
     background-color: var(--background-primary-color);
     color: var(--foreground-primary-color);
   }
+  .md-textarea {
+    border: 1px solid var(--background-secondary-color)
+  }
 }
 </style>

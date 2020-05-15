@@ -75,8 +75,9 @@
       <div class="ph-task-upsert-submit-controls">
         <md-button
           type="submit"
-          class="md-raised md-primary"
+          class="md-raised md-primary "
           :disabled="this.isLoading"
+          style = "background-color: var(--background-secondary-color)"
         >
           Добавить
         </md-button>

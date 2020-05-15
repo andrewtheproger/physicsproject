@@ -119,14 +119,9 @@ export default {
         "--foreground-secondary-color",
         this.user.color_foreground_secondary
       );
-      patchWithCssVariables(
-        styles,
-        "--link-color",
-        this.user.color_link
-      );
+      patchWithCssVariables(styles, "--link-color", this.user.color_link);
 
-      patchWithCssVariables(styles, "--icon-color", 
-        this.user.color_icon);
+      patchWithCssVariables(styles, "--icon-color", this.user.color_icon);
       return styles;
     },
   },
@@ -160,24 +155,17 @@ export default {
 @import "config/variables.scss";
 @import "~vue-material/dist/theme/engine"; // Import the theme engine
 
-@include md-register-theme(
-  "default",
-  (
-    primary: var(--icon-color) // The primary color of your application,,,,,
-  )
-);
-
-@import "~vue-material/dist/components/MdButton/theme";
-@import "~vue-material/dist/components/MdIcon/theme";
 a {
-  color: var(--link-color) !important;
+  color: var(--link-color);
   .md-tab-nav-button {
-    color: var(--foreground-primary-color) !important;
+    color: var(--foreground-primary-color);
   }
 }
 
 .md-button {
-  background-color: var(--icon-color) !important;
+  .ph-button {
+    background-color: var(--icon-color);
+  }
   color: var(--foreground-primary-color);
 }
 .ph-hidden {
@@ -212,9 +200,9 @@ div.md-tabs.md-theme-default {
     }
     background-color: var(--background-secondary-color);
     .md-button {
-      color: var(--foreground-primary-color) !important;
+      color: var(--foreground-primary-color);
 
-      background-color: var(--background-secondary-color) !important;
+      background-color: var(--background-secondary-color);
       .md-icon {
         color: var(--foreground-primary-color);
       }

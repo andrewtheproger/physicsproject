@@ -41,6 +41,7 @@
           type="submit"
           class="md-raised md-primary"
           :disabled="this.isLoading"
+          style = "background-color: var(--background-secondary-color)"
         >
           Далее
         </md-button>

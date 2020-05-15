@@ -4,7 +4,11 @@
       <h4>
         {{ title }}
       </h4>
-      <md-button class="md-icon-button" @click="reset">
+      <md-button
+        class="md-icon-button"
+        @click="reset"
+        style="background-color: var(--background-secondary-color)"
+      >
         <md-icon>
           replay
         </md-icon>
@@ -68,4 +72,5 @@ export default {
     align-items: center;
   }
 }
+
 </style>
