@@ -48,8 +48,6 @@
 </template>
 
 <script>
-/* eslint-disable */
-
 import vPagination from "vue-plain-pagination";
 import config from "../config/api";
 import axios from "axios";

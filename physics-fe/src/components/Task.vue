@@ -40,11 +40,6 @@
 </template>
 
 <script>
-/* eslint-disable */
-import config from '../config/api'
-import axios from "axios";
-import Task from './Task'
-
 export default {
   name: "Task",
   props: ['task']
