@@ -143,6 +143,7 @@ export default {
         images: []
       },
       url: `${config.apiPrefix}/images`,
+      originalData: {}, // cached task from server
       isLoading: false,
       id: null,
       existing_numbers: [],
@@ -173,7 +174,10 @@ export default {
         },
         mustBeUniqueNumber(v) {
           if (v) {
-            return this.$route.params.id || !this.existing_numbers.includes(v);
+            const isEditingSameTask = v === `${this.originalData.base_number}.${this.originalData.task_number}`;
+            const isCreatingNewTask = !this.existing_numbers.includes(v);
+
+            return isEditingSameTask || isCreatingNewTask;
           }
 
           return true;
@@ -206,6 +210,7 @@ export default {
               result => {
                   const data = result.data;
 
+                  this.originalData = data;
                   this.form.latex = data.body.latex;
                   this.form.number = `${data.base_number}.${data.task_number}`;
                   this.form.images = data.body.images;
