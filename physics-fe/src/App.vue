@@ -38,7 +38,7 @@
         data() {
             return {
                 isApiOk: null,
-                user: this.$store.getters.get_user || config.defaultUser
+                user: config.defaultUser
             };
         },
         computed: {
@@ -130,7 +130,10 @@
             this.checkApiOk();
             http_helper
                 .getMeAsUser(this.$store.getters.get_jwt)
-                .then(user => this.$store.commit("set_user", user))
+                .then(user => {
+                    this.$store.commit("set_user", user);
+                    this.user = this.$store.getters.get_user;
+                })
                 .catch(error => console.log(error))
         }
     };
@@ -197,6 +200,16 @@
     margin: 0;
     padding: 0;
   }
+
+  // idk how to fix these transition props once for all so todo
+  #app,
+  div.md-card.md-theme-default,
+  .ph-color-field,
+  i.md-icon.md-theme-default.md-icon-font {
+    transition: background-color 0.5s linear,
+                color 0.5s linear;
+  }
+
   div.md-card.md-theme-default {
     color: inherit;
     background-color: var(--background-secondary-color);

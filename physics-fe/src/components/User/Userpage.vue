@@ -39,10 +39,6 @@
             />
           </md-field>
         </div>
-        <span
-          >Чтобы изменить цвета, сохраните изменения и перезагрузите
-          страницу.</span
-        >
         <form class="ph-color-fields" @submit.prevent="onSubmit">
           <color-field
             @color_changed="color_changed"
@@ -110,7 +106,6 @@ import axios from "axios";
 }
 import Logout from "./Logout";
 import Color_Field from "./Color_Field";
-import http_helper from "../../lib/http";
 import config from "../../config/api.js";
 
 export default {
@@ -125,35 +120,27 @@ export default {
       isFlowFailed: null,
       flowFailed: null,
       allowSubmit: true, // todo to dict [child_id, locks_count]
-      user: {
-        email: null,
-        isAdmin: false,
-        color_background_primary: null,
-        color_background_secondary: null,
-        color_foreground_primary: null,
-        color_foreground_secondary: null
-      }
     };
   },
-  mounted() {
-    http_helper
-      .getMeAsUser(this.$store.getters.get_jwt)
-      .then(response => (this.user = response.data));
+  computed: {
+    user() {
+      return this.$store.getters.get_user;
+    }
   },
   methods: {
     reset(id) {
         switch (id) {
             case "background_primary":
-                this.user.color_background_primary = "#252525";
+                this.user.color_background_primary = config.defaultUser.color_background_primary;
                 break;
             case "background_secondary":
-                this.user.color_background_secondary = "#555555";
+                this.user.color_background_secondary = config.defaultUser.color_background_secondary;
                 break;
             case "foreground_primary":
-                this.user.color_foreground_primary = "#cccccc";
+                this.user.color_foreground_primary = config.defaultUser.color_foreground_primary;
                 break;
             case "foreground_secondary":
-                this.user.color_foreground_secondary = "#ccccff";
+                this.user.color_foreground_secondary = config.defaultUser.color_foreground_secondary;
                 break;
             default:
                 throw "This should not happens";

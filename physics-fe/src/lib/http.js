@@ -56,12 +56,19 @@ export default {
       }
     }).then(
       response => {
-        if (!response.data.email) {
-          response.data = config.defaultUser
+        let user = response.data;
+
+        if (!user.email) {
+          user = config.defaultUser
         }
 
+        user.color_background_primary = user.color_background_primary || config.defaultUser.color_background_primary;
+        user.color_background_secondary = user.color_background_secondary || config.defaultUser.color_background_secondary;
+        user.color_foreground_primary = user.color_foreground_primary || config.defaultUser.color_foreground_primary;
+        user.color_foreground_secondary = user.color_foreground_secondary || config.defaultUser.color_foreground_secondary;
+
         return {
-          ...response.data,
+          ...user,
           isAdmin: response.data.role === "admin"
         };
       },
