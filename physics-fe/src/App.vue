@@ -116,7 +116,6 @@
             }
         },
         methods: {
-
             checkApiOk() {
                 axios({
                     url: config.apiPrefix + "/health",
@@ -137,7 +136,8 @@
             this.checkApiOk();
             http_helper
                 .getMeAsUser(this.$store.getters.get_jwt)
-                .then(response => (this.user = response.data));
+                .then(response => this.$store.commit("set_user", response.data))
+                .catch(error => console.log(error))
         }
     };
 </script>

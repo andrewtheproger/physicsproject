@@ -59,37 +59,18 @@ export default {
         if (response.data.email) {
           response.data = {
             ...response.data,
-            isAdmin: response.data.role === "admin"
           };
-
-          if (!response.data.color_background_primary) {
-            response.data.color_background_primary = "#252525";
-          }
-
-          if (!response.data.color_background_secondary) {
-            response.data.color_background_secondary = "#555";
-          }
-
-          if (!response.data.color_foreground_primary) {
-            response.data.color_foreground_primary = "#ccc";
-          }
-
-          if (!response.data.color_foreground_secondary) {
-            response.data.color_foreground_secondary = "#ccf";
-          }
         } else {
           response.data = {
-            isAdmin: false,
             is_token_expired: true,
-            role: null,
-            color_background_primary: "#252525",
-            color_background_secondary: "#555",
-            color_foreground_primary: "#ccc",
-            color_foreground_secondary: "#ccf"
+            role: null
           };
         }
 
-        return response;
+        return {
+          ...response.data,
+          isAdmin: response.data.role === "admin"
+        };
       },
       error => {
         console.log(error);
