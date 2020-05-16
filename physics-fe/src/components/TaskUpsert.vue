@@ -139,7 +139,8 @@ export default {
       form: {
         latex: "Привет, это текст на $ \\LaTeX $, да. ",
         number: null,
-        isbn: null
+        isbn: null,
+        images: []
       },
       url: `${config.apiPrefix}/images`,
       isLoading: false,
@@ -185,10 +186,15 @@ export default {
   },
   created() {
       http_helper.predicate_numbers().then(numbers => {
+          if (!numbers || !numbers.length) {
+              this.existing_numbers = [];
+              return;
+          }
+
           this.existing_numbers = numbers.map(
               x => x.base_number + "." + x.task_number
           );
-      });
+      }).catch(error => console.log(error));
 
       if (this.$route.params.id) {
           const url = config.apiPrefix + "/tasks/" + this.$route.params.id;
