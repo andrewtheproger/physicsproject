@@ -68,8 +68,4 @@ export default {
     align-items: center;
   }
 }
-button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
-  color: var(--foreground-primary-color);
-  background-color: var(--background-secondary-color);
-}
 </style>

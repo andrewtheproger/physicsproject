@@ -63,8 +63,4 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "../../config/variables.scss";
-button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
-  color: var(--foreground-primary-color);
-  background-color: var(--background-secondary-color);
-}
 </style>
