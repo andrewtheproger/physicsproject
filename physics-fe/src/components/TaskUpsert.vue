@@ -188,40 +188,52 @@ export default {
   components: {
     MultipleFileUploader
   },
-  created() {
-      http_helper.predicate_numbers().then(numbers => {
-          if (!numbers || !numbers.length) {
-              this.existing_numbers = [];
-              return;
-          }
-
-          this.existing_numbers = numbers.map(
-              x => x.base_number + "." + x.task_number
-          );
-      }).catch(error => console.log(error));
-
-      if (this.$route.params.id) {
-          const url = config.apiPrefix + "/tasks/" + this.$route.params.id;
-
-          return axios({
-              url: url,
-              method: "GET"
-          }).then(
-              result => {
-                  const data = result.data;
-
-                  this.originalData = data;
-                  this.form.latex = data.body.latex;
-                  this.form.number = `${data.base_number}.${data.task_number}`;
-                  this.form.images = data.body.images;
-              },
-              error => {
-                  console.log(error);
-              }
-          );
-      }
+  watch:{
+    $route (){
+      this.init();
+    }
+  },
+  mounted() {
+    this.init();
   },
   methods: {
+    init() {
+        http_helper.predicate_numbers().then(numbers => {
+            if (!numbers || !numbers.length) {
+                this.existing_numbers = [];
+                return;
+            }
+
+            this.existing_numbers = numbers.map(
+                x => x.base_number + "." + x.task_number
+            );
+        }).catch(error => console.log(error));
+
+        if (this.$route.params.id) {
+            const url = config.apiPrefix + "/tasks/" + this.$route.params.id;
+
+            return axios({
+                url: url,
+                method: "GET"
+            }).then(
+                result => {
+                    const data = result.data;
+
+                    this.originalData = data;
+                    this.form.latex = data.body.latex;
+                    this.form.number = `${data.base_number}.${data.task_number}`;
+                    this.form.images = data.body.images;
+                },
+                error => {
+                    console.log(error);
+                }
+            );
+        } else {
+            this.form.latex = "Привет, это текст на $ \\LaTeX $, да";
+            this.form.number = null;
+            this.form.images = [];
+        }
+    },
     onNumberChange() {
       if (!this.form.number.includes(".")) {
         this.form.number = this.form.number
