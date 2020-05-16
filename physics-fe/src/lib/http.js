@@ -56,15 +56,8 @@ export default {
       }
     }).then(
       response => {
-        if (response.data.email) {
-          response.data = {
-            ...response.data,
-          };
-        } else {
-          response.data = {
-            is_token_expired: true,
-            role: null
-          };
+        if (!response.data.email) {
+          response.data = config.defaultUser
         }
 
         return {

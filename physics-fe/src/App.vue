@@ -4,7 +4,7 @@
       <md-tabs class="ph-menu" md-sync-route>
         <md-tab id="tab-home" md-label="3800" to="/" exact></md-tab>
         <md-tab
-            :md-disabled="user.is_token_expired"
+            :md-disabled="this.user.is_token_expired"
             id="tab-add"
             md-label="Добавить задачу"
             to="/add"
@@ -38,13 +38,7 @@
         data() {
             return {
                 isApiOk: null,
-                user: {
-                    is_token_expired: null,
-                    color_background_primary: "#252525",
-                    color_background_secondary: "#555",
-                    color_foreground_primary: "#ccc",
-                    color_foreground_secondary: "#ccf"
-                }
+                user: this.$store.getters.get_user || config.defaultUser
             };
         },
         computed: {
@@ -53,7 +47,7 @@
                     return 'ph-hidden';
                 }
 
-                return this.isApiOk ? 'ph-hidden' : 'fart';
+                return this.isApiOk ? 'ph-hidden' : '';
             },
             getClass_body() {
                 const parse = require("parse-color");
@@ -136,7 +130,7 @@
             this.checkApiOk();
             http_helper
                 .getMeAsUser(this.$store.getters.get_jwt)
-                .then(response => this.$store.commit("set_user", response.data))
+                .then(user => this.$store.commit("set_user", user))
                 .catch(error => console.log(error))
         }
     };
