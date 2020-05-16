@@ -207,5 +207,5 @@ button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
 button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
   
   background-color: var(--background-secondary-color) ;
-}
+} 
 </style>

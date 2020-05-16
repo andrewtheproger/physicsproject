@@ -13,7 +13,7 @@
         @link_removed="link_removed"
       />
     </div>
-  </div>
+  </div> 
 </template>
 
 <script>

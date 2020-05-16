@@ -49,7 +49,7 @@ export default {
   name: "Task",
   props: ["task"],
 };
-</script>
+</script> 
 
 <style scoped lang="scss">
 @import "../config/variables.scss";

@@ -127,7 +127,7 @@ export default {
   },
   validations: {
     form: {
-      latex: {
+      latex: { 
         required,
         mustSeemOk(v) {
           if (v) {

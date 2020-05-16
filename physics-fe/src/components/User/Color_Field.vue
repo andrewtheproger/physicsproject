@@ -4,10 +4,7 @@
       <h4>
         {{ title }}
       </h4>
-      <md-button
-        class="md-icon-button"
-        @click="reset"
-      >
+      <md-button class="md-icon-button" @click="reset">
         <md-icon>
           replay
         </md-icon>
@@ -73,6 +70,6 @@ export default {
 }
 button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
   color: var(--foreground-primary-color);
-  background-color: var(--background-secondary-color) ;
+  background-color: var(--background-secondary-color);
 }
 </style>

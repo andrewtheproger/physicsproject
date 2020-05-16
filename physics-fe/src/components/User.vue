@@ -55,7 +55,7 @@ export default {
           break;
         default:
           this.tabs.isRegistration = null;
-          this.tabs.isLogin = null;
+          this.tabs.isLogin = null; 
       }
     },
   },

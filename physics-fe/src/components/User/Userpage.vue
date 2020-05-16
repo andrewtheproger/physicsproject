@@ -159,7 +159,7 @@ export default {
         case "foreground_secondary":
           this.user.color_foreground_secondary = "#ccccff";
           break;
-        
+         
         default:
           throw "This should not happens";
       }

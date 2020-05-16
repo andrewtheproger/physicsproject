@@ -25,7 +25,7 @@
         <span v-if="this.last_commit_url">
           Последний коммит:
           <a :href="this.last_commit_url">{{this.last_commit_datetime_string}} {{this.ago}}</a>
-        </span>
+        </span> 
       </span>
 
       <ul class="ph-targets">

@@ -81,7 +81,7 @@ export default {
         password: null,
       },
       isLoading: false,
-      isFlowFailed: null,
+      isFlowFailed: null, 
       flowFailed: null,
     };
   },
@@ -163,6 +163,6 @@ export default {
 }
 button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
   color: var(--foreground-primary-color);
-  background-color: var(--background-secondary-color) ;
+  background-color: var(--background-secondary-color);
 }
 </style>

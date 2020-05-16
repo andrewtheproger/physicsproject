@@ -9,7 +9,7 @@ flask-jsonschema-validator
 Flask-Migrate
 Flask-SQLAlchemy
 itsdangerous
-Jinja2 
+Jinja2  
 jsonschema
 Mako
 MarkupSafe

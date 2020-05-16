@@ -22,7 +22,7 @@ export default {
 <style scoped lang="scss">
 @import "../config/variables.scss";
 .ph-latex {
-  display: flex;
+  display: flex; 
   padding: 1em;
 
   .ph-input,
