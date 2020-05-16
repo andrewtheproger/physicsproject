@@ -18,7 +18,7 @@
 import Registration from "./User/Registration";
 import Login from "./User/Login";
 import Userpage from "./User/Userpage";
-import http_helper from "../lib/http";
+import config from "../config/api";
 
 export default {
   name: "User",
@@ -32,15 +32,8 @@ export default {
       tabs: {
         isRegistration: null
       },
-      user: {
-        is_token_expired: null
-      }
+      user: this.$store.getters.get_user || config.defaultUser
     };
-  },
-  mounted() {
-    http_helper
-      .getMeAsUser(this.$store.getters.get_jwt)
-      .then(response => (this.user = response.data));
   },
   methods: {
     onTabChange(id) {
