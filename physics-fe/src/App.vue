@@ -151,7 +151,6 @@ export default {
 a {
   color: var(--foreground-secondary-color);
 }
-
 .md-button {
   color: var(--foreground-primary-color);
 }
@@ -173,8 +172,8 @@ div.md-field.md-theme-default {
   }
 }
 button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
-  color: var(--foreground-primary-color);
-  background-color: var(--background-secondary-color);
+  color: var(--foreground-action-primary-color);
+  background-color: var(--background-action-secondary-color);
 }
 div.md-tabs.md-theme-default {
   .md-tabs {
@@ -192,7 +191,6 @@ div.md-tabs.md-theme-default {
     .md-button {
       color: var(--foreground-primary-color);
 
-      background-color: var(--background-secondary-color);
       .md-icon {
         color: var(--foreground-primary-color);
       }
@@ -226,10 +224,6 @@ div.md-card.md-theme-default {
 }
 i.md-icon.md-theme-default.md-icon-font {
   color: var(--foreground-secondary-color);
-}
-button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
-  color: var(--foreground-action-color);
-  background-color: var(--background-action-color);
 }
 div.md-field,
 div.md-field.md-theme-default.md-has-textarea,
