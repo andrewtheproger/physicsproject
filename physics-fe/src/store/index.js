@@ -7,10 +7,10 @@ Vue.use(Vuex);
 const vuexLocal = new VuexPersistence({
   key: "physicsproject",
   storage: window.localStorage,
-  reducer: (state) => ({
+  reducer: state => ({
     jwt: state.jwt,
-    user: state.user,
-  }),
+    user: state.user
+  })
 });
 
 export default new Vuex.Store({
@@ -19,13 +19,13 @@ export default new Vuex.Store({
     user: {
       isAdmin: false,
       is_token_expired: true,
-      role: null,
-    },
+      role: null
+    }
   },
   getters: {
-    get_jwt: (state) => {
+    get_jwt: state => {
       return state.jwt;
-    },
+    }
   },
   mutations: {
     set_jwt(state, jwt) {
@@ -34,7 +34,7 @@ export default new Vuex.Store({
       }
 
       state.jwt = jwt;
-    },
+    }
   },
-  plugins: [vuexLocal.plugin],
+  plugins: [vuexLocal.plugin]
 });

@@ -34,14 +34,14 @@ export default {
       url: url,
       method: "GET",
       headers: {
-        Authorization: jwt,
-      },
+        Authorization: jwt
+      }
     }).then(
-      (response) => {
+      response => {
         if (response.data.email) {
           response.data = {
             ...response.data,
-            isAdmin: response.data.role === "admin",
+            isAdmin: response.data.role === "admin"
           };
 
           if (!response.data.color_background_primary) {
@@ -67,15 +67,15 @@ export default {
             color_background_primary: "#252525",
             color_background_secondary: "#555",
             color_foreground_primary: "#ccc",
-            color_foreground_secondary: "#ccf",
+            color_foreground_secondary: "#ccf"
           };
         }
 
         return response;
       },
-      (error) => {
+      error => {
         console.log(error);
       }
     );
-  },
+  }
 };

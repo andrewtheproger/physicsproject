@@ -78,31 +78,31 @@ export default {
     return {
       form: {
         email: null,
-        password: null,
+        password: null
       },
       isLoading: false,
-      isFlowFailed: null, 
-      flowFailed: null,
+      isFlowFailed: null,
+      flowFailed: null
     };
   },
   validations: {
     form: {
       email: {
         required,
-        email,
+        email
       },
       password: {
         required,
-        minLength: minLength(16),
-      },
-    },
+        minLength: minLength(16)
+      }
+    }
   },
   methods: {
     getValidationClass(fieldName) {
       const field = this.$v.form[fieldName];
       if (field) {
         return {
-          "md-invalid": field.$invalid && field.$dirty,
+          "md-invalid": field.$invalid && field.$dirty
         };
       }
     },
@@ -116,27 +116,27 @@ export default {
       axios
         .post(`${config.apiPrefix}/users/login`, {
           email: this.form.email,
-          password: this.form.password,
+          password: this.form.password
         })
-        .then((response) => {
+        .then(response => {
           this.isLoading = false;
           this.isFlowFailed = false;
           this.$store.commit("set_jwt", response.data.token);
           window.location.reload();
           return response;
         })
-        .catch((error) => {
+        .catch(error => {
           this.isFlowFailed = true;
           const data = error.response.data;
           this.flowFailed = {
             http_code: error.response.code,
             internal_code: data.code,
-            message: http_helper.get_error_message(data.code),
+            message: http_helper.get_error_message(data.code)
           };
           this.isLoading = false;
         });
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

@@ -89,7 +89,6 @@
               class="md-raised md-primary"
               v-if="this.allowSubmit"
               :disabled="this.isLoading || !this.allowSubmit"
-              
             >
               Сохранить
             </md-button>
@@ -121,7 +120,7 @@ export default {
   name: "Userpage",
   components: {
     Logout,
-    "color-field": Color_Field,
+    "color-field": Color_Field
   },
   data() {
     return {
@@ -135,14 +134,14 @@ export default {
         color_background_primary: null,
         color_background_secondary: null,
         color_foreground_primary: null,
-        color_foreground_secondary: null,
-      },
+        color_foreground_secondary: null
+      }
     };
   },
   mounted() {
     http_helper
       .getMeAsUser(this.$store.getters.get_jwt)
-      .then((response) => (this.user = response.data));
+      .then(response => (this.user = response.data));
   },
   methods: {
     reset(id) {
@@ -159,7 +158,7 @@ export default {
         case "foreground_secondary":
           this.user.color_foreground_secondary = "#ccccff";
           break;
-         
+
         default:
           throw "This should not happens";
       }
@@ -199,20 +198,20 @@ export default {
           color_background_primary: this.user.color_background_primary,
           color_background_secondary: this.user.color_background_secondary,
           color_foreground_primary: this.user.color_foreground_primary,
-          color_foreground_secondary: this.user.color_foreground_secondary,
+          color_foreground_secondary: this.user.color_foreground_secondary
         },
         headers: {
-          Authorization: this.$store.getters.get_jwt,
-        },
+          Authorization: this.$store.getters.get_jwt
+        }
       }).then(
-        (response) => {
+        response => {
           this.isLoading = false;
           this.isFlowFailed = false;
           this.flowFailed = null;
           this.allowSubmit = true;
           console.log(response);
         },
-        (error) => {
+        error => {
           this.isLoading = false;
           this.isFlowFailed = true;
           this.flowFailed = null; // todo
@@ -221,18 +220,17 @@ export default {
           console.log(error);
         }
       );
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../../config/variables.scss";
 
-
 button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
   color: var(--foreground-primary-color);
-  background-color: var(--background-secondary-color) ;
+  background-color: var(--background-secondary-color);
 }
 .md-card-header {
   display: flex;

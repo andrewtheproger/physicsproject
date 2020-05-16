@@ -48,8 +48,8 @@ export default {
         color_background_primary: "#252525",
         color_background_secondary: "#555",
         color_foreground_primary: "#ccc",
-        color_foreground_secondary: "#ccf",
-      },
+        color_foreground_secondary: "#ccf"
+      }
     };
   },
   computed: {
@@ -62,13 +62,13 @@ export default {
     },
     getClass_body() {
       const parse = require("parse-color");
-      const toColor = (color) => {
+      const toColor = color => {
         if (!color) {
           return {
             rgb: null,
             r: null,
             b: null,
-            c: null,
+            c: null
           };
         }
         const rgb = parse(color).rgb;
@@ -76,7 +76,7 @@ export default {
           rgb: color,
           r: rgb[0],
           g: rgb[1],
-          b: rgb[2],
+          b: rgb[2]
         };
       };
       const patchWithCssVariables = (slave, colorName, colorValue) => {
@@ -95,7 +95,7 @@ export default {
         "--foreground-success-color": "#0f0",
         "--foreground-warning-color": "#ff0",
         "--foreground-error-color": "#f00",
-        "--foreground-action-color": "#fff",
+        "--foreground-action-color": "#fff"
       };
       patchWithCssVariables(
         styles,
@@ -118,41 +118,39 @@ export default {
         this.user.color_foreground_secondary
       );
       return styles;
-    },
+    }
   },
   methods: {
     checkApiOk() {
       axios({
         url: config.apiPrefix + "/health",
-        method: "GET",
+        method: "GET"
       }).then(
-        (result) => {
+        result => {
           this.isApiOk = result.data.status === "ok";
           console.log("api is " + this.isApiOk);
         },
-        (error) => {
+        error => {
           console.log(error);
           this.isApiOk = false;
         }
       );
-    },
+    }
   },
   mounted() {
     this.checkApiOk();
     http_helper
       .getMeAsUser(this.$store.getters.get_jwt)
-      .then((response) => (this.user = response.data));
-  },
+      .then(response => (this.user = response.data));
+  }
 };
 </script>
 
 <style lang="scss">
 @import "config/variables.scss";
 a {
-  color: var(--foreground-secondary-color)
+  color: var(--foreground-secondary-color);
 }
-
-
 
 .md-button {
   color: var(--foreground-primary-color);

@@ -27,7 +27,7 @@ export default {
   name: "Logout",
   data() {
     return {
-      isLoading: false,
+      isLoading: false
     };
   },
   methods: {
@@ -38,15 +38,15 @@ export default {
         url: url,
         method: "POST",
         headers: {
-          Authorization: this.$store.getters.get_jwt,
-        },
+          Authorization: this.$store.getters.get_jwt
+        }
       }).then(
         () => {
           this.isLoading = false;
           this.$store.commit("set_jwt", null);
           window.location.reload();
         },
-        (error) => {
+        error => {
           this.isLoading = false;
           const data = error.response.data;
           if (data.code === 5) {
@@ -57,14 +57,14 @@ export default {
           throw error;
         }
       );
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
 @import "../../config/variables.scss";
 button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
   color: var(--foreground-primary-color);
-  background-color: var(--background-secondary-color) ;
+  background-color: var(--background-secondary-color);
 }
 </style>

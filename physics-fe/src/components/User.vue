@@ -25,22 +25,22 @@ export default {
   components: {
     Registration,
     Login,
-    Userpage,
+    Userpage
   },
   data() {
     return {
       tabs: {
-        isRegistration: null,
+        isRegistration: null
       },
       user: {
-        is_token_expired: null,
-      },
+        is_token_expired: null
+      }
     };
   },
   mounted() {
     http_helper
       .getMeAsUser(this.$store.getters.get_jwt)
-      .then((response) => (this.user = response.data));
+      .then(response => (this.user = response.data));
   },
   methods: {
     onTabChange(id) {
@@ -55,10 +55,10 @@ export default {
           break;
         default:
           this.tabs.isRegistration = null;
-          this.tabs.isLogin = null; 
+          this.tabs.isLogin = null;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

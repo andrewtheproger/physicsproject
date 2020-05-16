@@ -13,7 +13,7 @@
         @link_removed="link_removed"
       />
     </div>
-  </div> 
+  </div>
 </template>
 
 <script>
@@ -28,105 +28,105 @@ export default {
   props: {
     postURL: {
       type: String,
-      required: true,
+      required: true
     },
     minfiles: {
       type: Number,
-      default: 1,
+      default: 1
     },
     maxfiles: {
       type: Number,
-      default: 30,
+      default: 30
     },
     method: {
       type: String,
-      default: "post",
+      default: "post"
     },
     postMeta: {
       type: [String, Array, Object],
-      default: "",
+      default: ""
     },
     postData: {
       type: [Object],
-      default: () => {},
+      default: () => {}
     },
     postHeader: {
       type: [Object],
-      default: () => {},
+      default: () => {}
     },
     successMessagePath: {
       type: String,
-      required: true,
+      required: true
     },
     errorMessagePath: {
       type: String,
-      required: true,
+      required: true
     },
     headerMessage: {
       type: String,
-      default: "",
+      default: ""
     },
     dropAreaPrimaryMessage: {
       type: String,
-      default: "",
+      default: ""
     },
     dropAreaSecondaryMessage: {
       type: String,
-      default: "",
+      default: ""
     },
     fileNameMessage: {
       type: String,
-      default: "Имена",
+      default: "Имена"
     },
     fileSizeMessage: {
       type: String,
-      default: "Длина",
+      default: "Длина"
     },
     totalFileMessage: {
       type: String,
-      default: "Всего файлов:",
+      default: "Всего файлов:"
     },
     totalUploadSizeMessage: {
       type: String,
-      default: "Всего данных:",
+      default: "Всего данных:"
     },
     addMoreFiles: {
       type: String,
-      default: "Добавить ещё файл",
+      default: "Добавить ещё файл"
     },
     uploadButtonMessage: {
       type: String,
-      default: "Загрузить",
+      default: "Загрузить"
     },
     cancelButtonMessage: {
       type: String,
-      default: "Отменить",
+      default: "Отменить"
     },
     fileUploadErrorMessage: {
       type: String,
-      default: "Произошла ошибка",
+      default: "Произошла ошибка"
     },
     minFilesErrorMessage: {
       type: String,
-      default: "Минимальное количество файлов",
+      default: "Минимальное количество файлов"
     },
     maxFilesErrorMessage: {
       type: String,
-      default: "Максимальное количество файлов",
+      default: "Максимальное количество файлов"
     },
     retryErrorMessage: {
       type: String,
-      default: "Попробуйте снова",
+      default: "Попробуйте снова"
     },
     httpMethodErrorMessage: {
       type: String,
       default:
-        "This HTTP method is not allowed. Please use either 'put' or 'post' methods.",
+        "This HTTP method is not allowed. Please use either 'put' or 'post' methods."
     },
     showHttpMessages: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
   /*
    * The component's data.
@@ -138,12 +138,12 @@ export default {
       files: [], // files to show
       filelist: [], // files to send
       successMsg: "",
-      errorMsg: "",
+      errorMsg: ""
     };
   },
   components: {
     Dragndrop,
-    LinksImport,
+    LinksImport
   },
   methods: {
     removefiles() {
@@ -156,16 +156,16 @@ export default {
       this.links = [...this.links, $event];
     },
     link_removed($event) {
-      this.links = this.links.filter((x) => x !== $event);
+      this.links = this.links.filter(x => x !== $event);
     },
     file_added($event) {
       this.filelist = $event;
 
       const inputFiles = [...$event]; // this is hack to get out of FileList that's not an array
-      this.files = [...inputFiles, ...this.files].filter((x) => x);
+      this.files = [...inputFiles, ...this.files].filter(x => x);
     },
     file_removed($event) {
-      this.files = this.files.filter((x) => x.name !== $event);
+      this.files = this.files.filter(x => x.name !== $event);
     },
     onSubmit() {
       if (this.filelist.length === 0) {
@@ -216,9 +216,9 @@ export default {
         method: this.method,
         url: this.postURL,
         data: formData,
-        headers: this.postHeader,
+        headers: this.postHeader
       })
-        .then((response) => {
+        .then(response => {
           if (this.showHttpMessages) {
             this.successMsg = response + "." + this.successMessagePath;
           }
@@ -227,15 +227,15 @@ export default {
 
           return response;
         })
-        .catch((error) => {
+        .catch(error => {
           if (this.showHttpMessages) {
             this.errorMsg = error + "." + this.errorMessagePath;
           }
 
           this.removefiles();
         });
-    },
-  },
+    }
+  }
 };
 </script>
 

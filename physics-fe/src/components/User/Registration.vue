@@ -94,27 +94,27 @@ export default {
       form: {
         email: null,
         password: null,
-        repeatPassword: null,
+        repeatPassword: null
       },
       isLoading: false,
       isFlowFailed: null,
-      flowFailed: null,
+      flowFailed: null
     };
   },
   validations: {
     form: {
       email: {
         required,
-        email,
+        email
       },
       password: {
         required,
-        minLength: minLength(16),
+        minLength: minLength(16)
       },
       repeatPassword: {
-        sameAsPassword: sameAs("password"),
-      },
-    },
+        sameAsPassword: sameAs("password")
+      }
+    }
   },
 
   methods: {
@@ -123,7 +123,7 @@ export default {
 
       if (field) {
         return {
-          "md-invalid": field.$invalid && field.$dirty,
+          "md-invalid": field.$invalid && field.$dirty
         };
       }
     },
@@ -139,9 +139,9 @@ export default {
       axios
         .post(`${config.apiPrefix}/users/register`, {
           email: this.form.email,
-          password: this.form.password,
+          password: this.form.password
         })
-        .then((response) => {
+        .then(response => {
           this.isLoading = false;
           this.isFlowFailed = false;
 
@@ -150,7 +150,7 @@ export default {
 
           return response;
         })
-        .catch((error) => {
+        .catch(error => {
           this.isFlowFailed = true;
           console.log(error.response);
 
@@ -160,20 +160,20 @@ export default {
             this.flowFailed = {
               http_code: error.response.code,
               internal_code: data.code,
-              message: http_helper.get_error_message(data.code),
+              message: http_helper.get_error_message(data.code)
             };
           } catch {
             this.flowFailed = {
               http_code: null,
               internal_code: 1,
-              message: http_helper.get_error_message(1),
+              message: http_helper.get_error_message(1)
             };
           }
 
           this.isLoading = false;
         });
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -185,7 +185,7 @@ export default {
 }
 button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
   color: var(--foreground-primary-color);
-  background-color: var(--background-secondary-color) ;
+  background-color: var(--background-secondary-color);
 }
 .ph-main {
   display: flex;
@@ -205,7 +205,6 @@ button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
   }
 }
 button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
-  
-  background-color: var(--background-secondary-color) ;
-} 
+  background-color: var(--background-secondary-color);
+}
 </style>

@@ -117,18 +117,18 @@ export default {
       form: {
         latex: "Привет, это текст на $ \\LaTeX $, да. ",
         number: null,
-        isbn: null,
+        isbn: null
       },
       url: `${config.apiPrefix}/images`,
       isLoading: false,
       existing_numbers: [],
       isFlowFailed: null,
-      flowFailed: null,
+      flowFailed: null
     };
   },
   validations: {
     form: {
-      latex: { 
+      latex: {
         required,
         mustSeemOk(v) {
           if (v) {
@@ -136,7 +136,7 @@ export default {
           }
 
           return true;
-        },
+        }
       },
       number: {
         required,
@@ -153,9 +153,9 @@ export default {
           }
 
           return true;
-        },
-      },
-    },
+        }
+      }
+    }
   },
   components: {
     MultipleFileUploader,
@@ -166,14 +166,14 @@ export default {
 
     axios({
       url: url,
-      method: "GET",
+      method: "GET"
     }).then(
-      (result) => {
+      result => {
         this.existing_numbers = result.data.map(
-          (x) => x.base_number + "." + x.task_number
+          x => x.base_number + "." + x.task_number
         );
       },
-      (error) => {
+      error => {
         console.log(error);
       }
     );
@@ -195,7 +195,7 @@ export default {
 
       if (field) {
         return {
-          "md-invalid": field.$invalid && field.$dirty,
+          "md-invalid": field.$invalid && field.$dirty
         };
       }
     },
@@ -217,23 +217,23 @@ export default {
 
       this.$refs.multipleFileUploader
         .onSubmit()
-        .then((result) => {
+        .then(result => {
           if (result.status !== 200) {
             throw new TypeError("General error");
           }
 
           this.send(result.data.ids)
-            .then((result) => {
+            .then(result => {
               this.loadStatus = result.status;
               this.isLoading = false;
               this.isFlowFailed = false;
               this.existing_numbers = [
                 ...this.existing_numbers,
-                this.form.number,
+                this.form.number
               ];
               this.reset();
             })
-            .catch((error) => {
+            .catch(error => {
               this.isFlowFailed = true;
 
               const data = error.response.data;
@@ -241,13 +241,13 @@ export default {
               this.flowFailed = {
                 http_code: error.response.code,
                 internal_code: data.code,
-                message: http_helper.get_error_message(data.code),
+                message: http_helper.get_error_message(data.code)
               };
 
               this.isLoading = false;
             });
         })
-        .catch((error) => {
+        .catch(error => {
           this.isFlowFailed = true;
 
           const data = error.response.data;
@@ -255,7 +255,7 @@ export default {
           this.flowFailed = {
             http_code: error.response.code,
             internal_code: data.code,
-            message: http_helper.get_error_message(data.code),
+            message: http_helper.get_error_message(data.code)
           };
 
           this.isLoading = false;
@@ -274,12 +274,12 @@ export default {
           task_number: task_number,
           body: {
             latex: this.form.latex,
-            image_ids: images_ids,
-          },
+            image_ids: images_ids
+          }
         },
         headers: {
-          Authorization: this.$store.getters.get_jwt,
-        },
+          Authorization: this.$store.getters.get_jwt
+        }
       })
         .then(function(response) {
           return response;
@@ -287,8 +287,8 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -301,7 +301,7 @@ export default {
 <style lang="scss" scoped>
 @import "../config/variables.scss";
 button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
-  background-color: var(--background-secondary-color) ;
+  background-color: var(--background-secondary-color);
   color: var(--foreground-primary-color);
 }
 .ph-task-upsert {

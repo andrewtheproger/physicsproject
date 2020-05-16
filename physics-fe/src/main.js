@@ -15,7 +15,7 @@ import {
   MdMenu,
   MdList,
   MdCard,
-  MdCheckbox,
+  MdCheckbox
 } from "vue-material/dist/components";
 import gallery from "img-vuer";
 import { Photoshop } from "vue-color";
@@ -39,8 +39,8 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   store,
-  render: (h) => h(App),
+  render: h => h(App),
   components: {
-    "photoshop-picker": Photoshop,
-  },
+    "photoshop-picker": Photoshop
+  }
 }).$mount("#app");
