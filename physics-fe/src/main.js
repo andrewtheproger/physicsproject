@@ -17,11 +17,9 @@ import {
   MdCard,
   MdCheckbox,
 } from "vue-material/dist/components";
-import VueMathjax from "vue-mathjax";
 import gallery from "img-vuer";
 import { Photoshop } from "vue-color";
 
-Vue.use(VueMathjax);
 Vue.use(MdTabs);
 Vue.use(MdIcon);
 Vue.use(MdButton);

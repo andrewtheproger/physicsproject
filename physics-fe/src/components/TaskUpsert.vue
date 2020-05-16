@@ -107,6 +107,7 @@ import axios from "axios";
 import { required } from "vuelidate/lib/validators";
 import { validationMixin } from "vuelidate";
 import http_helper from "../lib/http";
+import VueMathjax from "./VueMathJax/vueMathJax";
 
 export default {
   name: "User",
@@ -158,6 +159,7 @@ export default {
   },
   components: {
     MultipleFileUploader,
+    VueMathjax
   },
   created() {
     const url = config.apiPrefix + "/tasks/predicate_numbers";

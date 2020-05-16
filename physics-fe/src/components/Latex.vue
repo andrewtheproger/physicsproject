@@ -1,22 +1,34 @@
 <template>
   <div class="ph-latex">
-    <md-textarea cols="30" rows="15" v-model.trim="latex" class="ph-input">
-    </md-textarea>
+    <md-field class="ph-input">
+      <md-textarea
+        cols="30"
+        rows="15"
+        v-model.trim="latex"
+      >
+      </md-textarea>
+    </md-field>
 
     <vue-mathjax class="ph-mathjax" :formula="this.latex"></vue-mathjax>
   </div>
 </template>
 
 <script>
+import VueMathjax from "./VueMathJax/vueMathJax";
 export default {
-  name: "Latex",
-  data() {
-    return {
-      latex: "Привет, это текст на $ \\LaTeX $, да. ",
-    };
-  },
-  methods: {},
-};
+    name: "Latex",
+    components: {
+        VueMathjax
+    },
+    data() {
+      return {
+          latex: "Привет, это текст на $ \\LaTeX $, да. ",
+      }
+    },
+    methods: {
+
+    }
+}
 </script>
 
 <style scoped lang="scss">
@@ -24,6 +36,10 @@ export default {
 .ph-latex {
   display: flex; 
   padding: 1em;
+
+  .ph-input {
+    border: 1px solid var(--foreground-primary-color);
+  }
 
   .ph-input,
   .ph-mathjax {

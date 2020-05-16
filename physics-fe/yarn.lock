@@ -8405,11 +8405,6 @@ vue-material@^1.0.0-beta-11:
     vue-github-buttons "^3.1.0"
     vue-toc "0.0.1"
 
-vue-mathjax@^0.0.11:
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/vue-mathjax/-/vue-mathjax-0.0.11.tgz#ab2cfae479e76d95db8ea0e941203d08572714a8"
-  integrity sha512-s2P4OatDmzBZD/gm+/FHl5Idd43gxzSIdXOkMq/MiWrNsdOvMMzNFrirfQp0agqbCiNuA8/It/sXsgCDeh5FfA==
-
 vue-plain-pagination@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/vue-plain-pagination/-/vue-plain-pagination-0.3.0.tgz#f2f03550d2090508f9f6e18fba41930b25464c1e"
