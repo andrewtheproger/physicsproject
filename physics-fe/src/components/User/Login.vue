@@ -41,7 +41,6 @@
           type="submit"
           class="md-raised md-primary"
           :disabled="this.isLoading"
-          style = "background-color: var(--background-secondary-color)"
         >
           Далее
         </md-button>
@@ -161,5 +160,9 @@ export default {
       filter: invert(1);
     }
   }
+}
+button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
+  color: var(--foreground-primary-color);
+  background-color: var(--background-secondary-color) ;
 }
 </style>

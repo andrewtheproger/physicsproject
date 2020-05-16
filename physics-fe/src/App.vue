@@ -49,8 +49,6 @@ export default {
         color_background_secondary: "#555",
         color_foreground_primary: "#ccc",
         color_foreground_secondary: "#ccf",
-        link_color: "yellow",
-        icon_color: "yellow",
       },
     };
   },
@@ -119,9 +117,6 @@ export default {
         "--foreground-secondary-color",
         this.user.color_foreground_secondary
       );
-      patchWithCssVariables(styles, "--link-color", this.user.color_link);
-
-      patchWithCssVariables(styles, "--icon-color", this.user.color_icon);
       return styles;
     },
   },
@@ -153,19 +148,13 @@ export default {
 
 <style lang="scss">
 @import "config/variables.scss";
-@import "~vue-material/dist/theme/engine"; // Import the theme engine
-
 a {
-  color: var(--link-color);
-  .md-tab-nav-button {
-    color: var(--foreground-primary-color);
-  }
+  color: var(--foreground-secondary-color)
 }
 
+
+
 .md-button {
-  .ph-button {
-    background-color: var(--icon-color);
-  }
   color: var(--foreground-primary-color);
 }
 .ph-hidden {
@@ -185,7 +174,10 @@ div.md-field.md-theme-default {
     color: var(--foreground-error-color);
   }
 }
-
+button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
+  color: var(--foreground-primary-color);
+  background-color: var(--background-secondary-color);
+}
 div.md-tabs.md-theme-default {
   .md-tabs {
     width: 100%;

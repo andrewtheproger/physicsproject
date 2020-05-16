@@ -77,7 +77,6 @@
           type="submit"
           class="md-raised md-primary "
           :disabled="this.isLoading"
-          style = "background-color: var(--background-secondary-color)"
         >
           Добавить
         </md-button>
@@ -299,7 +298,10 @@ export default {
 
 <style lang="scss" scoped>
 @import "../config/variables.scss";
-
+button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
+  background-color: var(--background-secondary-color) ;
+  color: var(--foreground-primary-color);
+}
 .ph-task-upsert {
   padding: 2em;
 
