@@ -10,7 +10,12 @@
             to="/add"
             exact
         ></md-tab>
-        <md-tab id="tab-latex" md-label="Редактор LaTeX" to="/latex" exact></md-tab>
+        <md-tab
+          id="tab-latex"
+          md-label="Редактор LaTeX"
+          to="/latex"
+          exact
+        ></md-tab>
         <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>
 
         <md-tab id="tab-user" md-icon="face" to="/user" exact> </md-tab>
@@ -135,87 +140,112 @@
                     this.user = this.$store.getters.get_user;
                 })
                 .catch(error => console.log(error))
-        }
-    };
+        },
+};
 </script>
 
 <style lang="scss">
-  @import "config/variables.scss";
-  .ph-hidden {
-    display: none;
-  }
-  .ph-warnings {
-    list-style: none;
-    background-color: var(--background-warning-color);
-    color: var(--foreground-warning-color);
-  }
-  .ph-failure {
+@import "config/variables.scss";
+.ph-hidden {
+  display: none;
+}
+.ph-warnings {
+  list-style: none;
+  background-color: var(--background-warning-color);
+  color: var(--foreground-warning-color);
+}
+.ph-failure {
+  color: var(--foreground-error-color);
+}
+div.md-field.md-theme-default {
+  &.md-invalid .md-error {
+    -webkit-text-fill-color: var(--foreground-error-color);
     color: var(--foreground-error-color);
   }
-  div.md-field.md-theme-default {
-    &.md-invalid .md-error {
-      -webkit-text-fill-color: var(--foreground-error-color);
-      color: var(--foreground-error-color);
-    }
+}
+div.md-tabs.md-theme-default {
+  .md-tabs {
+    width: 100%;
   }
-  div.md-tabs.md-theme-default {
-    .md-tabs {
-      width: 100%;
+  padding: 0.5em;
+  display: flex;
+  justify-content: space-between;
+  font-size: 150%;
+  .md-tabs-navigation {
+    a:last-of-type {
+      margin-left: auto;
     }
-    padding: 0.5em;
-    display: flex;
-    justify-content: space-between;
-    font-size: 150%;
-    .md-tabs-navigation {
-      a:last-of-type {
-        margin-left: auto;
-      }
-      background-color: var(--background-secondary-color);
-      .md-button {
-        color: var(--foreground-primary-color);
-        .md-icon {
-          color: var(--foreground-primary-color);
-        }
-      }
-      .md-button.md-active {
-        color: var(--foreground-primary-color);
-        .md-icon {
-          color: var(--foreground-primary-color);
-        }
-      }
-    }
-    .md-tabs-indicator {
-      background-color: var(--foreground-secondary-color);
-    }
-  }
-  // that's the most root component because
-  // that's the only one we can inline css variables
-  #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background-color: var(--background-primary-color);
-    color: var(--foreground-secondary-color);
-    min-height: 100vh;
-    margin: 0;
-    padding: 0;
-  }
-
-  // idk how to fix these transition props once for all so todo
-  #app,
-  div.md-card.md-theme-default,
-  .ph-color-field,
-  i.md-icon.md-theme-default.md-icon-font {
-    transition: background-color 0.5s linear,
-                color 0.5s linear;
-  }
-
-  div.md-card.md-theme-default {
-    color: inherit;
     background-color: var(--background-secondary-color);
+    .md-button {
+      color: var(--foreground-primary-color);
+      .md-icon {
+        color: var(--foreground-primary-color);
+      }
+    }
+    .md-button.md-active {
+      color: var(--foreground-primary-color);
+      .md-icon {
+        color: var(--foreground-primary-color);
+      }
+    }
   }
-  i.md-icon.md-theme-default.md-icon-font {
-    color: var(--foreground-secondary-color);
+  .md-tabs-indicator {
+    background-color: var(--foreground-secondary-color);
+  }
+}
+// that's the most root component because
+// that's the only one we can inline css variables
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-primary-color);
+  color: var(--foreground-secondary-color);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+// idk how to fix these transition props once for all so todo
+#app,
+div.md-card.md-theme-default,
+.ph-color-field,
+i.md-icon.md-theme-default.md-icon-font {
+  transition: background-color 0.5s linear,
+  color 0.5s linear;
+}
+
+div.md-card.md-theme-default {
+  color: inherit;
+  background-color: var(--background-secondary-color);
+}
+i.md-icon.md-theme-default.md-icon-font {
+  color: var(--foreground-secondary-color);
+}
+button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
+  color: var(--foreground-action-color);
+  background-color: var(--background-action-color);
+}
+div.md-field,
+div.md-field.md-theme-default.md-has-textarea,
+div.md-field.md-theme-default,
+div.md-field.md-theme-default.md-focused,
+div.md-field.md-theme-default.md-focused textarea.md-textarea,
+div.md-field.md-theme-default.md-has-value,
+div.md-field.md-theme-default.md-has-value textarea.md-textarea {
+  -webkit-text-fill-color: var(--foreground-primary-color);
+
+  .md-input,
+  label {
+    color: var(--foreground-primary-color);
+    -webkit-text-fill-color: var(--foreground-primary-color);
+  }
+  &:after,
+  &:before,
+  &:not(.md-autogrow):after,
+  &:not(.md-autogrow):before {
+    background-color: var(--foreground-primary-color);
+    transition: all 0.3s;
   }
 
   .md-button.md-theme-default {
@@ -228,48 +258,29 @@
     color: var(--foreground-action-color);
     background-color: var(--background-action-color);
   }
-  div.md-field,
-  div.md-field.md-theme-default.md-has-textarea,
-  div.md-field.md-theme-default,
-  div.md-field.md-theme-default.md-focused,
-  div.md-field.md-theme-default.md-focused textarea.md-textarea,
-  div.md-field.md-theme-default.md-has-value,
-  div.md-field.md-theme-default.md-has-value textarea.md-textarea {
-    -webkit-text-fill-color: var(--foreground-primary-color);
-    .md-input,
-    label {
-      color: var(--foreground-primary-color);
-      -webkit-text-fill-color: var(--foreground-primary-color);
-    }
-    &:after,
-    &:before,
-    &:not(.md-autogrow):after,
-    &:not(.md-autogrow):before {
-      background-color: var(--foreground-primary-color);
-      transition: all 0.3s;
-    }
-    &:hover:after {
-      background-color: var(--foreground-secondary-color);
-      transition: all 0.3s;
-    }
-    &:hover {
-      transition: all 0.3s;
-    }
-    .md-icon.md-theme-default.md-icon-font svg {
-      fill: var(--foreground-primary-color);
-    }
+  &:hover:after {
+    background-color: var(--foreground-secondary-color);
+    transition: all 0.3s;
   }
-  .md-field.md-theme-default label {
-    padding-left: 1em;
+  &:hover {
+    transition: all 0.3s;
   }
+  .md-icon.md-theme-default.md-icon-font svg {
+    fill: var(--foreground-primary-color);
+  }
+}
+.md-field.md-theme-default label {
+  padding-left: 1em;
+}
 
-  .ph-success {
-    background-color: var(--background-success-color);
-    color: var(--foreground-success-color);
-  }
+.ph-success {
+  background-color: var(--background-success-color);
+  color: var(--foreground-success-color);
+}
 
-  .ph-failure {
-    background-color: var(--background-error-color);
-    color: var(--foreground-error-color);
-  }
+.ph-failure {
+  background-color: var(--background-error-color);
+  color: var(--foreground-error-color);
+}
+
 </style>

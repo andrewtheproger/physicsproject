@@ -36,7 +36,14 @@
     </nav>
 
     <ul class="ph-tasks" v-if="this.tasks">
-      <li v-for="task in this.paginate(this.tasks, this.page.itemsPerPage, this.page.currentPage)" :key="task.id">
+      <li
+        v-for="task in this.paginate(
+          this.tasks,
+          this.page.itemsPerPage,
+          this.page.currentPage
+        )"
+        :key="task.id"
+      >
         <Task :task="task" />
       </li>
     </ul>

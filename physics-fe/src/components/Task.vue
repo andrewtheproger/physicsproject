@@ -46,8 +46,13 @@
 </template>
 
 <script>
+import VueMathjax from "./VueMathJax/vueMathJax";
+
 export default {
   name: "Task",
+  components: {
+    VueMathjax
+  },
   props: ['task'],
   computed: {
     user() {

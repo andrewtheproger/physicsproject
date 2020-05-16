@@ -90,8 +90,12 @@
               Сохранить
             </md-button>
 
-            <span class="ph-success" v-if="isFlowFailed === false">Изменения сохранены</span>
-            <span class="ph-success" v-if="isFlowFailed === true">Произошла ошибка, и изменения не сохранились</span>
+            <span class="ph-success" v-if="isFlowFailed === false"
+              >Изменения сохранены</span
+            >
+            <span class="ph-success" v-if="isFlowFailed === true"
+              >Произошла ошибка, и изменения не сохранились</span
+            >
           </div>
         </form>
       </md-card-content>
@@ -197,7 +201,7 @@ export default {
         error => {
           this.isLoading = false;
           this.isFlowFailed = true;
-          this.flowFailed = null;  // todo
+          this.flowFailed = null; // todo
           this.allowSubmit = true;
 
           console.log(error);
