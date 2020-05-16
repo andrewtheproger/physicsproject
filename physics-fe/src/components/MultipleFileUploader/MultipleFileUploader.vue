@@ -128,8 +128,8 @@ export default {
       default: true
     },
     links: {
-        type: Array,
-        default: () => []
+      type: Array,
+      default: () => []
     }
   },
   /*

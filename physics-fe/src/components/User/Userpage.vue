@@ -123,7 +123,7 @@ export default {
       isLoading: false,
       isFlowFailed: null,
       flowFailed: null,
-      allowSubmit: true, // todo to dict [child_id, locks_count]
+      allowSubmit: true // todo to dict [child_id, locks_count]
     };
   },
   computed: {
@@ -133,22 +133,26 @@ export default {
   },
   methods: {
     reset(id) {
-        switch (id) {
-            case "background_primary":
-                this.user.color_background_primary = config.defaultUser.color_background_primary;
-                break;
-            case "background_secondary":
-                this.user.color_background_secondary = config.defaultUser.color_background_secondary;
-                break;
-            case "foreground_primary":
-                this.user.color_foreground_primary = config.defaultUser.color_foreground_primary;
-                break;
-            case "foreground_secondary":
-                this.user.color_foreground_secondary = config.defaultUser.color_foreground_secondary;
-                break;
-            default:
-                throw "This should not happens";
-        }
+      switch (id) {
+        case "background_primary":
+          this.user.color_background_primary =
+            config.defaultUser.color_background_primary;
+          break;
+        case "background_secondary":
+          this.user.color_background_secondary =
+            config.defaultUser.color_background_secondary;
+          break;
+        case "foreground_primary":
+          this.user.color_foreground_primary =
+            config.defaultUser.color_foreground_primary;
+          break;
+        case "foreground_secondary":
+          this.user.color_foreground_secondary =
+            config.defaultUser.color_foreground_secondary;
+          break;
+        default:
+          throw "This should not happens";
+      }
     },
     color_changing() {
       this.allowSubmit = false;

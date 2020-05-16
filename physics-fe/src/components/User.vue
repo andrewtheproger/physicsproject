@@ -30,7 +30,7 @@ export default {
     return {
       tabs: {
         isRegistration: null
-      },
+      }
     };
   },
   computed: {

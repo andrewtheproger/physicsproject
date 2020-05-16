@@ -6,22 +6,21 @@ import axios from "axios";
 
 export default {
   predicate_numbers() {
-      const url = config.apiPrefix + "/tasks/predicate_numbers";
+    const url = config.apiPrefix + "/tasks/predicate_numbers";
 
-      return axios({
-        url: url,
-        method: "GET"
-      }).then(
-          result => {
-            return result.data;
-          },
-          error => {
-            console.log(error);
-          }
-      );
-    },
+    return axios({
+      url: url,
+      method: "GET"
+    }).then(
+      result => {
+        return result.data;
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  },
   get_error_message(code) {
-
     switch (code) {
       case 1:
         return "разработчик сделал что-то не так";
@@ -59,13 +58,21 @@ export default {
         let user = response.data;
 
         if (!user.email) {
-          user = config.defaultUser
+          user = config.defaultUser;
         }
 
-        user.color_background_primary = user.color_background_primary || config.defaultUser.color_background_primary;
-        user.color_background_secondary = user.color_background_secondary || config.defaultUser.color_background_secondary;
-        user.color_foreground_primary = user.color_foreground_primary || config.defaultUser.color_foreground_primary;
-        user.color_foreground_secondary = user.color_foreground_secondary || config.defaultUser.color_foreground_secondary;
+        user.color_background_primary =
+          user.color_background_primary ||
+          config.defaultUser.color_background_primary;
+        user.color_background_secondary =
+          user.color_background_secondary ||
+          config.defaultUser.color_background_secondary;
+        user.color_foreground_primary =
+          user.color_foreground_primary ||
+          config.defaultUser.color_foreground_primary;
+        user.color_foreground_secondary =
+          user.color_foreground_secondary ||
+          config.defaultUser.color_foreground_secondary;
 
         return {
           ...user,

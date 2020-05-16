@@ -110,9 +110,9 @@
 
         <div class="ph-failure" v-if="isFlowFailed === true">
           {{
-          this.flowFailed.http_code
-          ? "Произошла ошибка на стороне сервера"
-          : "Вы ошиблись"
+            this.flowFailed.http_code
+              ? "Произошла ошибка на стороне сервера"
+              : "Вы ошиблись"
           }}: {{ this.flowFailed.message }}
         </div>
       </div>
@@ -175,7 +175,9 @@ export default {
         },
         mustBeUniqueNumber(v) {
           if (v) {
-            const isEditingSameTask = v === `${this.originalData.base_number}.${this.originalData.task_number}`;
+            const isEditingSameTask =
+              v ===
+              `${this.originalData.base_number}.${this.originalData.task_number}`;
             const isCreatingNewTask = !this.existing_numbers.includes(v);
 
             return isEditingSameTask || isCreatingNewTask;
@@ -190,8 +192,8 @@ export default {
     MultipleFileUploader,
     VueMathjax
   },
-  watch:{
-    $route (){
+  watch: {
+    $route() {
       this.init();
     }
   },
@@ -200,41 +202,44 @@ export default {
   },
   methods: {
     init() {
-        http_helper.predicate_numbers().then(numbers => {
-            if (!numbers || !numbers.length) {
-                this.existing_numbers = [];
-                return;
-            }
+      http_helper
+        .predicate_numbers()
+        .then(numbers => {
+          if (!numbers || !numbers.length) {
+            this.existing_numbers = [];
+            return;
+          }
 
-            this.existing_numbers = numbers.map(
-                x => x.base_number + "." + x.task_number
-            );
-        }).catch(error => console.log(error));
+          this.existing_numbers = numbers.map(
+            x => x.base_number + "." + x.task_number
+          );
+        })
+        .catch(error => console.log(error));
 
-        if (this.$route.params.id) {
-            const url = config.apiPrefix + "/tasks/" + this.$route.params.id;
+      if (this.$route.params.id) {
+        const url = config.apiPrefix + "/tasks/" + this.$route.params.id;
 
-            return axios({
-                url: url,
-                method: "GET"
-            }).then(
-                result => {
-                    const data = result.data;
+        return axios({
+          url: url,
+          method: "GET"
+        }).then(
+          result => {
+            const data = result.data;
 
-                    this.originalData = data;
-                    this.form.latex = data.body.latex;
-                    this.form.number = `${data.base_number}.${data.task_number}`;
-                    this.form.images = data.body.images;
-                },
-                error => {
-                    console.log(error);
-                }
-            );
-        } else {
-            this.form.latex = "Привет, это текст на $ \\LaTeX $, да";
-            this.form.number = null;
-            this.form.images = [];
-        }
+            this.originalData = data;
+            this.form.latex = data.body.latex;
+            this.form.number = `${data.base_number}.${data.task_number}`;
+            this.form.images = data.body.images;
+          },
+          error => {
+            console.log(error);
+          }
+        );
+      } else {
+        this.form.latex = "Привет, это текст на $ \\LaTeX $, да";
+        this.form.number = null;
+        this.form.images = [];
+      }
     },
     onNumberChange() {
       if (!this.form.number.includes(".")) {
@@ -272,34 +277,33 @@ export default {
         return;
       }
 
-      this.$refs.multipleFileUploader
-        .onSubmit()
-        .then(result => {
-          if (result.status !== 200) {
-            throw new TypeError("General error");
-          }
+      this.$refs.multipleFileUploader.onSubmit().then(result => {
+        if (result.status !== 200) {
+          throw new TypeError("General error");
+        }
 
-          this.send(result.data.ids)
-            .then(result => {
+        this.send(result.data.ids)
+          .then(result => {
+            console.log(result);
 
-              console.log(result);
-
-              this.isLoading = false;
-              this.isFlowFailed = false;
-              this.existing_numbers = [
-                ...this.existing_numbers,
-                this.form.number
-              ];
-              this.reset();
-            })
-            .catch(error => this.handleError(error));
-        })
+            this.isLoading = false;
+            this.isFlowFailed = false;
+            this.existing_numbers = [
+              ...this.existing_numbers,
+              this.form.number
+            ];
+            this.reset();
+          })
+          .catch(error => this.handleError(error));
+      });
     },
     send(images_ids) {
       const numbers = this.form.number.split(".");
       const base_number = numbers[0];
       const task_number = numbers[1];
-      const id = this.$route.params.id ? parseInt(this.$route.params.id) : undefined;
+      const id = this.$route.params.id
+        ? parseInt(this.$route.params.id)
+        : undefined;
 
       return axios({
         url: `${config.apiPrefix}/tasks`,
@@ -317,8 +321,8 @@ export default {
           Authorization: this.$store.getters.get_jwt
         }
       })
-      .then(response => response)
-      .catch(error => this.handleError(error));
+        .then(response => response)
+        .catch(error => this.handleError(error));
     },
     handleError(error) {
       this.isFlowFailed = true;
@@ -326,9 +330,9 @@ export default {
       const data = error.response.data;
 
       this.flowFailed = {
-          http_code: error.response.status,
-          internal_code: data.code,
-          message: http_helper.get_error_message(data.code)
+        http_code: error.response.status,
+        internal_code: data.code,
+        message: http_helper.get_error_message(data.code)
       };
 
       this.isLoading = false;

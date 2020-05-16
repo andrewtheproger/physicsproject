@@ -1,9 +1,12 @@
 <template>
   <div class="ph-task" v-on:keyup.escape="cl">
-
     <h3 class="ph-task-header">
       <span>3800.{{ task.base_number }}.{{ task.task_number }}</span>
-      <md-button :to="`/edit/${task.id}`" class="md-icon-button md-dense md-primary" v-if="this.user.isAdmin">
+      <md-button
+        :to="`/edit/${task.id}`"
+        class="md-icon-button md-dense md-primary"
+        v-if="this.user.isAdmin"
+      >
         <md-icon>edit</md-icon>
       </md-button>
     </h3>
@@ -53,12 +56,12 @@ export default {
   components: {
     VueMathjax
   },
-  props: ['task'],
+  props: ["task"],
   computed: {
     user() {
       return this.$store.getters.get_user;
     }
-  },
+  }
 };
 </script>
 

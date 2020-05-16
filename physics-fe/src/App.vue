@@ -4,11 +4,11 @@
       <md-tabs class="ph-menu" md-sync-route>
         <md-tab id="tab-home" md-label="3800" to="/" exact></md-tab>
         <md-tab
-            :md-disabled="this.user.is_token_expired"
-            id="tab-add"
-            md-label="Добавить задачу"
-            to="/add"
-            exact
+          :md-disabled="this.user.is_token_expired"
+          id="tab-add"
+          md-label="Добавить задачу"
+          to="/add"
+          exact
         ></md-tab>
         <md-tab
           id="tab-latex"
@@ -35,112 +35,112 @@
 </template>
 
 <script>
-    import axios from "axios";
-    import config from "./config/api";
-    import http_helper from "./lib/http";
-    export default {
-        name: "App",
-        data() {
-            return {
-                isApiOk: null,
-                user: config.defaultUser
-            };
-        },
-        computed: {
-            getApiInfoClass() {
-                if (this.isApiOk === null) {
-                    return 'ph-hidden';
-                }
+import axios from "axios";
+import config from "./config/api";
+import http_helper from "./lib/http";
+export default {
+  name: "App",
+  data() {
+    return {
+      isApiOk: null,
+      user: config.defaultUser
+    };
+  },
+  computed: {
+    getApiInfoClass() {
+      if (this.isApiOk === null) {
+        return "ph-hidden";
+      }
 
-                return this.isApiOk ? 'ph-hidden' : '';
-            },
-            getClass_body() {
-                const parse = require("parse-color");
-                const toColor = color => {
-                    if (!color) {
-                        return {
-                            rgb: null,
-                            r: null,
-                            b: null,
-                            c: null
-                        };
-                    }
-                    const rgb = parse(color).rgb;
-                    return {
-                        rgb: color,
-                        r: rgb[0],
-                        g: rgb[1],
-                        b: rgb[2]
-                    };
-                };
-                const patchWithCssVariables = (slave, colorName, colorValue) => {
-                    const color = toColor(colorValue);
-                    slave[colorName] = color.rgb;
-                    slave[`${colorName}-r`] = color.r;
-                    slave[`${colorName}-g`] = color.g;
-                    slave[`${colorName}-b`] = color.b;
-                    return slave;
-                };
-                const styles = {
-                    "--background-success-color": "#050",
-                    "--background-warning-color": "#550",
-                    "--background-error-color": "#500",
-                    "--background-action-color": "#448aff",
-                    "--foreground-success-color": "#0f0",
-                    "--foreground-warning-color": "#ff0",
-                    "--foreground-error-color": "#f00",
-                    "--foreground-action-color": "#fff"
-                };
-                patchWithCssVariables(
-                    styles,
-                    "--background-primary-color",
-                    this.user.color_background_primary
-                );
-                patchWithCssVariables(
-                    styles,
-                    "--background-secondary-color",
-                    this.user.color_background_secondary
-                );
-                patchWithCssVariables(
-                    styles,
-                    "--foreground-primary-color",
-                    this.user.color_foreground_primary
-                );
-                patchWithCssVariables(
-                    styles,
-                    "--foreground-secondary-color",
-                    this.user.color_foreground_secondary
-                );
-                return styles;
-            }
+      return this.isApiOk ? "ph-hidden" : "";
+    },
+    getClass_body() {
+      const parse = require("parse-color");
+      const toColor = color => {
+        if (!color) {
+          return {
+            rgb: null,
+            r: null,
+            b: null,
+            c: null
+          };
+        }
+        const rgb = parse(color).rgb;
+        return {
+          rgb: color,
+          r: rgb[0],
+          g: rgb[1],
+          b: rgb[2]
+        };
+      };
+      const patchWithCssVariables = (slave, colorName, colorValue) => {
+        const color = toColor(colorValue);
+        slave[colorName] = color.rgb;
+        slave[`${colorName}-r`] = color.r;
+        slave[`${colorName}-g`] = color.g;
+        slave[`${colorName}-b`] = color.b;
+        return slave;
+      };
+      const styles = {
+        "--background-success-color": "#050",
+        "--background-warning-color": "#550",
+        "--background-error-color": "#500",
+        "--background-action-color": "#448aff",
+        "--foreground-success-color": "#0f0",
+        "--foreground-warning-color": "#ff0",
+        "--foreground-error-color": "#f00",
+        "--foreground-action-color": "#fff"
+      };
+      patchWithCssVariables(
+        styles,
+        "--background-primary-color",
+        this.user.color_background_primary
+      );
+      patchWithCssVariables(
+        styles,
+        "--background-secondary-color",
+        this.user.color_background_secondary
+      );
+      patchWithCssVariables(
+        styles,
+        "--foreground-primary-color",
+        this.user.color_foreground_primary
+      );
+      patchWithCssVariables(
+        styles,
+        "--foreground-secondary-color",
+        this.user.color_foreground_secondary
+      );
+      return styles;
+    }
+  },
+  methods: {
+    checkApiOk() {
+      axios({
+        url: config.apiPrefix + "/health",
+        method: "GET"
+      }).then(
+        result => {
+          this.isApiOk = result.data.status === "ok";
+          console.log("api is " + this.isApiOk);
         },
-        methods: {
-            checkApiOk() {
-                axios({
-                    url: config.apiPrefix + "/health",
-                    method: "GET"
-                }).then(
-                    result => {
-                        this.isApiOk = result.data.status === "ok";
-                        console.log("api is " + this.isApiOk);
-                    },
-                    error => {
-                        console.log(error);
-                        this.isApiOk = false;
-                    }
-                );
-            }
-        },
-        mounted() {
-            this.checkApiOk();
-            http_helper
-                .getMeAsUser(this.$store.getters.get_jwt)
-                .then(user => {
-                    this.$store.commit("set_user", user);
-                    this.user = this.$store.getters.get_user;
-                })
-                .catch(error => console.log(error))
-        },
+        error => {
+          console.log(error);
+          this.isApiOk = false;
+        }
+      );
+    }
+  },
+  mounted() {
+    this.checkApiOk();
+    http_helper
+      .getMeAsUser(this.$store.getters.get_jwt)
+      .then(user => {
+        this.$store.commit("set_user", user);
+        this.user = this.$store.getters.get_user;
+      })
+      .catch(error => console.log(error));
+  }
 };
 </script>
 
@@ -211,8 +211,7 @@ div.md-tabs.md-theme-default {
 div.md-card.md-theme-default,
 .ph-color-field,
 i.md-icon.md-theme-default.md-icon-font {
-  transition: background-color 0.5s linear,
-  color 0.5s linear;
+  transition: background-color 0.5s linear, color 0.5s linear;
 }
 
 div.md-card.md-theme-default {
@@ -282,5 +281,4 @@ div.md-field.md-theme-default.md-has-value textarea.md-textarea {
   background-color: var(--background-error-color);
   color: var(--foreground-error-color);
 }
-
 </style>
