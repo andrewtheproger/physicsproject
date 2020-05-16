@@ -7,7 +7,7 @@ import urllib.request
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 import json
-
+ 
 from flask import Flask, jsonify, abort, request, Response
 from flask_restful import HTTPException
 from flask_migrate import Migrate
