@@ -94,8 +94,12 @@
               Сохранить
             </md-button>
 
-            <span class="ph-success" v-if="isFlowFailed === false">Изменения сохранены</span>
-            <span class="ph-success" v-if="isFlowFailed === true">Произошла ошибка, и изменения не сохранились</span>
+            <span class="ph-success" v-if="isFlowFailed === false"
+              >Изменения сохранены</span
+            >
+            <span class="ph-success" v-if="isFlowFailed === true"
+              >Произошла ошибка, и изменения не сохранились</span
+            >
           </div>
         </form>
       </md-card-content>
@@ -142,22 +146,22 @@ export default {
   },
   methods: {
     reset(id) {
-        switch (id) {
-            case "background_primary":
-                this.user.color_background_primary = "#252525";
-                break;
-            case "background_secondary":
-                this.user.color_background_secondary = "#555555";
-                break;
-            case "foreground_primary":
-                this.user.color_foreground_primary = "#cccccc";
-                break;
-            case "foreground_secondary":
-                this.user.color_foreground_secondary = "#ccccff";
-                break;
-            default:
-                throw "This should not happens";
-        }
+      switch (id) {
+        case "background_primary":
+          this.user.color_background_primary = "#252525";
+          break;
+        case "background_secondary":
+          this.user.color_background_secondary = "#555555";
+          break;
+        case "foreground_primary":
+          this.user.color_foreground_primary = "#cccccc";
+          break;
+        case "foreground_secondary":
+          this.user.color_foreground_secondary = "#ccccff";
+          break;
+        default:
+          throw "This should not happens";
+      }
     },
     color_changing() {
       this.allowSubmit = false;
@@ -210,7 +214,7 @@ export default {
         error => {
           this.isLoading = false;
           this.isFlowFailed = true;
-          this.flowFailed = null;  // todo
+          this.flowFailed = null; // todo
           this.allowSubmit = true;
 
           console.log(error);

@@ -45,9 +45,9 @@ import VueMathjax from "./VueMathJax/vueMathJax";
 export default {
   name: "Task",
   components: {
-      VueMathjax
+    VueMathjax
   },
-  props: ['task']
+  props: ["task"]
 };
 </script>
 
