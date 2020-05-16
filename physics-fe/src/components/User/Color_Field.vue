@@ -51,7 +51,7 @@ export default {
 @import "../../config/variables.scss";
 
 .ph-color-field {
-  flex: 0 50%;
+  flex: 0 30%;
   flex-direction: column;
   display: flex;
   align-items: center;

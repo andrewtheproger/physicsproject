@@ -52,13 +52,22 @@ export default {
             response.data.color_background_secondary = "#555";
           }
 
+          if (!response.data.color_background_action) {
+            response.data.color_background_action = "#448aff";
+          }
+
           if (!response.data.color_foreground_primary) {
             response.data.color_foreground_primary = "#ccc";
           }
 
-          if (!response.data.color_foreground_secondary) {
-            response.data.color_foreground_secondary = "#ccf";
+          if (!response.data.color_action_foreground) {
+            response.data.color_action_foreground = "#ccf";
           }
+
+          if (!response.data.color_foreground_action) {
+            response.data.color_foreground_action = "#fff";
+          }
+
         } else {
           response.data = {
             isAdmin: false,
@@ -66,8 +75,10 @@ export default {
             role: null,
             color_background_primary: "#252525",
             color_background_secondary: "#555",
+            color_background_action: "#448aff",
             color_foreground_primary: "#ccc",
-            color_foreground_secondary: "#ccf"
+            color_foreground_secondary: "#ccf",
+            color_foreground_action: "#fff"
           };
         }
 

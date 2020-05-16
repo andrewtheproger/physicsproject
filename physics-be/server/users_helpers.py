@@ -17,7 +17,7 @@ def check_is_token_expired(user, secret):
         return True
     except jwt.InvalidTokenError:
         return True
-  
+
 
 def to_model(user, secret):
     is_token_expired = check_is_token_expired(user, secret)
@@ -32,8 +32,10 @@ def to_model(user, secret):
         'is_token_expired': is_token_expired,
         'color_background_primary': str_or_none(user.color_background_primary),
         'color_background_secondary': str_or_none(user.color_background_secondary),
+        'color_background_action': str_or_none(user.color_background_action),
         'color_foreground_primary': str_or_none(user.color_foreground_primary),
         'color_foreground_secondary': str_or_none(user.color_foreground_secondary),
+        'color_foreground_action': str_or_none(user.color_foreground_action)
     }
 
 
@@ -48,8 +50,10 @@ def from_register_model(model):
     role = get_or_none(model, 'role')
     color_background_primary = get_or_none(model, 'color_background_primary')
     color_background_secondary = get_or_none(model, 'color_background_secondary')
+    color_background_action = get_or_none(model, 'color_background_action')
     color_foreground_primary = get_or_none(model, 'color_foreground_primary')
     color_foreground_secondary = get_or_none(model, 'color_foreground_secondary')
+    color_foreground_action = get_or_none(model, 'color_foreground_action')
 
     return User(id=id,
                 created_date=created_date,
@@ -58,8 +62,10 @@ def from_register_model(model):
                 role=role,
                 color_background_primary=color_background_primary,
                 color_background_secondary=color_background_secondary,
+                color_background_action=color_background_action,
                 color_foreground_primary=color_foreground_primary,
-                color_foreground_secondary=color_foreground_secondary),\
+                color_foreground_secondary=color_foreground_secondary,
+                color_foreground_action=color_foreground_action),\
         password
 
 

@@ -64,6 +64,14 @@
             @color_changed="color_changed"
             @color_changing="color_changing"
             @reset="reset"
+            id="action_background"
+            title="Цвет фона кнопки действия"
+            :value="this.user.color_background_action"
+          ></color-field>
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            @reset="reset"
             id="foreground_primary"
             title="Главный цвет шрифта"
             :value="this.user.color_foreground_primary"
@@ -75,6 +83,14 @@
             id="foreground_secondary"
             title="Дополнительный цвет шрифта"
             :value="this.user.color_foreground_secondary"
+          ></color-field>
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            @reset="reset"
+            id="action_foreground"
+            title="Цвет шрифта кнопки действия"
+            :value="this.user.color_foreground_action"
           ></color-field>
           <div class="ph-user-submit-controls">
             <md-progress-spinner
@@ -128,20 +144,24 @@ export default {
       isFlowFailed: null,
       flowFailed: null,
       allowSubmit: true, // todo to dict [child_id, locks_count]
-      user: {
+      user: { // to config default user from edit task branch
         email: null,
         isAdmin: false,
         color_background_primary: null,
         color_background_secondary: null,
+        color_background_action: null,
         color_foreground_primary: null,
-        color_foreground_secondary: null
+        color_foreground_secondary: null,
+        color_foreground_action: null,
       }
     };
   },
   mounted() {
     http_helper
       .getMeAsUser(this.$store.getters.get_jwt)
-      .then(response => (this.user = response.data));
+      .then(response => {
+          return (this.user = response.data);
+      });
   },
   methods: {
     reset(id) {
@@ -152,11 +172,17 @@ export default {
         case "background_secondary":
           this.user.color_background_secondary = "#555555";
           break;
+        case "action_background":
+          this.user.color_background_action = "#448aff";
+          break;
         case "foreground_primary":
           this.user.color_foreground_primary = "#cccccc";
           break;
         case "foreground_secondary":
           this.user.color_foreground_secondary = "#ccccff";
+          break;
+        case "action_foreground":
+          this.user.color_foreground_action = "#ffffff";
           break;
 
         default:
@@ -174,11 +200,17 @@ export default {
         case "background_secondary":
           this.user.color_background_secondary = hex;
           break;
+        case "action_background":
+          this.user.color_background_action = hex;
+          break;
         case "foreground_primary":
           this.user.color_foreground_primary = hex;
           break;
         case "foreground_secondary":
           this.user.color_foreground_secondary = hex;
+          break;
+        case "action_foreground":
+          this.user.color_foreground_action = hex;
           break;
         default:
           throw "This should not happens";
@@ -197,8 +229,10 @@ export default {
         data: {
           color_background_primary: this.user.color_background_primary,
           color_background_secondary: this.user.color_background_secondary,
+          color_background_action: this.user.color_background_action,
           color_foreground_primary: this.user.color_foreground_primary,
-          color_foreground_secondary: this.user.color_foreground_secondary
+          color_foreground_secondary: this.user.color_foreground_secondary,
+          color_foreground_action: this.user.color_foreground_action,
         },
         headers: {
           Authorization: this.$store.getters.get_jwt
