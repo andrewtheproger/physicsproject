@@ -27,10 +27,10 @@
       Произошла ошибка: {{ this.flowFailed.message }}
     </div>
 
-    <nav v-if="this.tasks && this.tasks.length > 1">
+    <nav v-if="this.tasks && Math.floor(this.tasks.length / this.page.itemsPerPage) > 0">
       <v-pagination
           v-model="page.currentPage"
-          :page-count="Math.floor(this.tasks.length / this.page.itemsPerPage)"
+          :page-count="Math.floor(this.tasks.length / this.page.itemsPerPage) + 1"
           :labels="page.paginationAnchorTexts"
       ></v-pagination>
     </nav>

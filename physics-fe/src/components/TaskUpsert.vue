@@ -280,11 +280,13 @@ export default {
       const numbers = this.form.number.split(".");
       const base_number = numbers[0];
       const task_number = numbers[1];
+      const id = this.$route.params.id ? parseInt(this.$route.params.id) : undefined;
 
       return axios({
         url: `${config.apiPrefix}/tasks`,
         method: "POST",
         data: {
+          id: id,
           base_number: base_number,
           task_number: task_number,
           body: {
@@ -301,7 +303,6 @@ export default {
     },
     handleError(error) {
       this.isFlowFailed = true;
-      debugger;
 
       const data = error.response.data;
 

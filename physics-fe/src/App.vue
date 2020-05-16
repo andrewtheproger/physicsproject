@@ -217,6 +217,13 @@
   i.md-icon.md-theme-default.md-icon-font {
     color: var(--foreground-secondary-color);
   }
+
+  .md-button.md-theme-default {
+    i.md-icon.md-theme-default.md-icon-font {
+      color: var(--foreground-secondary-color);
+    }
+  }
+
   button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
     color: var(--foreground-action-color);
     background-color: var(--background-action-color);
