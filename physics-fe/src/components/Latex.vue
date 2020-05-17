@@ -1,20 +1,18 @@
 <template>
   <div class="ph-latex">
-    <md-field class="ph-input">
-      <md-textarea
-        cols="30"
-        rows="15"
-        @change="onLatexChange"
-        v-model.trim="latex"
-      >
-      </md-textarea>
-      <md-button
-        class="md-dense md-icon-button ph-latex-copy-button"
-        @click="this.copyLatex"
-      >
-        <md-icon :class="this.getCopyStatusClass">file_copy</md-icon>
-      </md-button>
-    </md-field>
+    <editor v-model.trim="latex"
+            @change="onLatexChange"
+            @init="editorInit"
+            lang="latex"
+            theme="tomorrow_night"
+            width="500"
+            height="100" />
+    <md-button
+      class="md-dense md-icon-button ph-latex-copy-button"
+      @click="this.copyLatex"
+    >
+      <md-icon :class="this.getCopyStatusClass">file_copy</md-icon>
+    </md-button>
 
     <vue-mathjax class="ph-mathjax" :formula="this.latex"></vue-mathjax>
   </div>
@@ -26,7 +24,8 @@ const latexLocalStorageKey = "ph-3800-latex-input";
 export default {
   name: "Latex",
   components: {
-    VueMathjax
+    VueMathjax,
+    editor: require('vue2-ace-editor'),
   },
   data() {
     return {
@@ -46,6 +45,12 @@ export default {
     }
   },
   methods: {
+    editorInit: function () {
+        require('brace/ext/language_tools')
+        require('brace/mode/latex')
+        require('brace/theme/tomorrow_night')
+        require('brace/snippets/latex')
+    },
     copyLatex() {
       const setCopyStatusToNull = () => (this.copyStatus = null);
 
