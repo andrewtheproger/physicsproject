@@ -11,5 +11,13 @@ export default {
     color_foreground_primary: "#cccccc",
     color_foreground_secondary: "#ccccff",
     color_foreground_action: "#ffffff"
+  },
+  datetime_format: {
+    day: '2-digit',
+    year: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
   }
 };

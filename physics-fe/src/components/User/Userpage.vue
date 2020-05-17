@@ -113,6 +113,8 @@
             >
           </div>
         </form>
+
+        <span>Дата регистрации: {{this.formatDate(this.user.created_date)}}</span>
       </md-card-content>
     </md-card>
   </div>
@@ -147,6 +149,11 @@ export default {
     }
   },
   methods: {
+    formatDate(timestamp) {
+      const date = new Date(timestamp);
+
+      return date.toLocaleDateString("ru-RU", config.datetime_format);
+    },
     reset(id) {
       switch (id) {
         case "background_primary":
