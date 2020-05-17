@@ -1,7 +1,9 @@
 <template>
   <div class="ph-latex">
     <md-field class="ph-input">
-      <md-textarea cols="30" rows="15" v-model.trim="latex"> </md-textarea>
+      <md-textarea cols="30" rows="15"
+                   @change="onLatexChange"
+                   v-model.trim="latex"> </md-textarea>
     </md-field>
 
     <vue-mathjax class="ph-mathjax" :formula="this.latex"></vue-mathjax>
@@ -10,6 +12,7 @@
 
 <script>
 import VueMathjax from "./VueMathJax/vueMathJax";
+const latexLocalStorageKey = 'ph-3800-latex-input';
 export default {
   name: "Latex",
   components: {
@@ -17,10 +20,14 @@ export default {
   },
   data() {
     return {
-      latex: "Привет, это текст на $ \\LaTeX $, да. "
+      latex: localStorage.getItem(latexLocalStorageKey) || "Привет, это текст на $ \\LaTeX $, да. "
     };
   },
-  methods: {}
+  methods: {
+    onLatexChange() {
+      localStorage.setItem(latexLocalStorageKey, this.latex || '')
+    }
+  }
 };
 </script>
 
