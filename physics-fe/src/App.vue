@@ -87,7 +87,7 @@ export default {
         "--background-error-color": "#500",
         "--foreground-success-color": "#0f0",
         "--foreground-warning-color": "#ff0",
-        "--foreground-error-color": "#f00",
+        "--foreground-error-color": "#f00"
       };
       patchWithCssVariables(
         styles,
@@ -100,9 +100,9 @@ export default {
         this.user.color_background_secondary
       );
       patchWithCssVariables(
-          styles,
-          "--action-background-color",
-          this.user.color_background_action
+        styles,
+        "--action-background-color",
+        this.user.color_background_action
       );
       patchWithCssVariables(
         styles,
@@ -115,9 +115,9 @@ export default {
         this.user.color_foreground_secondary
       );
       patchWithCssVariables(
-          styles,
-          "--action-foreground-color",
-          this.user.color_foreground_action
+        styles,
+        "--action-foreground-color",
+        this.user.color_foreground_action
       );
       return styles;
     }

@@ -219,7 +219,7 @@ export default {
           color_background_action: this.user.color_background_action,
           color_foreground_primary: this.user.color_foreground_primary,
           color_foreground_secondary: this.user.color_foreground_secondary,
-          color_foreground_action: this.user.color_foreground_action,
+          color_foreground_action: this.user.color_foreground_action
         },
         headers: {
           Authorization: this.$store.getters.get_jwt
