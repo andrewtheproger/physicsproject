@@ -67,12 +67,18 @@ export default {
         user.color_background_secondary =
           user.color_background_secondary ||
           config.defaultUser.color_background_secondary;
+        user.color_background_action =
+          user.color_background_action ||
+          config.defaultUser.color_background_action;
         user.color_foreground_primary =
           user.color_foreground_primary ||
           config.defaultUser.color_foreground_primary;
         user.color_foreground_secondary =
           user.color_foreground_secondary ||
           config.defaultUser.color_foreground_secondary;
+        user.color_foreground_action =
+          user.color_foreground_action ||
+          config.defaultUser.color_foreground_action;
 
         return {
           ...user,

@@ -7,7 +7,9 @@ export default {
     role: null,
     color_background_primary: "#252525",
     color_background_secondary: "#555555",
+    color_background_action: "#448aff",
     color_foreground_primary: "#cccccc",
-    color_foreground_secondary: "#ccccff"
+    color_foreground_secondary: "#ccccff",
+    color_foreground_action: "#ffffff"
   }
 };

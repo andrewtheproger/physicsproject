@@ -7,7 +7,7 @@ import urllib.request
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 import json
- 
+
 from flask import Flask, jsonify, abort, request, Response
 from flask_restful import HTTPException
 from flask_migrate import Migrate
@@ -473,11 +473,17 @@ def update_user(user_id):
     if user.color_background_secondary:
         db_user.color_background_secondary = user.color_background_secondary
 
+    if user.color_background_action:
+        db_user.color_background_action = user.color_background_action
+
     if user.color_foreground_primary:
         db_user.color_foreground_primary = user.color_foreground_primary
 
     if user.color_foreground_secondary:
         db_user.color_foreground_secondary = user.color_foreground_secondary
+
+    if user.color_foreground_action:
+        db_user.color_foreground_action = user.color_foreground_action
 
     db.session.commit()
 
@@ -540,11 +546,17 @@ def update_me():
     if user.color_background_secondary:
         db_user.color_background_secondary = user.color_background_secondary
 
+    if user.color_background_action:
+        db_user.color_background_action = user.color_background_action
+
     if user.color_foreground_primary:
         db_user.color_foreground_primary = user.color_foreground_primary
 
     if user.color_foreground_secondary:
         db_user.color_foreground_secondary = user.color_foreground_secondary
+
+    if user.color_foreground_action:
+        db_user.color_foreground_action = user.color_foreground_action
 
     db.session.commit()
 

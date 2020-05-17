@@ -60,6 +60,14 @@
             @color_changed="color_changed"
             @color_changing="color_changing"
             @reset="reset"
+            id="action_background"
+            title="Цвет фона кнопки действия"
+            :value="this.user.color_background_action"
+          ></color-field>
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            @reset="reset"
             id="foreground_primary"
             title="Главный цвет шрифта"
             :value="this.user.color_foreground_primary"
@@ -71,6 +79,14 @@
             id="foreground_secondary"
             title="Дополнительный цвет шрифта"
             :value="this.user.color_foreground_secondary"
+          ></color-field>
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            @reset="reset"
+            id="action_foreground"
+            title="Цвет шрифта кнопки действия"
+            :value="this.user.color_foreground_action"
           ></color-field>
           <div class="ph-user-submit-controls">
             <md-progress-spinner
@@ -141,6 +157,9 @@ export default {
           this.user.color_background_secondary =
             config.defaultUser.color_background_secondary;
           break;
+        case "action_background":
+          this.user.color_background_action = "#448aff";
+          break;
         case "foreground_primary":
           this.user.color_foreground_primary =
             config.defaultUser.color_foreground_primary;
@@ -148,6 +167,9 @@ export default {
         case "foreground_secondary":
           this.user.color_foreground_secondary =
             config.defaultUser.color_foreground_secondary;
+          break;
+        case "action_foreground":
+          this.user.color_foreground_action = "#ffffff";
           break;
 
         default:
@@ -165,11 +187,17 @@ export default {
         case "background_secondary":
           this.user.color_background_secondary = hex;
           break;
+        case "action_background":
+          this.user.color_background_action = hex;
+          break;
         case "foreground_primary":
           this.user.color_foreground_primary = hex;
           break;
         case "foreground_secondary":
           this.user.color_foreground_secondary = hex;
+          break;
+        case "action_foreground":
+          this.user.color_foreground_action = hex;
           break;
         default:
           throw "This should not happens";
@@ -188,8 +216,10 @@ export default {
         data: {
           color_background_primary: this.user.color_background_primary,
           color_background_secondary: this.user.color_background_secondary,
+          color_background_action: this.user.color_background_action,
           color_foreground_primary: this.user.color_foreground_primary,
-          color_foreground_secondary: this.user.color_foreground_secondary
+          color_foreground_secondary: this.user.color_foreground_secondary,
+          color_foreground_action: this.user.color_foreground_action,
         },
         headers: {
           Authorization: this.$store.getters.get_jwt
