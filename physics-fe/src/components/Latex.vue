@@ -1,12 +1,12 @@
 <template>
   <div class="ph-latex">
     <md-field class="ph-input">
-      <md-textarea cols="30" rows="15" v-model.trim="latex"> </md-textarea>
-
+      <md-textarea cols="30" rows="15"
+                   @change="onLatexChange"
+                   v-model.trim="latex"> </md-textarea>
       <md-button
         class="md-dense md-icon-button ph-latex-copy-button"
         @click="this.copyLatex">
-
         <md-icon :class="this.getCopyStatusClass">file_copy</md-icon>
       </md-button>
     </md-field>
@@ -17,6 +17,7 @@
 
 <script>
 import VueMathjax from "./VueMathJax/vueMathJax";
+const latexLocalStorageKey = 'ph-3800-latex-input';
 export default {
   name: "Latex",
   components: {
@@ -24,7 +25,7 @@ export default {
   },
   data() {
     return {
-      latex: "Привет, это текст на $ \\LaTeX $, да. ",
+      latex: localStorage.getItem(latexLocalStorageKey) || "Привет, это текст на $ \\LaTeX $, да. ",
       copyStatus: null
     };
   },
@@ -50,6 +51,9 @@ export default {
                 setTimeout(setCopyStatusToNull, 1000);
                 return this.copyStatus = false;
             });
+    },
+    onLatexChange() {
+      localStorage.setItem(latexLocalStorageKey, this.latex || '')
     }
   }
 };
