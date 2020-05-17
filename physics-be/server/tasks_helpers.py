@@ -30,6 +30,7 @@ def to_model(task):
         'updated_date': task.updated_date,
         'base_number': task.base_number,
         'task_number': task.task_number,
+        'creator': task.creator,
         'body': {
             'latex': task.latex,
             'images': [to_view(i) for i in task.images]
@@ -49,6 +50,7 @@ def from_model(model):
     body = get_or_none(model, 'body')
     latex = get_or_none(body, 'latex')
     image_ids = get_or_none(body, 'image_ids')
+    creator = get_or_none(body, 'creator')
 
     return Task(id=id,
                 created_date=created_date,
@@ -56,7 +58,8 @@ def from_model(model):
                 base_number=base_number,
                 task_number=task_number,
                 latex=latex,
-                image_ids_json=json.dumps(image_ids))
+                image_ids_json=json.dumps(image_ids),
+                creator=creator)
 
 
 def does_task_exists(session, base_number, task_number):

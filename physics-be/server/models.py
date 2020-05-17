@@ -26,6 +26,7 @@ class Task(db.Model):
     hints = db.relationship('Hint', backref='task', lazy='dynamic')
     image_ids_json = db.Column(db.String(4096))
     images = db.relationship('Image', lazy=True)
+    creator = db.Column(db.Integer)
 
 
 class HintStatus(enum.Enum):
