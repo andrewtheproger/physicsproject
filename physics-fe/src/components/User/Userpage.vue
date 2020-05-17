@@ -96,15 +96,6 @@
             >
             </md-progress-spinner>
 
-            <md-button
-              type="submit"
-              class="md-raised md-primary"
-              v-if="this.allowSubmit"
-              :disabled="this.isLoading || !this.allowSubmit"
-            >
-              Сохранить
-            </md-button>
-
             <span class="ph-success" v-if="isFlowFailed === false"
               >Изменения сохранены</span
             >
@@ -182,6 +173,8 @@ export default {
         default:
           throw "This should not happens";
       }
+
+      this.onSubmit();
     },
     color_changing() {
       this.allowSubmit = false;
@@ -211,6 +204,7 @@ export default {
       }
 
       this.allowSubmit = true;
+      this.onSubmit();
     },
     onSubmit() {
       const url = config.apiPrefix + "/users/me";
