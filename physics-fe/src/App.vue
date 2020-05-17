@@ -290,10 +290,12 @@ div.md-field.md-theme-default.md-has-value textarea.md-textarea {
 .ph-success {
   background-color: var(--background-success-color);
   color: var(--foreground-success-color);
+  -webkit-text-fill-color: var(--foreground-success-color);
 }
 
 .ph-failure {
   background-color: var(--background-error-color);
   color: var(--foreground-error-color);
+  -webkit-text-fill-color: var(--foreground-error-color);
 }
 </style>

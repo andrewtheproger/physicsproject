@@ -2,6 +2,13 @@
   <div class="ph-latex">
     <md-field class="ph-input">
       <md-textarea cols="30" rows="15" v-model.trim="latex"> </md-textarea>
+
+      <md-button
+        class="md-dense md-icon-button ph-latex-copy-button"
+        @click="this.copyLatex">
+
+        <md-icon :class="this.getCopyStatusClass">file_copy</md-icon>
+      </md-button>
     </md-field>
 
     <vue-mathjax class="ph-mathjax" :formula="this.latex"></vue-mathjax>
@@ -17,10 +24,34 @@ export default {
   },
   data() {
     return {
-      latex: "Привет, это текст на $ \\LaTeX $, да. "
+      latex: "Привет, это текст на $ \\LaTeX $, да. ",
+      copyStatus: null
     };
   },
-  methods: {}
+  computed: {
+      getCopyStatusClass() {
+          if (this.copyStatus === null) {
+              return '';
+          }
+
+          return this.copyStatus ? 'ph-success' : 'ph-failure';
+      }
+  },
+  methods: {
+    copyLatex() {
+        const setCopyStatusToNull = () => this.copyStatus = null;
+
+        this.$copyText(this.latex).then(
+            () => {
+                setTimeout(setCopyStatusToNull, 1000);
+                return this.copyStatus = true;
+            },
+            () => {
+                setTimeout(setCopyStatusToNull, 1000);
+                return this.copyStatus = false;
+            });
+    }
+  }
 };
 </script>
 
@@ -29,6 +60,20 @@ export default {
 .ph-latex {
   display: flex;
   padding: 1em;
+
+  .ph-latex-copy-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    opacity: 0.3;
+
+    transition: all .3s ease;
+
+    .md-icon:hover {
+      opacity: 0.8;
+    }
+  }
 
   .ph-input {
     border: 1px solid var(--foreground-primary-color);

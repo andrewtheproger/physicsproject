@@ -20,6 +20,7 @@ import {
 } from "vue-material/dist/components";
 import gallery from "img-vuer";
 import { Photoshop } from "vue-color";
+import VueClipboard from 'vue-clipboard2'
 
 Vue.use(MdTabs);
 Vue.use(MdIcon);
@@ -34,6 +35,7 @@ Vue.use(MdList);
 Vue.use(MdCard);
 Vue.use(MdCheckbox);
 Vue.use(gallery);
+Vue.use(VueClipboard);
 
 Vue.config.productionTip = false;
 
