@@ -284,5 +284,5 @@ export default {
 .ph-tasks {
   list-style: none;
   color: var(--foreground-primary-color);
-}
+} 
 </style>

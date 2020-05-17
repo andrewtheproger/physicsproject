@@ -1,689 +1,588 @@
 {
-	"info": {
-		"_postman_id": "c2932510-330d-4cf1-b617-acf975625404",
-		"name": "las3800",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "Upsert task",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"base_number\": \"2\",\n\t\"task_number\": \"25\",\n\t\"body\": {\n\t\t\"latex\": \"long \\\\LaTeX\",\n\t\t\"image_ids\": []\n\t}\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{prefix}}/tasks",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"tasks"
-					]
-				},
-				"description": "Insert if no id is provided, update otherwise."
-			},
-			"response": []
-		},
-		{
-			"name": "Predicate task numbers",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{prefix}}/tasks/predicate_numbers",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"tasks",
-						"predicate_numbers"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get tasks",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{prefix}}/tasks?page=0&count=10&order=base_number&filter_by_base_number=2&filter_by_task_number=25",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"tasks"
-					],
-					"query": [
-						{
-							"key": "page",
-							"value": "0"
-						},
-						{
-							"key": "count",
-							"value": "10"
-						},
-						{
-							"key": "order",
-							"value": "base_number"
-						},
-						{
-							"key": "filter_by_base_number",
-							"value": "2"
-						},
-						{
-							"key": "filter_by_task_number",
-							"value": "25"
-						}
-					]
-				},
-				"description": "A filter can be applied"
-			},
-			"response": []
-		},
-		{
-			"name": "Get task by id",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{prefix}}/tasks/1",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"tasks",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete task by id",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{prefix}}/tasks/1",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"tasks",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Upsert hint",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n\t\"body\": {\r\n\t\t\"latex\": \"latex here\",\r\n\t\t\"image_hrefs\": [ \"href12\", \"href13\" ]\r\n\t},\r\n\t\"status\": \"pending\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{prefix}}/tasks/1/hints",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"tasks",
-						"1",
-						"hints"
-					]
-				},
-				"description": "Insert if no id is provided, update otherwise."
-			},
-			"response": []
-		},
-		{
-			"name": "Get hints by task id",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{prefix}}/tasks/1/hints?page=0&count=10&order=date",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"tasks",
-						"1",
-						"hints"
-					],
-					"query": [
-						{
-							"key": "page",
-							"value": "0"
-						},
-						{
-							"key": "count",
-							"value": "10"
-						},
-						{
-							"key": "order",
-							"value": "date"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Approve hint",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "{{prefix}}/tasks/1/hints/1/approve",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"tasks",
-						"1",
-						"hints",
-						"1",
-						"approve"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Decline hint",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "{{prefix}}/tasks/1/hints/1/decline",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"tasks",
-						"1",
-						"hints",
-						"1",
-						"decline"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete hint",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{prefix}}/tasks/1/hints/1",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"tasks",
-						"1",
-						"hints",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get users",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{prefix}}/users?page=0&count=10&order=number",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"users"
-					],
-					"query": [
-						{
-							"key": "page",
-							"value": "0"
-						},
-						{
-							"key": "count",
-							"value": "10"
-						},
-						{
-							"key": "order",
-							"value": "number"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get me as user",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{prefix}}/users/me",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"users",
-						"me"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Register user",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"email\": \"snowinmars@yandex.ru\",\n\t\"password\": \"snowinmars@yandex.ru\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{prefix}}/users/register",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"users",
-						"register"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Login user",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "875cb95c-f31c-4e85-80f2-f697a431d56b",
-						"exec": [
-							"const response = pm.response.json()",
-							"",
-							"pm.environment.set(\"token\", response.token)"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"email\": \"snowinmars@yandex.ru\",\n\t\"password\": \"snowinmars@yandex.ru\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{prefix}}/users/login",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"users",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Logout user",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{prefix}}/users/logout",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"users",
-						"logout"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete user",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{prefix}}/users/2",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"users",
-						"2"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Update user",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"role\": \"user\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{prefix}}/users/2",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"users",
-						"2"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Update me as user",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"color_background_primary\": \"#554555\",\n    \"color_background_secondary\": null,\n    \"color_foreground_primary\": null,\n    \"color_foreground_secondary\": null\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{prefix}}/users/me",
-					"host": [
-						"{{prefix}}"
-					],
-					"path": [
-						"users",
-						"me"
-					]
-				}
-			},
-			"response": []
-		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"id": "1974af80-2702-452e-a159-3cb68517e8be",
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"id": "8a09e81a-91f0-4c1c-84ec-3dd7e038711d",
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"protocolProfileBehavior": {}
+  "info": {
+    "_postman_id": "c2932510-330d-4cf1-b617-acf975625404",
+    "name": "las3800",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Upsert task",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"base_number\": \"2\",\n\t\"task_number\": \"25\",\n\t\"body\": {\n\t\t\"latex\": \"long \\\\LaTeX\",\n\t\t\"image_ids\": []\n\t}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{prefix}}/tasks",
+          "host": ["{{prefix}}"],
+          "path": ["tasks"]
+        },
+        "description": "Insert if no id is provided, update otherwise."
+      },
+      "response": []
+    },
+    {
+      "name": "Predicate task numbers",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{prefix}}/tasks/predicate_numbers",
+          "host": ["{{prefix}}"],
+          "path": ["tasks", "predicate_numbers"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get tasks",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{prefix}}/tasks?page=0&count=10&order=base_number&filter_by_base_number=2&filter_by_task_number=25",
+          "host": ["{{prefix}}"],
+          "path": ["tasks"],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "count",
+              "value": "10"
+            },
+            {
+              "key": "order",
+              "value": "base_number"
+            },
+            {
+              "key": "filter_by_base_number",
+              "value": "2"
+            },
+            {
+              "key": "filter_by_task_number",
+              "value": "25"
+            }
+          ]
+        },
+        "description": "A filter can be applied"
+      },
+      "response": []
+    },
+    {
+      "name": "Get task by id",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{prefix}}/tasks/1",
+          "host": ["{{prefix}}"],
+          "path": ["tasks", "1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete task by id",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{prefix}}/tasks/1",
+          "host": ["{{prefix}}"],
+          "path": ["tasks", "1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Upsert hint",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\t\"body\": {\r\n\t\t\"latex\": \"latex here\",\r\n\t\t\"image_hrefs\": [ \"href12\", \"href13\" ]\r\n\t},\r\n\t\"status\": \"pending\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{prefix}}/tasks/1/hints",
+          "host": ["{{prefix}}"],
+          "path": ["tasks", "1", "hints"]
+        },
+        "description": "Insert if no id is provided, update otherwise."
+      },
+      "response": []
+    },
+    {
+      "name": "Get hints by task id",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{prefix}}/tasks/1/hints?page=0&count=10&order=date",
+          "host": ["{{prefix}}"],
+          "path": ["tasks", "1", "hints"],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "count",
+              "value": "10"
+            },
+            {
+              "key": "order",
+              "value": "date"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Approve hint",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{prefix}}/tasks/1/hints/1/approve",
+          "host": ["{{prefix}}"],
+          "path": ["tasks", "1", "hints", "1", "approve"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Decline hint",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{prefix}}/tasks/1/hints/1/decline",
+          "host": ["{{prefix}}"],
+          "path": ["tasks", "1", "hints", "1", "decline"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete hint",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{prefix}}/tasks/1/hints/1",
+          "host": ["{{prefix}}"],
+          "path": ["tasks", "1", "hints", "1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get users",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{prefix}}/users?page=0&count=10&order=number",
+          "host": ["{{prefix}}"],
+          "path": ["users"],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "count",
+              "value": "10"
+            },
+            {
+              "key": "order",
+              "value": "number"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get me as user",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{prefix}}/users/me",
+          "host": ["{{prefix}}"],
+          "path": ["users", "me"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Register user",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"email\": \"snowinmars@yandex.ru\",\n\t\"password\": \"snowinmars@yandex.ru\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{prefix}}/users/register",
+          "host": ["{{prefix}}"],
+          "path": ["users", "register"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login user",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "875cb95c-f31c-4e85-80f2-f697a431d56b",
+            "exec": [
+              "const response = pm.response.json()",
+              "",
+              "pm.environment.set(\"token\", response.token)"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"email\": \"snowinmars@yandex.ru\",\n\t\"password\": \"snowinmars@yandex.ru\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{prefix}}/users/login",
+          "host": ["{{prefix}}"],
+          "path": ["users", "login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Logout user",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{prefix}}/users/logout",
+          "host": ["{{prefix}}"],
+          "path": ["users", "logout"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete user",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{prefix}}/users/2",
+          "host": ["{{prefix}}"],
+          "path": ["users", "2"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update user",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"role\": \"user\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{prefix}}/users/2",
+          "host": ["{{prefix}}"],
+          "path": ["users", "2"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update me as user",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"color_background_primary\": \"#554555\",\n    \"color_background_secondary\": null,\n    \"color_foreground_primary\": null,\n    \"color_foreground_secondary\": null\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{prefix}}/users/me",
+          "host": ["{{prefix}}"],
+          "path": ["users", "me"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "1974af80-2702-452e-a159-3cb68517e8be",
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "8a09e81a-91f0-4c1c-84ec-3dd7e038711d",
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "protocolProfileBehavior": {}
 }
