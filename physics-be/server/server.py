@@ -65,7 +65,7 @@ def notify(msg):
     requests.post(DISCORD_WEBHOOK, data={'content': msg})
 
 
-def is_in_active_role(request, roles):
+def get_user_from_request(request):
     bearer_token = request.headers.get('Authorization')
 
     if not bearer_token:
@@ -74,6 +74,12 @@ def is_in_active_role(request, roles):
     bearer_value = bearer_token.split()[1]
 
     user = db.session.query(User).filter_by(auth_token=f'{bearer_value}').first()
+
+    return user;
+
+
+def is_in_active_role(request, roles):
+    user = get_user_from_request(request)
 
     if user is None:
         return False
@@ -258,6 +264,7 @@ def upsert_task():
 
     should_insert = task.id is None
     now = int(time.time() * 1000)  # ms
+    user = get_user_from_request(request)
 
     if should_insert:
         if tasks_helpers.does_task_exists(db.session, task.base_number, task.task_number):
@@ -265,6 +272,7 @@ def upsert_task():
 
         task.created_date = now
         task.updated_date = now
+        task.creator = user.id
 
         db.session.add(task)
 
