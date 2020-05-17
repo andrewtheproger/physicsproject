@@ -30,7 +30,7 @@ app.config['SECURITY_PASSWORD_SALT'] = SECURITY_PASSWORD_SALT
 
 db.init_app(app)
 migrate = Migrate(app, db)
-CORS(app, resources={r"/api/*": {"origins": "*", "methods": ['GET', 'POST'], "allow_headers": "*", "max_age": 86400}})
+CORS(app, resources={r"/api/*": {"origins": "*", "methods": ['GET', 'POST', 'DELETE'], "allow_headers": "*", "max_age": 86400}})
 
 print(f'Using {SQLALCHEMY_DATABASE_URI}')
 
