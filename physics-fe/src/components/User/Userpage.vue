@@ -225,12 +225,11 @@ export default {
           Authorization: this.$store.getters.get_jwt
         }
       }).then(
-        response => {
+        () => {
           this.isLoading = false;
           this.isFlowFailed = false;
           this.flowFailed = null;
           this.allowSubmit = true;
-          console.log(response);
         },
         error => {
           this.isLoading = false;

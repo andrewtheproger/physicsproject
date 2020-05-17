@@ -283,9 +283,7 @@ export default {
         }
 
         this.send(result.data.ids)
-          .then(result => {
-            console.log(result);
-
+          .then(() => {
             this.isLoading = false;
             this.isFlowFailed = false;
             this.existing_numbers = [
