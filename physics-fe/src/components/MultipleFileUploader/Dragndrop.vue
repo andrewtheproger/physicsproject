@@ -252,5 +252,5 @@ export default {
       width 0.25s ease-out 0.5s,
       height 0.25s ease-out 0.75s;
   }
-}
+} 
 </style>

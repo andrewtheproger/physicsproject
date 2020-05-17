@@ -18,11 +18,10 @@ import {
   MdCard,
   MdCheckbox
 } from "vue-material/dist/components";
-import VueMathjax from "vue-mathjax";
 import gallery from "img-vuer";
 import { Photoshop } from "vue-color";
+import VueClipboard from "vue-clipboard2";
 
-Vue.use(VueMathjax);
 Vue.use(MdTabs);
 Vue.use(MdIcon);
 Vue.use(MdButton);
@@ -36,6 +35,7 @@ Vue.use(MdList);
 Vue.use(MdCard);
 Vue.use(MdCheckbox);
 Vue.use(gallery);
+Vue.use(VueClipboard);
 
 Vue.config.productionTip = false;
 

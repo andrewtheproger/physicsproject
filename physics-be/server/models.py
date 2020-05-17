@@ -26,6 +26,7 @@ class Task(db.Model):
     hints = db.relationship('Hint', backref='task', lazy='dynamic')
     image_ids_json = db.Column(db.String(4096))
     images = db.relationship('Image', lazy=True)
+    creator = db.Column(db.Integer)
 
 
 class HintStatus(enum.Enum):
@@ -59,8 +60,10 @@ class User(db.Model):
     auth_token = db.Column(db.String(512))  # jwt has no max length, but 512 is fine for now
     color_background_primary = db.Column(db.String(16))  # sqlalchemy ColorType is fine but
     color_background_secondary = db.Column(db.String(16))  # sqlalchemy breaks the `flask db upgrade` flow
-    color_foreground_primary = db.Column(db.String(16))  # see https://github.com/miguelgrinberg/Flask-Migrate/issues/62
+    color_background_action = db.Column(db.String(16))  # see https://github.com/miguelgrinberg/Flask-Migrate/issues/62
+    color_foreground_primary = db.Column(db.String(16))
     color_foreground_secondary = db.Column(db.String(16))
+    color_foreground_action = db.Column(db.String(16))
 
     def set_password_hash(self, password):
         self.password_hash = generate_password_hash(password)
@@ -73,7 +76,7 @@ class User(db.Model):
         now = datetime.datetime.utcnow()
 
         payload = {
-            'exp': now + datetime.timedelta(days=0, seconds=500),
+            'exp': now + datetime.timedelta(days=0, seconds=2 * 3600),  # todo increase login time by adding salt to the user_id
             'iat': now,
             'sub': user_id
         }

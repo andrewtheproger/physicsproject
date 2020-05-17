@@ -30,7 +30,7 @@ app.config['SECURITY_PASSWORD_SALT'] = SECURITY_PASSWORD_SALT
 
 db.init_app(app)
 migrate = Migrate(app, db)
-CORS(app, resources={r"/api/*": {"origins": "*", "methods": ['GET', 'POST'], "allow_headers": "*", "max_age": 86400}})
+CORS(app, resources={r"/api/*": {"origins": "*", "methods": ['GET', 'POST', 'DELETE'], "allow_headers": "*", "max_age": 86400}})
 
 print(f'Using {SQLALCHEMY_DATABASE_URI}')
 
@@ -48,7 +48,8 @@ errors = {
     'user_not_exists': 5,
     'user_already_exists': 6,
     'images_not_exists': 7,
-    'user_password_is_wrong': 8
+    'user_password_is_wrong': 8,
+    'unauthorized_access_requested': 9
 }
 
 
@@ -64,7 +65,7 @@ def notify(msg):
     requests.post(DISCORD_WEBHOOK, data={'content': msg})
 
 
-def is_in_active_role(request, roles):
+def get_user_from_request(request):
     bearer_token = request.headers.get('Authorization')
 
     if not bearer_token:
@@ -73,6 +74,12 @@ def is_in_active_role(request, roles):
     bearer_value = bearer_token.split()[1]
 
     user = db.session.query(User).filter_by(auth_token=f'{bearer_value}').first()
+
+    return user;
+
+
+def is_in_active_role(request, roles):
+    user = get_user_from_request(request)
 
     if user is None:
         return False
@@ -219,7 +226,10 @@ def get_tasks():
 
 @app.route('/api/tasks/<int:task_id>', methods=['GET'])
 def get_task(task_id):
-    task = db.session.query(Task).filter_by(id=task_id).first()
+    task = db.session.query(Task) \
+        .outerjoin(Image, Task.id == Image.task_id) \
+        .filter(Task.id == task_id) \
+        .first()
 
     if not task:
         abort(404, errors['task_not_exists'])
@@ -243,7 +253,7 @@ def predicate_tasks_number():
 @app.validate('task', 'upsert')
 def upsert_task():
     if not is_in_active_role(request, ['user', 'admin']):
-        abort(403)
+        abort(403, errors['unauthorized_access_requested'])
 
     body = request.json
 
@@ -254,6 +264,7 @@ def upsert_task():
 
     should_insert = task.id is None
     now = int(time.time() * 1000)  # ms
+    user = get_user_from_request(request)
 
     if should_insert:
         if tasks_helpers.does_task_exists(db.session, task.base_number, task.task_number):
@@ -261,6 +272,7 @@ def upsert_task():
 
         task.created_date = now
         task.updated_date = now
+        task.creator = user.id
 
         db.session.add(task)
 
@@ -303,7 +315,7 @@ def upsert_task():
 @app.route('/api/tasks/<int:task_id>', methods=['DELETE'])
 def delete_task(task_id):
     if not is_in_active_role(request, ['admin']):
-        abort(403)
+        abort(403, errors['unauthorized_access_requested'])
 
     task = db.session.query(Task).filter(Task.id == task_id).first()
 
@@ -324,7 +336,7 @@ def delete_task(task_id):
 @app.route('/api/tasks/<int:task_id>/hints', methods=['GET'])
 def get_hints(task_id):
     if not is_in_active_role(request, ['user', 'admin']):
-        abort(403)
+        abort(403, errors['unauthorized_access_requested'])
 
     tasks = db.session.query(Hint).filter_by(task_id=task_id).all()
 
@@ -334,7 +346,7 @@ def get_hints(task_id):
 @app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>', methods=['DELETE'])
 def delete_hint(task_id, hint_id):
     if not is_in_active_role(request, ['admin']):
-        abort(403)
+        abort(403, errors['unauthorized_access_requested'])
 
     db.session.query(Hint).filter(Hint.id == hint_id).delete(synchronize_session=False)
     db.session.commit()
@@ -353,7 +365,7 @@ def upsert_hint(task_id):
 
     if should_insert:
         if not is_in_active_role(request, ['user', 'admin']):
-            abort(403)
+            abort(403, errors['unauthorized_access_requested'])
 
         hint.created_date = now
         hint.updated_date = now
@@ -362,7 +374,7 @@ def upsert_hint(task_id):
         db.session.add(hint)
     else:
         if not is_in_active_role(request, ['admin']):
-            abort(403)
+            abort(403, errors['unauthorized_access_requested'])
 
         db_hint = db.session.query(Hint).filter_by(id=hint.id).first()
 
@@ -391,7 +403,7 @@ def upsert_hint(task_id):
 @app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/approve', methods=['POST'])
 def enable_hint(task_id, hint_id):
     if not is_in_active_role(request, ['admin']):
-        abort(403)
+        abort(403, errors['unauthorized_access_requested'])
 
     now = int(time.time() * 1000)  # ms
     db_hint = db.session.query(Hint).filter(Hint.id == hint_id).filter(Hint.status != HintStatus.approved).first()
@@ -410,7 +422,7 @@ def enable_hint(task_id, hint_id):
 @app.route('/api/tasks/<int:task_id>/hints/<int:hint_id>/decline', methods=['POST'])
 def disable_hint(task_id, hint_id):
     if not is_in_active_role(request, ['admin']):
-        abort(403)
+        abort(403, errors['unauthorized_access_requested'])
 
     now = int(time.time() * 1000)  # ms
     db_hint = db.session.query(Hint).filter(Hint.id == hint_id).filter(Hint.status != HintStatus.declined).first()
@@ -432,7 +444,7 @@ def disable_hint(task_id, hint_id):
 @app.route('/api/users', methods=['GET'])
 def get_users():
     if not is_in_active_role(request, ['admin']):
-        abort(403)
+        abort(403, errors['unauthorized_access_requested'])
 
     filter_email = request.args.get('filter_by_email')
 
@@ -448,7 +460,7 @@ def get_users():
 @app.validate('user', 'update')
 def update_user(user_id):
     if not is_in_active_role(request, ['admin']):
-        abort(403)
+        abort(403, errors['unauthorized_access_requested'])
 
     body = request.json
     user, _ = users_helpers.from_register_model(body)
@@ -469,11 +481,17 @@ def update_user(user_id):
     if user.color_background_secondary:
         db_user.color_background_secondary = user.color_background_secondary
 
+    if user.color_background_action:
+        db_user.color_background_action = user.color_background_action
+
     if user.color_foreground_primary:
         db_user.color_foreground_primary = user.color_foreground_primary
 
     if user.color_foreground_secondary:
         db_user.color_foreground_secondary = user.color_foreground_secondary
+
+    if user.color_foreground_action:
+        db_user.color_foreground_action = user.color_foreground_action
 
     db.session.commit()
 
@@ -483,7 +501,7 @@ def update_user(user_id):
 @app.route('/api/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     if not is_in_active_role(request, ['admin']):
-        abort(403)
+        abort(403, errors['unauthorized_access_requested'])
 
     db_user = db.session.query(User).filter_by(id=user_id).first()
 
@@ -498,7 +516,7 @@ def get_me():
     bearer_token = request.headers.get('Authorization')
 
     if not bearer_token:
-        abort(403)
+        abort(403, errors['unauthorized_access_requested'])
 
     bearer_value = bearer_token.split()[1]
     db_user = db.session.query(User).filter_by(auth_token=f'{bearer_value}').first()
@@ -514,7 +532,7 @@ def update_me():
     bearer_token = request.headers.get('Authorization')
 
     if not bearer_token:
-        abort(403)
+        abort(403, errors['unauthorized_access_requested'])
 
     body = request.json
     user, _ = users_helpers.from_register_model(body)
@@ -536,11 +554,17 @@ def update_me():
     if user.color_background_secondary:
         db_user.color_background_secondary = user.color_background_secondary
 
+    if user.color_background_action:
+        db_user.color_background_action = user.color_background_action
+
     if user.color_foreground_primary:
         db_user.color_foreground_primary = user.color_foreground_primary
 
     if user.color_foreground_secondary:
         db_user.color_foreground_secondary = user.color_foreground_secondary
+
+    if user.color_foreground_action:
+        db_user.color_foreground_action = user.color_foreground_action
 
     db.session.commit()
 
@@ -550,7 +574,7 @@ def update_me():
 @app.route('/api/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     if not is_in_active_role(request, ['admin']):
-        abort(403)
+        abort(403, errors['unauthorized_access_requested'])
 
     db.session.query(User).filter(User.id == user_id).delete(synchronize_session=False)
     db.session.commit()

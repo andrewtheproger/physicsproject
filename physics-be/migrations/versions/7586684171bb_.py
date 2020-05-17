@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 6872c9057e85
+Revision ID: 7586684171bb
 Revises: 
-Create Date: 2020-05-03 23:03:16.646984
+Create Date: 2020-05-17 21:41:14.307254
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '6872c9057e85'
+revision = '7586684171bb'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -26,6 +26,7 @@ def upgrade():
     sa.Column('task_number', sa.String(length=16), nullable=True),
     sa.Column('latex', sa.String(length=4096), nullable=True),
     sa.Column('image_ids_json', sa.String(length=4096), nullable=True),
+    sa.Column('creator', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',
@@ -38,8 +39,10 @@ def upgrade():
     sa.Column('auth_token', sa.String(length=512), nullable=True),
     sa.Column('color_background_primary', sa.String(length=16), nullable=True),
     sa.Column('color_background_secondary', sa.String(length=16), nullable=True),
+    sa.Column('color_background_action', sa.String(length=16), nullable=True),
     sa.Column('color_foreground_primary', sa.String(length=16), nullable=True),
     sa.Column('color_foreground_secondary', sa.String(length=16), nullable=True),
+    sa.Column('color_foreground_action', sa.String(length=16), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email')
     )

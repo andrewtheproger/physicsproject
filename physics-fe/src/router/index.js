@@ -4,7 +4,7 @@ import Home from "../components/Home";
 import About from "../components/About";
 import User from "../components/User";
 import TaskUpsert from "../components/TaskUpsert";
-//import UserComponent from "../components/UserComponent"
+import Latex from "../components/Latex";
 Vue.use(VueRouter);
 
 const routes = [
@@ -24,14 +24,22 @@ const routes = [
     component: TaskUpsert
   },
   {
+    path: "/edit/:id",
+    name: "Edit",
+    component: TaskUpsert
+  },
+  {
     path: "/user",
     name: "User",
     component: User
+  },
+  {
+    path: "/latex",
+    name: "latex",
+    component: Latex
   }
 ];
 
-const router = new VueRouter({
+export default new VueRouter({
   routes
 });
-
-export default router;

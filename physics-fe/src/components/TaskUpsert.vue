@@ -65,6 +65,7 @@
         ref="multipleFileUploader"
         successMessagePath=""
         errorMessagePath=""
+        :links="this.form.images.map(x => x.url)"
       ></multiple-file-uploader>
 
       <md-progress-bar
@@ -72,10 +73,10 @@
         v-if="this.isLoading"
       ></md-progress-bar>
 
-      <div class="ph-task-upsert-submit-controls">
+      <div v-if="!this.$route.params.id" class="ph-task-upsert-submit-controls">
         <md-button
           type="submit"
-          class="md-raised md-primary"
+          class="md-raised md-primary "
           :disabled="this.isLoading"
         >
           Добавить
@@ -85,7 +86,38 @@
           Задача добавлена, спасибо
         </div>
 
-        <div class="ph-failure" v-if="flowFailed">
+        <div class="ph-failure" v-if="isFlowFailed === true">
+          {{
+            this.flowFailed.http_code
+              ? "Произошла ошибка на стороне сервера"
+              : "Вы ошиблись"
+          }}: {{ this.flowFailed.message }}
+        </div>
+      </div>
+
+      <div v-if="this.$route.params.id" class="ph-task-upsert-submit-controls">
+        <md-button
+          type="submit"
+          class="md-raised md-primary"
+          :disabled="this.isLoading"
+        >
+          Сохранить
+        </md-button>
+
+        <md-button
+          type="button"
+          @click="remove"
+          class="md-raised md-accent"
+          :disabled="this.isLoading"
+        >
+          Удалить
+        </md-button>
+
+        <div class="ph-success" v-if="isFlowFailed === false">
+          Успешно
+        </div>
+
+        <div class="ph-failure" v-if="isFlowFailed === true">
           {{
             this.flowFailed.http_code
               ? "Произошла ошибка на стороне сервера"
@@ -107,6 +139,7 @@ import axios from "axios";
 import { required } from "vuelidate/lib/validators";
 import { validationMixin } from "vuelidate";
 import http_helper from "../lib/http";
+import VueMathjax from "./VueMathJax/vueMathJax";
 
 export default {
   name: "User",
@@ -116,10 +149,13 @@ export default {
       form: {
         latex: "Привет, это текст на $ \\LaTeX $, да. ",
         number: null,
-        isbn: null
+        isbn: null,
+        images: []
       },
       url: `${config.apiPrefix}/images`,
+      originalData: {}, // cached task from server
       isLoading: false,
+      id: null,
       existing_numbers: [],
       isFlowFailed: null,
       flowFailed: null
@@ -148,7 +184,12 @@ export default {
         },
         mustBeUniqueNumber(v) {
           if (v) {
-            return !this.existing_numbers.includes(v);
+            const isEditingSameTask =
+              v ===
+              `${this.originalData.base_number}.${this.originalData.task_number}`;
+            const isCreatingNewTask = !this.existing_numbers.includes(v);
+
+            return isEditingSameTask || isCreatingNewTask;
           }
 
           return true;
@@ -157,26 +198,82 @@ export default {
     }
   },
   components: {
-    MultipleFileUploader
+    MultipleFileUploader,
+    VueMathjax
   },
-  created() {
-    const url = config.apiPrefix + "/tasks/predicate_numbers";
-
-    axios({
-      url: url,
-      method: "GET"
-    }).then(
-      result => {
-        this.existing_numbers = result.data.map(
-          x => x.base_number + "." + x.task_number
-        );
-      },
-      error => {
-        console.log(error);
-      }
-    );
+  watch: {
+    $route() {
+      this.init();
+    }
+  },
+  mounted() {
+    this.init();
   },
   methods: {
+    remove() {
+      const url = config.apiPrefix + "/tasks/" + this.$route.params.id;
+      this.isLoading = true;
+      this.isFlowFailed = null;
+
+      return axios({
+        url: url,
+        method: "DELETE",
+        headers: {
+          Authorization: this.$store.getters.get_jwt
+        }
+      }).then(
+        () => {
+          this.isLoading = false;
+          this.isFlowFailed = false;
+        },
+        error => {
+          console.log(error);
+
+          this.isLoading = false;
+          this.isFlowFailed = true;
+        }
+      );
+    },
+    init() {
+      http_helper
+        .predicate_numbers()
+        .then(numbers => {
+          if (!numbers || !numbers.length) {
+            this.existing_numbers = [];
+            return;
+          }
+
+          this.existing_numbers = numbers.map(
+            x => x.base_number + "." + x.task_number
+          );
+        })
+        .catch(error => console.log(error));
+
+      if (this.$route.params.id) {
+        const url = config.apiPrefix + "/tasks/" + this.$route.params.id;
+
+        return axios({
+          url: url,
+          method: "GET"
+        }).then(
+          result => {
+            const data = result.data;
+
+            this.originalData = data;
+            this.form.latex = data.body.latex;
+            this.form.number = `${data.base_number}.${data.task_number}`;
+            this.form.images = data.body.images;
+          },
+          error => {
+            console.log(error);
+          }
+        );
+      } else {
+        this.form.latex = "Привет, это текст на $ \\LaTeX $, да";
+        this.form.number = null;
+        this.form.images = [];
+      }
+    },
     onNumberChange() {
       if (!this.form.number.includes(".")) {
         this.form.number = this.form.number
@@ -213,61 +310,37 @@ export default {
         return;
       }
 
-      this.$refs.multipleFileUploader
-        .onSubmit()
-        .then(result => {
-          if (result.status !== 200) {
-            throw new TypeError("General error");
-          }
+      this.$refs.multipleFileUploader.onSubmit().then(result => {
+        if (result.status !== 200) {
+          throw new TypeError("General error");
+        }
 
-          this.send(result.data.ids)
-            .then(result => {
-              this.loadStatus = result.status;
-              this.isLoading = false;
-              this.isFlowFailed = false;
-              this.existing_numbers = [
-                ...this.existing_numbers,
-                this.form.number
-              ];
-              this.reset();
-            })
-            .catch(error => {
-              this.isFlowFailed = true;
-
-              const data = error.response.data;
-
-              this.flowFailed = {
-                http_code: error.response.code,
-                internal_code: data.code,
-                message: http_helper.get_error_message(data.code)
-              };
-
-              this.isLoading = false;
-            });
-        })
-        .catch(error => {
-          this.isFlowFailed = true;
-
-          const data = error.response.data;
-
-          this.flowFailed = {
-            http_code: error.response.code,
-            internal_code: data.code,
-            message: http_helper.get_error_message(data.code)
-          };
-
-          this.isLoading = false;
-        });
+        this.send(result.data.ids)
+          .then(() => {
+            this.isLoading = false;
+            this.isFlowFailed = false;
+            this.existing_numbers = [
+              ...this.existing_numbers,
+              this.form.number
+            ];
+            this.reset();
+          })
+          .catch(error => this.handleError(error));
+      });
     },
     send(images_ids) {
       const numbers = this.form.number.split(".");
       const base_number = numbers[0];
       const task_number = numbers[1];
+      const id = this.$route.params.id
+        ? parseInt(this.$route.params.id)
+        : undefined;
 
       return axios({
         url: `${config.apiPrefix}/tasks`,
         method: "POST",
         data: {
+          id: id,
           base_number: base_number,
           task_number: task_number,
           body: {
@@ -279,12 +352,23 @@ export default {
           Authorization: this.$store.getters.get_jwt
         }
       })
-        .then(function(response) {
-          return response;
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+        .then(response => response)
+        .catch(error => this.handleError(error));
+    },
+    handleError(error) {
+      this.isFlowFailed = true;
+
+      const data = error.response.data;
+
+      this.flowFailed = {
+        http_code: error.response.status,
+        internal_code: data.code,
+        message: http_helper.get_error_message(data.code)
+      };
+
+      this.isLoading = false;
+
+      throw error;
     }
   }
 };
@@ -298,7 +382,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "../config/variables.scss";
-
 .ph-task-upsert {
   padding: 2em;
 
