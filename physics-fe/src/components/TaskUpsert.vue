@@ -104,8 +104,17 @@
           Сохранить
         </md-button>
 
+        <md-button
+          type="button"
+          @click="remove"
+          class="md-raised md-accent"
+          :disabled="this.isLoading"
+        >
+          Удалить
+        </md-button>
+
         <div class="ph-success" v-if="isFlowFailed === false">
-          Изменения сохранены
+          Успешно
         </div>
 
         <div class="ph-failure" v-if="isFlowFailed === true">
@@ -201,6 +210,30 @@ export default {
     this.init();
   },
   methods: {
+    remove() {
+      const url = config.apiPrefix + "/tasks/" + this.$route.params.id;
+      this.isLoading = true;
+      this.isFlowFailed = null;
+
+      return axios({
+        url: url,
+        method: "DELETE",
+        headers: {
+            Authorization: this.$store.getters.get_jwt
+        }
+      }).then(
+        () => {
+          this.isLoading = false;
+          this.isFlowFailed = false;
+        },
+        error => {
+          console.log(error);
+
+          this.isLoading = false;
+          this.isFlowFailed = true;
+        }
+      );
+    },
     init() {
       http_helper
         .predicate_numbers()
