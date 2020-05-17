@@ -113,6 +113,7 @@
 
 <script>
 import axios from "axios";
+import config from "../config/api"
 export default {
   name: "About",
   data() {
@@ -124,15 +125,6 @@ export default {
   },
   methods: {
     get_last_change_block(result) {
-        const datetime_format = {
-            day: '2-digit',
-            year: 'numeric',
-            month: 'short',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-        };
-
         const git_info = result.data;
 
         const now = Date.now();
@@ -142,7 +134,7 @@ export default {
 
         const last_commit_url = git_info.commit.html_url;
 
-        const last_commit_datetime_string = last_commit_datetime.toLocaleDateString("ru-RU", datetime_format);
+        const last_commit_datetime_string = last_commit_datetime.toLocaleDateString("ru-RU", config.datetime_format);
 
         const ago = diff === 0 ? '(сегодня)' : `(дней назад: ${diff})`
 
@@ -160,7 +152,7 @@ export default {
   }
 }
 </script>
- 
+
 <style lang="scss" scoped>
 .ph-about {
   padding: 1em;
