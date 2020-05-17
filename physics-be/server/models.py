@@ -14,7 +14,7 @@ class Image(db.Model):
     url = db.Column(db.String(256))
     thumbnail_url = db.Column(db.String(256))
     task_id = db.Column(db.Integer, db.ForeignKey('task.id'), nullable=True)
-
+  
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)

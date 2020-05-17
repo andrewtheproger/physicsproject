@@ -17,7 +17,7 @@ def check_is_token_expired(user, secret):
         return True
     except jwt.InvalidTokenError:
         return True
-
+  
 
 def to_model(user, secret):
     is_token_expired = check_is_token_expired(user, secret)

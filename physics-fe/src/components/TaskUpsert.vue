@@ -75,7 +75,7 @@
       <div class="ph-task-upsert-submit-controls">
         <md-button
           type="submit"
-          class="md-raised md-primary"
+          class="md-raised md-primary "
           :disabled="this.isLoading"
         >
           Добавить
@@ -300,7 +300,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "../config/variables.scss";
-
 .ph-task-upsert {
   padding: 2em;
 

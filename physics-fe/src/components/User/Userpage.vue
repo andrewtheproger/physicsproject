@@ -76,7 +76,6 @@
             title="Дополнительный цвет шрифта"
             :value="this.user.color_foreground_secondary"
           ></color-field>
-
           <div class="ph-user-submit-controls">
             <md-progress-spinner
               v-if="!this.allowSubmit"
@@ -159,6 +158,7 @@ export default {
         case "foreground_secondary":
           this.user.color_foreground_secondary = "#ccccff";
           break;
+
         default:
           throw "This should not happens";
       }

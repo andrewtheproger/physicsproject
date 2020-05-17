@@ -183,7 +183,6 @@ export default {
   display: flex;
   flex-direction: row-reverse;
 }
-
 .ph-main {
   display: flex;
   align-content: center;
