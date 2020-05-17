@@ -1,6 +1,15 @@
 <template>
   <div class="ph-task" v-on:keyup.escape="cl">
-    <h3>3800.{{ task.base_number }}.{{ task.task_number }}</h3>
+    <h3 class="ph-task-header">
+      <span>3800.{{ task.base_number }}.{{ task.task_number }}</span>
+      <md-button
+        :to="`/edit/${task.id}`"
+        class="md-icon-button md-dense md-primary"
+        v-if="this.user.isAdmin"
+      >
+        <md-icon>edit</md-icon>
+      </md-button>
+    </h3>
     <div classs="ph-text">
       <vue-mathjax :formula="task.body.latex"></vue-mathjax>
     </div>
@@ -47,7 +56,12 @@ export default {
   components: {
     VueMathjax
   },
-  props: ["task"]
+  props: ["task"],
+  computed: {
+    user() {
+      return this.$store.getters.get_user;
+    }
+  }
 };
 </script>
 
@@ -56,6 +70,11 @@ export default {
 
 .ph-task-no-hints-available {
   font-size: 80%;
+}
+
+.ph-task-header {
+  display: flex;
+  align-items: center;
 }
 
 .ph-task-hints,

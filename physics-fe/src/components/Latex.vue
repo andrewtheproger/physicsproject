@@ -32,6 +32,10 @@ export default {
 
   .ph-input {
     border: 1px solid var(--foreground-primary-color);
+
+    textarea {
+      max-height: inherit;
+    }
   }
 
   .ph-input,

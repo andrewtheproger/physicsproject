@@ -5,6 +5,21 @@ import axios from "axios";
 }
 
 export default {
+  predicate_numbers() {
+    const url = config.apiPrefix + "/tasks/predicate_numbers";
+
+    return axios({
+      url: url,
+      method: "GET"
+    }).then(
+      result => {
+        return result.data;
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  },
   get_error_message(code) {
     switch (code) {
       case 1:
@@ -23,6 +38,8 @@ export default {
         return "изображение не найдено";
       case 8:
         return "неверный пароль";
+      case 9:
+        return "недостаточно прав. Проверьте, что вы залогинены";
       default:
         throw `This should not happens ${code}`;
     }
@@ -38,51 +55,35 @@ export default {
       }
     }).then(
       response => {
-        if (response.data.email) {
-          response.data = {
-            ...response.data,
-            isAdmin: response.data.role === "admin"
-          };
+        let user = response.data;
 
-          if (!response.data.color_background_primary) {
-            response.data.color_background_primary = "#252525";
-          }
-
-          if (!response.data.color_background_secondary) {
-            response.data.color_background_secondary = "#555";
-          }
-
-          if (!response.data.color_background_action) {
-            response.data.color_background_action = "#448aff";
-          }
-
-          if (!response.data.color_foreground_primary) {
-            response.data.color_foreground_primary = "#ccc";
-          }
-
-          if (!response.data.color_action_foreground) {
-            response.data.color_action_foreground = "#ccf";
-          }
-
-          if (!response.data.color_foreground_action) {
-            response.data.color_foreground_action = "#fff";
-          }
-
-        } else {
-          response.data = {
-            isAdmin: false,
-            is_token_expired: true,
-            role: null,
-            color_background_primary: "#252525",
-            color_background_secondary: "#555",
-            color_background_action: "#448aff",
-            color_foreground_primary: "#ccc",
-            color_foreground_secondary: "#ccf",
-            color_foreground_action: "#fff"
-          };
+        if (!user.email) {
+          user = config.defaultUser;
         }
 
-        return response;
+        user.color_background_primary =
+          user.color_background_primary ||
+          config.defaultUser.color_background_primary;
+        user.color_background_secondary =
+          user.color_background_secondary ||
+          config.defaultUser.color_background_secondary;
+        user.color_background_action =
+          user.color_background_action ||
+          config.defaultUser.color_background_action;
+        user.color_foreground_primary =
+          user.color_foreground_primary ||
+          config.defaultUser.color_foreground_primary;
+        user.color_foreground_secondary =
+          user.color_foreground_secondary ||
+          config.defaultUser.color_foreground_secondary;
+        user.color_foreground_action =
+          user.color_foreground_action ||
+          config.defaultUser.color_foreground_action;
+
+        return {
+          ...user,
+          isAdmin: response.data.role === "admin"
+        };
       },
       error => {
         console.log(error);

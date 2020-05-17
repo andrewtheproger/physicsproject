@@ -152,7 +152,6 @@ export default {
         })
         .catch(error => {
           this.isFlowFailed = true;
-          console.log(error.response);
 
           try {
             const data = error.response.data;

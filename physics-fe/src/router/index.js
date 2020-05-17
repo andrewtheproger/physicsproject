@@ -24,6 +24,11 @@ const routes = [
     component: TaskUpsert
   },
   {
+    path: "/edit/:id",
+    name: "Edit",
+    component: TaskUpsert
+  },
+  {
     path: "/user",
     name: "User",
     component: User
@@ -35,8 +40,6 @@ const routes = [
   }
 ];
 
-const router = new VueRouter({
+export default new VueRouter({
   routes
 });
-
-export default router;

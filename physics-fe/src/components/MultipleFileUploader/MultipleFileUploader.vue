@@ -126,6 +126,10 @@ export default {
     showHttpMessages: {
       type: Boolean,
       default: true
+    },
+    links: {
+      type: Array,
+      default: () => []
     }
   },
   /*
@@ -134,7 +138,6 @@ export default {
   data() {
     return {
       dragging: false,
-      links: [],
       files: [], // files to show
       filelist: [], // files to send
       successMsg: "",

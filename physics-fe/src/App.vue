@@ -4,7 +4,7 @@
       <md-tabs class="ph-menu" md-sync-route>
         <md-tab id="tab-home" md-label="3800" to="/" exact></md-tab>
         <md-tab
-          :md-disabled="user.is_token_expired"
+          :md-disabled="this.user.is_token_expired"
           id="tab-add"
           md-label="Добавить задачу"
           to="/add"
@@ -43,15 +43,7 @@ export default {
   data() {
     return {
       isApiOk: null,
-      user: {
-        is_token_expired: null,
-        color_background_primary: "#252525",
-        color_background_secondary: "#555",
-        color_background_action: "#448aff",
-        color_foreground_primary: "#ccc",
-        color_foreground_secondary: "#ccf",
-        color_foreground_action: "#fff"
-      }
+      user: config.defaultUser
     };
   },
   computed: {
@@ -60,7 +52,7 @@ export default {
         return "ph-hidden";
       }
 
-      return this.isApiOk ? "ph-hidden" : "fart";
+      return this.isApiOk ? "ph-hidden" : "";
     },
     getClass_body() {
       const parse = require("parse-color");
@@ -151,7 +143,11 @@ export default {
     this.checkApiOk();
     http_helper
       .getMeAsUser(this.$store.getters.get_jwt)
-      .then(response => (this.user = response.data));
+      .then(user => {
+        this.$store.commit("set_user", user);
+        this.user = this.$store.getters.get_user;
+      })
+      .catch(error => console.log(error));
   }
 };
 </script>
@@ -228,6 +224,15 @@ div.md-tabs.md-theme-default {
   margin: 0;
   padding: 0;
 }
+
+// idk how to fix these transition props once for all so todo
+#app,
+div.md-card.md-theme-default,
+.ph-color-field,
+i.md-icon.md-theme-default.md-icon-font {
+  transition: background-color 0.5s linear, color 0.5s linear;
+}
+
 div.md-card.md-theme-default {
   color: inherit;
   background-color: var(--background-secondary-color);
@@ -243,6 +248,7 @@ div.md-field.md-theme-default.md-focused textarea.md-textarea,
 div.md-field.md-theme-default.md-has-value,
 div.md-field.md-theme-default.md-has-value textarea.md-textarea {
   -webkit-text-fill-color: var(--foreground-primary-color);
+
   .md-input,
   label {
     color: var(--foreground-primary-color);
@@ -254,6 +260,17 @@ div.md-field.md-theme-default.md-has-value textarea.md-textarea {
   &:not(.md-autogrow):before {
     background-color: var(--foreground-primary-color);
     transition: all 0.3s;
+  }
+
+  .md-button.md-theme-default {
+    i.md-icon.md-theme-default.md-icon-font {
+      color: var(--foreground-secondary-color);
+    }
+  }
+
+  button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
+    color: var(--foreground-action-color);
+    background-color: var(--background-action-color);
   }
   &:hover:after {
     background-color: var(--foreground-secondary-color);
