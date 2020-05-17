@@ -24,8 +24,8 @@
 
         <span v-if="this.last_commit_url">
           Последний коммит:
-          <a :href="this.last_commit_url">{{this.last_commit_datetime_string}} {{this.ago}}</a>
-        </span> 
+          <a :href="this.last_commit_url" target="_blank">{{this.last_commit_datetime_string}} {{this.ago}} </a>
+        </span>
       </span>
 
       <ul class="ph-targets">
@@ -54,11 +54,11 @@
       Лучше всего - добавить задачу из 3800:
 
       <ul>
-        <li><a href="/#/">Найдите</a>, какой задачи у нас нет,</li>
-        <li>Перейдите на <a href="/#/add">страницу добавления задачи</a> и добавьте её.</li>
+        <li><a href="/#/" target="_blank">Найдите</a>, какой задачи у нас нет,</li>
+        <li>Перейдите на <a href="/#/add" target="_blank">страницу добавления задачи</a> и добавьте её.</li>
       </ul>
 
-      Мы записываем условие в формате <a href="https://ru.wikipedia.org/wiki/LaTeX">LaTeX</a> - этот формат позволяет удобно хранить и передавать формулы. LaTeX очень прост в освоении, основы таковы:
+      Мы записываем условие в формате <a href="https://ru.wikipedia.org/wiki/LaTeX" target="_blank">LaTeX</a> - этот формат позволяет удобно хранить и передавать формулы. LaTeX очень прост в освоении, основы таковы:
 
       <ul>
         <li>Русский текст пишется просто так,</li>
@@ -66,19 +66,19 @@
         <li>Маленькие цифры снизу пишутся через _</li>
         <li>Степени пишутся через ^</li>
         <li>Сложные выражения обрамляются фигурными скобками</li>
-        <li>Синтаксис LaTeX описан на <a href="https://ru.wikipedia.org/wiki/Википедия:Формулы">этой странице</a></li>
+        <li>Синтаксис LaTeX описан на <a href="https://ru.wikipedia.org/wiki/Википедия:Формулы" target="_blank">этой странице</a></li>
       </ul>
 
       Полезные ссылки:
 
       <ul>
         <li>
-          <a href="https://www.mathway.com/ru/graph">
+          <a href="https://www.mathway.com/ru/graph" target="_blank">
             Построение простых графиков
           </a>
         </li>
         <li>
-          <a href="https://wolframalpha.com">
+          <a href="https://wolframalpha.com" target="_blank">
             Построение сложных графиков
           </a>
         </li>
