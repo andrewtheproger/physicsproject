@@ -47,8 +47,10 @@ export default {
         is_token_expired: null,
         color_background_primary: "#252525",
         color_background_secondary: "#555",
+        color_background_action: "#448aff",
         color_foreground_primary: "#ccc",
-        color_foreground_secondary: "#ccf"
+        color_foreground_secondary: "#ccf",
+        color_foreground_action: "#fff"
       }
     };
   },
@@ -91,11 +93,9 @@ export default {
         "--background-success-color": "#050",
         "--background-warning-color": "#550",
         "--background-error-color": "#500",
-        "--background-action-color": "#448aff",
         "--foreground-success-color": "#0f0",
         "--foreground-warning-color": "#ff0",
         "--foreground-error-color": "#f00",
-        "--foreground-action-color": "#fff"
       };
       patchWithCssVariables(
         styles,
@@ -108,6 +108,11 @@ export default {
         this.user.color_background_secondary
       );
       patchWithCssVariables(
+          styles,
+          "--action-background-color",
+          this.user.color_background_action
+      );
+      patchWithCssVariables(
         styles,
         "--foreground-primary-color",
         this.user.color_foreground_primary
@@ -116,6 +121,11 @@ export default {
         styles,
         "--foreground-secondary-color",
         this.user.color_foreground_secondary
+      );
+      patchWithCssVariables(
+          styles,
+          "--action-foreground-color",
+          this.user.color_foreground_action
       );
       return styles;
     }
@@ -172,8 +182,8 @@ div.md-field.md-theme-default {
   }
 }
 button.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
-  color: var(--foreground-action-primary-color);
-  background-color: var(--background-action-secondary-color);
+  color: var(--action-foreground-color);
+  background-color: var(--action-background-color);
 }
 div.md-tabs.md-theme-default {
   .md-tabs {
