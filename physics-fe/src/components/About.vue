@@ -1,6 +1,6 @@
 <template>
   <div class="ph-about">
-    <p>
+    <div>
       Проект посвящён книге "3800 задач по физике".
 
       Цели две:
@@ -9,10 +9,10 @@
         <li>Позволить быстро искать задачу по номеру,</li>
         <li>Сопроводить каждую задачу комментариями и подсказками.</li>
       </ul>
-    </p>
+    </div>
 
     <h2>Текущее состояние проекта</h2>
-    <p>
+    <div>
       <span>
         <a class="ph-github-icon" href="https://github.com/andrewtheproger/physicsproject">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="2em" height="2em">
@@ -46,11 +46,11 @@
           Сопроводить каждую задачу подсказкой или комментарием.
         </li>
       </ul>
-    </p>
+    </div>
 
     <h2>Как помочь проекту</h2>
 
-    <p>
+    <div>
       Лучше всего - добавить задачу из 3800:
 
       <ul>
@@ -83,10 +83,10 @@
           </a>
         </li>
       </ul>
-    </p>
+    </div>
 
     <h4>График разработки</h4>
-    <p>
+    <div>
 
       <ul>
         <li>
@@ -107,7 +107,7 @@
           </ul>
         </li>
       </ul>
-    </p>
+    </div>
   </div>
 </template>
 
@@ -160,7 +160,7 @@ export default {
   }
 }
 </script>
- 
+
 <style lang="scss" scoped>
 .ph-about {
   padding: 1em;
