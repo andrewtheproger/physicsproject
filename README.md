@@ -1,94 +1,106 @@
-# physics
+# 3800 las project
 
-To run the site locally you should run `snowinmars/3800fe` and `snowinmars/3800be` docker images.
+This is a project that provide illegal access to '3800 задач по физике' book. It maintenance by school students for free. Monetization will never be allowed.
 
-## Frontend
+The project could be viewed [here](http://ec2-3-120-108-152.eu-central-1.compute.amazonaws.com/). If you'd like to share the link, please use this page link due to the server host will be changed.
 
-The frontend exists in the `/physics-fe` directory.
+The project provide access to its api. See postman collections files in the git root or contact dev team for information.
 
-### Run locally
+## Development
+
+To run the site locally you should run `snowinmars/3800fe` and `snowinmars/3800be` docker images or run these two servers manually outside of docker.
+
+#### Run in docker
+
+###### Frontend
+
+1. Run
 ```
-yarn install
-yarn run serve
-```
+# ensure that /physics-fe/src/config/api.js > 'apiPrefix' equals to "http://127.0.0.1:5000/api"
 
-To allow lints and fixes enter
-```
-yarn run lint
-```
-
-### Run in docker
-
-```
+cd /physics-fe
+docker build -t snowinmars/3800fe .
 docker run -p 80:8080 snowinmars/3800fe
 ```
 
-Host is `http://localhost:80`
+On this step you should be able to see the frontend page on `http://localhost:80` with the 'api is dead' warning.
 
-### Build in docker
+###### Backend
 
+To run backend you should create a database. It could not be automatically created in docker build process due to the database should be available with or without alive docker container.
+
+1. Create a docker volume
+    ```
+    docker volume create
+        --opt type=none
+        --opt device=/home/user/docker/3800/
+        --opt o=bind
+            3800be
+    ```
+   
+1. Create a database in docker volume's folder. In the example above the folder is `/home/user/docker/3800/`.
+    
+    - You can use test database from `/physics-be/server/tests/test.db`
+    - You can ask a developer to provide you a database file.
+    - You can create your own database using the guide below.
+
+1. Run
 ```
-docker build -t snowinmars/3800fe .
-```
+# if '/app/server/vol' path below ends with 'vol'
+# the '/physics-be/server/config.py > SQLALCHEMY_DATABASE_URI' should contains 'vol' too.
 
-## Backend
-
-The backend exists in the `/physics-be` directory.
-
-### Run locally on Windows
-```
-cd ./physics-be
-
-pip install -r requirements.txt
-$env:FLASK_APP = 'server/server.py'  # powershell 
-set FLASK_APP=server/server.py       # cmd
-
-flask db init      # creates database using SQLALCHEMY_DATABASE_URI variable
-flask db migrate   # in /physics-be/server/config.py 
-flask db upgrade
-
-flask run --host 0.0.0.0 --port 5000
-```
-
-### Run locally on Linux
-
-- Install requirements from `/physics-be/requirements.txt` using your distributive approach
-- Set `FLASK_APP` environment variable equals to path to the `physics-be/server/server.py` file
-- Run
-```
-cd ./physics-be
-
-flask db init
-flask db migrate
-flask db upgrade
-
-flask run --host 0.0.0.0 --port 5000
-```
-
-### Run in docker
-
-Interface `0.0.0.0` is required due to Flask server stuff. If the interface will be mismatched you will not be able to communicate with container (it will looks like 404).
-
-##### Create volume
-```
-docker volume create
-	--opt type=none
-	--opt device=/home/user/docker/3800/
-	--opt o=bind
-		3800be
-```
-
-The volume should contain sqlite `server.db` file.
-
-```
+cd /physics-be
+docker build -t snowinmars/3800be .
 docker run -v 3800be:/app/server/vol -p 0.0.0.0:5000:5000 snowinmars/3800be
 ```
 
-### Build in docker
+## How to start developing
 
-Host is `http://localhost:5000/api`
+#### Frontend
 
+Install `yarn`.
+
+Run
 
 ```
-docker build -t snowinmars/3800be .
+cd physics-fe
+
+yarn install
+yarn run lint
+yarn run serve
 ```
+
+- To change api host use `/physics-fe/src/config/api.js > apiPrefix` variable.
+- `App.vue` styles are not scoped, so it applies globally.
+- Do not set color explicitly. Use variables like `--background-primary-color`. See `App.vue` for examples.
+- Try to encapsulate data inside components, use global store or local storage only if you have to.
+- If your component needs to access the current user, check out how it works in `User.vue`.
+
+#### Backend
+
+1. Install `pip`.
+
+1. Run `pip install --user -r /physics-be/requirements.txt`. It's safe to run on linux due to the `--user` key installs packages to `~` without roaming around with package manager stuff. Of course, if you can, you can try to install python packages with your package manager, but I see that most systems doesn't support all the python packages well.
+
+1. Make an env variable `FLASK_APP` point to `/physics-be/server/server.py`.
+
+    You should run all flask commands from the directory where the `FLASK_APP` will be correct.
+    
+    The examples below assumes that you're in `/physics-be` folder:
+    
+    - shell: `export FLASK_APP=server/server.py`
+    - cmd: `set FLASK_APP=server/server.py`
+    - powershell: `$env:FLASK_APP = 'server/server.py'`
+
+1. Run
+    ```
+    flask db init
+    flask db migrate
+    flask db upgrade
+    ```
+
+    It uses `/physics-be/server/config.py > SQLALCHEMY_DATABASE_URI` variable so make sure it fit your local path.
+   
+1. Run `flask run --host 0.0.0.0 --port 5000`
+
+    Interface `0.0.0.0` is required due to Flask server stuff. If the interface will be mismatched you will not be able to communicate with docker container (it will looks like 404). For local runs I prefer to use `0.0.0.0` anyway.
