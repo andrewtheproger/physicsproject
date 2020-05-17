@@ -20,7 +20,7 @@ import {
 } from "vue-material/dist/components";
 import gallery from "img-vuer";
 import { Photoshop } from "vue-color";
-import VueClipboard from 'vue-clipboard2'
+import VueClipboard from "vue-clipboard2";
 
 Vue.use(MdTabs);
 Vue.use(MdIcon);

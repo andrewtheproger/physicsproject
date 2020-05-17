@@ -105,7 +105,9 @@
           </div>
         </form>
 
-        <span>Дата регистрации: {{this.formatDate(this.user.created_date)}}</span>
+        <span
+          >Дата регистрации: {{ this.formatDate(this.user.created_date) }}</span
+        >
       </md-card-content>
     </md-card>
   </div>

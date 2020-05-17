@@ -1,12 +1,17 @@
 <template>
   <div class="ph-latex">
     <md-field class="ph-input">
-      <md-textarea cols="30" rows="15"
-                   @change="onLatexChange"
-                   v-model.trim="latex"> </md-textarea>
+      <md-textarea
+        cols="30"
+        rows="15"
+        @change="onLatexChange"
+        v-model.trim="latex"
+      >
+      </md-textarea>
       <md-button
         class="md-dense md-icon-button ph-latex-copy-button"
-        @click="this.copyLatex">
+        @click="this.copyLatex"
+      >
         <md-icon :class="this.getCopyStatusClass">file_copy</md-icon>
       </md-button>
     </md-field>
@@ -17,7 +22,7 @@
 
 <script>
 import VueMathjax from "./VueMathJax/vueMathJax";
-const latexLocalStorageKey = 'ph-3800-latex-input';
+const latexLocalStorageKey = "ph-3800-latex-input";
 export default {
   name: "Latex",
   components: {
@@ -25,35 +30,38 @@ export default {
   },
   data() {
     return {
-      latex: localStorage.getItem(latexLocalStorageKey) || "Привет, это текст на $ \\LaTeX $, да. ",
+      latex:
+        localStorage.getItem(latexLocalStorageKey) ||
+        "Привет, это текст на $ \\LaTeX $, да. ",
       copyStatus: null
     };
   },
   computed: {
-      getCopyStatusClass() {
-          if (this.copyStatus === null) {
-              return '';
-          }
-
-          return this.copyStatus ? 'ph-success' : 'ph-failure';
+    getCopyStatusClass() {
+      if (this.copyStatus === null) {
+        return "";
       }
+
+      return this.copyStatus ? "ph-success" : "ph-failure";
+    }
   },
   methods: {
     copyLatex() {
-        const setCopyStatusToNull = () => this.copyStatus = null;
+      const setCopyStatusToNull = () => (this.copyStatus = null);
 
-        this.$copyText(this.latex).then(
-            () => {
-                setTimeout(setCopyStatusToNull, 1000);
-                return this.copyStatus = true;
-            },
-            () => {
-                setTimeout(setCopyStatusToNull, 1000);
-                return this.copyStatus = false;
-            });
+      this.$copyText(this.latex).then(
+        () => {
+          setTimeout(setCopyStatusToNull, 1000);
+          return (this.copyStatus = true);
+        },
+        () => {
+          setTimeout(setCopyStatusToNull, 1000);
+          return (this.copyStatus = false);
+        }
+      );
     },
     onLatexChange() {
-      localStorage.setItem(latexLocalStorageKey, this.latex || '')
+      localStorage.setItem(latexLocalStorageKey, this.latex || "");
     }
   }
 };
@@ -72,7 +80,7 @@ export default {
 
     opacity: 0.3;
 
-    transition: all .3s ease;
+    transition: all 0.3s ease;
 
     .md-icon:hover {
       opacity: 0.8;

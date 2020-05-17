@@ -219,7 +219,7 @@ export default {
         url: url,
         method: "DELETE",
         headers: {
-            Authorization: this.$store.getters.get_jwt
+          Authorization: this.$store.getters.get_jwt
         }
       }).then(
         () => {
