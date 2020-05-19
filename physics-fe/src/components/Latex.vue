@@ -1,18 +1,20 @@
 <template>
   <div class="ph-latex">
-    <editor v-model.trim="latex"
-            @change="onLatexChange"
-            @init="editorInit"
-            lang="latex"
-            theme="tomorrow_night"
-            width="500"
-            height="100" />
-    <md-button
-      class="md-dense md-icon-button ph-latex-copy-button"
-      @click="this.copyLatex"
-    >
-      <md-icon :class="this.getCopyStatusClass">file_copy</md-icon>
-    </md-button>
+    <div class="ph-latex-editor">
+      <editor v-model.trim="latex"
+              @init="editorInit"
+              lang="latex"
+              theme="tomorrow_night"
+              width="100%"
+              height="100%"/>
+
+      <md-button
+        class="md-dense md-icon-button ph-latex-copy-button"
+        @click="this.copyLatex"
+      >
+        <md-icon :class="this.getCopyStatusClass">file_copy</md-icon>
+      </md-button>
+    </div>
 
     <vue-mathjax class="ph-mathjax" :formula="this.latex"></vue-mathjax>
   </div>
@@ -45,11 +47,14 @@ export default {
     }
   },
   methods: {
-    editorInit: function () {
-        require('brace/ext/language_tools')
-        require('brace/mode/latex')
-        require('brace/theme/tomorrow_night')
-        require('brace/snippets/latex')
+    editorInit: function (editor) {
+        require('brace/ext/language_tools');
+        require('brace/mode/latex');
+        require('brace/theme/tomorrow_night');
+        require('brace/snippets/latex');
+
+        editor.on('change', this.onLatexChange); // it doesn't work as @change dunno why
+        editor.setOption("wrap", true)
     },
     copyLatex() {
       const setCopyStatusToNull = () => (this.copyStatus = null);
@@ -78,10 +83,16 @@ export default {
   display: flex;
   padding: 1em;
 
+  .ph-latex-editor {
+    position: relative;
+    min-width: 50%;
+    min-height: 15em;
+  }
+
   .ph-latex-copy-button {
     position: absolute;
     bottom: 0;
-    right: 0;
+    right: 3em;
 
     opacity: 0.3;
 
@@ -104,6 +115,8 @@ export default {
   .ph-mathjax {
     width: 50%;
     margin: 1em;
+    max-height: 75vh;
+    overflow: auto;
 
     background-color: var(--background-primary-color);
     color: var(--foreground-primary-color);
