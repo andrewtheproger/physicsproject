@@ -1,7 +1,9 @@
 <template>
   <div class="ph-latex">
     <div class="ph-latex-editor">
-      <editor v-model.trim="latex"
+      <span v-if="body.created_date">Восстановлен LaTeX от {{body.restored}}</span>
+
+      <editor v-model="body.latex"
               @init="editorInit"
               lang="latex"
               theme="tomorrow_night"
@@ -16,12 +18,13 @@
       </md-button>
     </div>
 
-    <vue-mathjax class="ph-mathjax" :formula="this.latex"></vue-mathjax>
+    <vue-mathjax class="ph-mathjax" :formula="this.body.latex"></vue-mathjax>
   </div>
 </template>
 
 <script>
 import VueMathjax from "./VueMathJax/vueMathJax";
+import config from "../config/api";
 const latexLocalStorageKey = "ph-3800-latex-input";
 export default {
   name: "Latex",
@@ -31,11 +34,27 @@ export default {
   },
   data() {
     return {
-      latex:
-        localStorage.getItem(latexLocalStorageKey) ||
-        "Привет, это текст на $ \\LaTeX $, да. ",
+      body: {},
       copyStatus: null
     };
+  },
+  created() {
+    const s = localStorage.getItem(latexLocalStorageKey);
+
+    if (s) {
+      this.body = JSON.parse(s);
+    } else {
+      this.body.latex = "Привет, это текст на $ \\LaTeX $, да. ";
+    }
+
+    if (this.body.created_date) {
+      this.body.restored = new Date(this.body.created_date).toLocaleDateString(
+        "ru-RU",
+        config.datetime_format
+      )
+    } else {
+      this.body.restored = 'неизвестного числа'
+    }
   },
   computed: {
     getCopyStatusClass() {
@@ -71,7 +90,11 @@ export default {
       );
     },
     onLatexChange() {
-      localStorage.setItem(latexLocalStorageKey, this.latex || "");
+      const json = JSON.stringify({
+        latex: this.body.latex || "",
+        created_date: Date.now()
+      });
+      localStorage.setItem(latexLocalStorageKey, json);
     }
   }
 };
@@ -82,6 +105,8 @@ export default {
 .ph-latex {
   display: flex;
   padding: 1em;
+  width: 100%;
+  -webkit-text-fill-color: initial;
 
   .ph-latex-editor {
     position: relative;
