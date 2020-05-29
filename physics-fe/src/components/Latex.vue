@@ -122,4 +122,10 @@ export default {
     color: var(--foreground-primary-color);
   }
 }
+.ace_line{
+  font-size: 72px;
+}
+span {
+font-size: 32px;
+}
 </style>

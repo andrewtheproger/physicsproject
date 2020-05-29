@@ -13,7 +13,7 @@
         <md-tab
           id="tab-latex"
           md-label="Редактор LaTeX"
-          to="/latex"
+          to="/latex" 
           exact
         ></md-tab>
         <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>

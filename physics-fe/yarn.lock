@@ -8448,6 +8448,11 @@ vue-material@^1.0.0-beta-11:
     vue-github-buttons "^3.1.0"
     vue-toc "0.0.1"
 
+vue-mathjax@^0.0.11:
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/vue-mathjax/-/vue-mathjax-0.0.11.tgz#ab2cfae479e76d95db8ea0e941203d08572714a8"
+  integrity sha512-s2P4OatDmzBZD/gm+/FHl5Idd43gxzSIdXOkMq/MiWrNsdOvMMzNFrirfQp0agqbCiNuA8/It/sXsgCDeh5FfA==
+
 vue-plain-pagination@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/vue-plain-pagination/-/vue-plain-pagination-0.3.0.tgz#f2f03550d2090508f9f6e18fba41930b25464c1e"
@@ -8459,6 +8464,13 @@ vue-router@^3.1.6:
   version "3.1.6"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.1.6.tgz#45f5a3a3843e31702c061dd829393554e4328f89"
   integrity sha512-GYhn2ynaZlysZMkFE5oCHRUTqE8BWs/a9YbKpNLi0i7xD6KG1EzDqpHQmv1F5gXjr8kL5iIVS8EOtRaVUEXTqA==
+
+vue-slide-bar@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/vue-slide-bar/-/vue-slide-bar-1.2.0.tgz#d77e1c09ffff35a205109c532d0eefbfc39b217f"
+  integrity sha512-SewM0C1lt7s0vrp9N1u3dA0yVNEj2kTs+m2bHhe+Mc/NYmjqcU3IcbKlVrrbWOkAjrLFYQ3OmsvVEl60Xzb8+w==
+  dependencies:
+    vue "^2.5.22"
 
 vue-style-loader@^4.1.0, vue-style-loader@^4.1.2:
   version "4.1.2"
@@ -8495,7 +8507,7 @@ vue2-ace-editor@^0.0.15:
   dependencies:
     brace "^0.11.0"
 
-vue@^2.5.17, vue@^2.6.10, vue@^2.6.11:
+vue@^2.5.17, vue@^2.5.22, vue@^2.6.10, vue@^2.6.11:
   version "2.6.11"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.11.tgz#76594d877d4b12234406e84e35275c6d514125c5"
   integrity sha512-VfPwgcGABbGAue9+sfrD4PuwFar7gPb1yl1UK1MwXoQPAw0BKSqWfoYCT/ThFrdEVWoI51dBuyCoiNU9bZDZxQ==

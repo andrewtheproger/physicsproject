@@ -88,6 +88,25 @@
             title="Цвет шрифта кнопки действия"
             :value="this.user.color_foreground_action"
           ></color-field>
+          <VueSlideBar
+            v-model="font_size"
+            :min = "1"
+            :max= "100"
+            :icon-width = "50"
+            :range="slider.range"
+            :processStyle="{
+              backgroundColor: this.$store.getters.get_user
+                .color_foreground_secondary,
+            }"
+            :tooltipStyles="{
+              backgroundColor: this.$store.getters.get_user
+                .color_foreground_secondary,
+              borderColor: this.$store.getters.get_user
+                .color_foreground_primary,
+              position: `absolute`
+            }"
+
+          />
           <div class="ph-user-submit-controls">
             <md-progress-spinner
               v-if="!this.allowSubmit"
@@ -115,6 +134,7 @@
 
 <script>
 import axios from "axios";
+import VueSlideBar from "vue-slide-bar";
 {
   axios;
 }
@@ -126,20 +146,26 @@ export default {
   name: "Userpage",
   components: {
     Logout,
-    "color-field": Color_Field
+    "color-field": Color_Field,
+    VueSlideBar,
   },
   data() {
     return {
       isLoading: false,
       isFlowFailed: null,
       flowFailed: null,
-      allowSubmit: true // todo to dict [child_id, locks_count]
+      allowSubmit: true, // todo to dict [child_id, locks_count]
+      font_size: 20,
+      slider: {
+        
+        range: [25, 50, 75, 100],
+      },
     };
   },
   computed: {
     user() {
       return this.$store.getters.get_user;
-    }
+    },
   },
   methods: {
     formatDate(timestamp) {
@@ -222,11 +248,12 @@ export default {
           color_background_action: this.user.color_background_action,
           color_foreground_primary: this.user.color_foreground_primary,
           color_foreground_secondary: this.user.color_foreground_secondary,
-          color_foreground_action: this.user.color_foreground_action
+          color_foreground_action: this.user.color_foreground_action,
+          font_size: this.user.font_size
         },
         headers: {
-          Authorization: this.$store.getters.get_jwt
-        }
+          Authorization: this.$store.getters.get_jwt,
+        },
       }).then(
         () => {
           this.isLoading = false;
@@ -234,7 +261,7 @@ export default {
           this.flowFailed = null;
           this.allowSubmit = true;
         },
-        error => {
+        (error) => {
           this.isLoading = false;
           this.isFlowFailed = true;
           this.flowFailed = null; // todo
@@ -243,14 +270,17 @@ export default {
           console.log(error);
         }
       );
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../../config/variables.scss";
-
+.vue-slide-bar-component{
+  position: absolute;
+  width: 100%
+}
 .md-card-header {
   display: flex;
 
