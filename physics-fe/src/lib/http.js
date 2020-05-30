@@ -10,12 +10,12 @@ export default {
 
     return axios({
       url: url,
-      method: "GET"
+      method: "GET",
     }).then(
-      result => {
+      (result) => {
         return result.data;
       },
-      error => {
+      (error) => {
         console.log(error);
       }
     );
@@ -51,10 +51,10 @@ export default {
       url: url,
       method: "GET",
       headers: {
-        Authorization: jwt
-      }
+        Authorization: jwt,
+      },
     }).then(
-      response => {
+      (response) => {
         let user = response.data;
 
         if (!user.email) {
@@ -79,15 +79,15 @@ export default {
         user.color_foreground_action =
           user.color_foreground_action ||
           config.defaultUser.color_foreground_action;
-
+        user.font_size = user.font_size || config.defaultUser.font_size;
         return {
           ...user,
-          isAdmin: response.data.role === "admin"
+          isAdmin: response.data.role === "admin",
         };
       },
-      error => {
+      (error) => {
         console.log(error);
       }
     );
-  }
+  },
 };

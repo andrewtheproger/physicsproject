@@ -43,7 +43,7 @@
       </ul>
     </div>
     <div class="ph-task-no-hints-available" v-else>
-      Подсказок к решению пока нет.
+      <p>Подсказок к решению пока нет.</p>
     </div>
   </div>
 </template>

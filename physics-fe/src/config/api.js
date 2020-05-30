@@ -10,7 +10,8 @@ export default {
     color_background_action: "#448aff",
     color_foreground_primary: "#cccccc",
     color_foreground_secondary: "#ccccff",
-    color_foreground_action: "#ffffff"
+    color_foreground_action: "#ffffff",
+    font_size: "20px"
   },
   datetime_format: {
     day: "2-digit",

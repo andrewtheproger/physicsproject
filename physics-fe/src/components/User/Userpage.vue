@@ -89,6 +89,7 @@
             :value="this.user.color_foreground_action"
           ></color-field>
           <VueSlideBar
+          @input="onSubmit"
             v-model="font_size"
             :min = "1"
             :max= "100"
@@ -105,8 +106,13 @@
                 .color_foreground_primary,
               position: `absolute`
             }"
-
+            id = "font_size"
           />
+          <md-button class="md-icon-button" @click="reset(`font_size`)">
+        <md-icon>
+          replay
+        </md-icon>
+      </md-button>
           <div class="ph-user-submit-controls">
             <md-progress-spinner
               v-if="!this.allowSubmit"
@@ -157,8 +163,20 @@ export default {
       allowSubmit: true, // todo to dict [child_id, locks_count]
       font_size: 20,
       slider: {
-        
-        range: [25, 50, 75, 100],
+        range: [{
+            label: '25'
+          },
+          {
+            label: '50',
+            
+          },
+          {
+            label: '75'
+          },
+          {
+            label: '100',
+          },
+          ],
       },
     };
   },
@@ -197,7 +215,9 @@ export default {
         case "action_foreground":
           this.user.color_foreground_action = "#ffffff";
           break;
-
+        case "font_size":
+          this.user.font_size = 20;
+          break;
         default:
           throw "This should not happens";
       }
@@ -272,6 +292,10 @@ export default {
       );
     },
   },
+  mounted(){
+    console.log(this)
+    
+  }
 };
 </script>
 
@@ -279,7 +303,7 @@ export default {
 @import "../../config/variables.scss";
 .vue-slide-bar-component{
   position: absolute;
-  width: 100%
+  width: 90%
 }
 .md-card-header {
   display: flex;

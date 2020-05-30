@@ -13,7 +13,7 @@
         <md-tab
           id="tab-latex"
           md-label="Редактор LaTeX"
-          to="/latex" 
+          to="/latex"
           exact
         ></md-tab>
         <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>
@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       isApiOk: null,
-      user: config.defaultUser
+      user: config.defaultUser,
     };
   },
   computed: {
@@ -56,13 +56,13 @@ export default {
     },
     getClass_body() {
       const parse = require("parse-color");
-      const toColor = color => {
+      const toColor = (color) => {
         if (!color) {
           return {
             rgb: null,
             r: null,
             b: null,
-            c: null
+            c: null,
           };
         }
         const rgb = parse(color).rgb;
@@ -70,15 +70,26 @@ export default {
           rgb: color,
           r: rgb[0],
           g: rgb[1],
-          b: rgb[2]
+          b: rgb[2],
         };
       };
-      const patchWithCssVariables = (slave, colorName, colorValue) => {
-        const color = toColor(colorValue);
-        slave[colorName] = color.rgb;
-        slave[`${colorName}-r`] = color.r;
-        slave[`${colorName}-g`] = color.g;
-        slave[`${colorName}-b`] = color.b;
+      const patchWithCssVariables = (
+        slave,
+        varName,
+        value,
+        type = "color"
+      ) => {
+        if (type === "color") {
+          const color = toColor(value);
+          slave[varName] = color.rgb;
+          slave[`${varName}-r`] = color.r;
+          slave[`${varName}-g`] = color.g;
+          slave[`${varName}-b`] = color.b;
+          
+        }
+        else {
+          slave[varName] = value
+        }
         return slave;
       };
       const styles = {
@@ -87,7 +98,7 @@ export default {
         "--background-error-color": "#500",
         "--foreground-success-color": "#0f0",
         "--foreground-warning-color": "#ff0",
-        "--foreground-error-color": "#f00"
+        "--foreground-error-color": "#f00",
       };
       patchWithCssVariables(
         styles,
@@ -119,41 +130,53 @@ export default {
         "--action-foreground-color",
         this.user.color_foreground_action
       );
+      patchWithCssVariables(
+        styles,
+        "--font-size",
+        this.user.font_size,
+        "font_size"
+      );
       return styles;
-    }
+    },
   },
   methods: {
     checkApiOk() {
       axios({
         url: config.apiPrefix + "/health",
-        method: "GET"
+        method: "GET",
       }).then(
-        result => {
+        (result) => {
           this.isApiOk = result.data.status === "ok";
           console.log("api is " + this.isApiOk);
         },
-        error => {
+        (error) => {
           console.log(error);
           this.isApiOk = false;
         }
       );
-    }
+    },
   },
   mounted() {
     this.checkApiOk();
     http_helper
       .getMeAsUser(this.$store.getters.get_jwt)
-      .then(user => {
+      .then((user) => {
         this.$store.commit("set_user", user);
         this.user = this.$store.getters.get_user;
       })
-      .catch(error => console.log(error));
-  }
+      .catch((error) => console.log(error));
+  },
 };
 </script>
 
 <style lang="scss">
 @import "config/variables.scss";
+p, li, span{
+  font-size: var(--font-size);
+}
+h1, h2, h3, h4, h5, h6 {
+  font-size: 200%
+}
 a {
   color: var(--foreground-secondary-color);
 }
