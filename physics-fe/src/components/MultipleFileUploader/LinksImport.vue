@@ -47,8 +47,8 @@ export default {
       const value = e.target.dataset.link;
 
       this.$emit("link_removed", value);
-    }
-  }
+    },
+  },
 };
 </script>
 
