@@ -1,7 +1,9 @@
 <template>
   <div class="ph-latex">
     <div class="ph-latex-editor">
-      <editor v-model="latex"
+      <span v-if="body.created_date">Восстановлен LaTeX от {{body.restored}}</span>
+
+      <editor v-model="body.latex"
               @init="editorInit"
               lang="latex"
               ref='myEditor'
@@ -33,7 +35,7 @@
     <div class="ph-mathjax" :style="this.getMathjaxStyle()">
       <vue-mathjax
         class="ph-mathjax-render"
-        :formula="this.latex"
+        :formula="this.body.latex"
       ></vue-mathjax>
 
       <div class="ph-mathjax-controls">
@@ -53,6 +55,7 @@
 
 <script>
 import VueMathjax from "./VueMathJax/vueMathJax";
+import config from "../config/api";
 const latexLocalStorageKey = "ph-3800-latex-input";
 export default {
   name: "Latex",
@@ -62,9 +65,11 @@ export default {
   },
   data() {
     return {
-      latex:
-        localStorage.getItem(latexLocalStorageKey) ||
-        "Привет, это текст на $ \\LaTeX $, да. ",
+      body: {
+        latex:
+          localStorage.getItem(latexLocalStorageKey) ||
+          "Привет, это текст на $ \\LaTeX $, да. ",
+      },
       copyStatus: null,
       mathjaxZoom: {
         current: 100,
@@ -79,6 +84,24 @@ export default {
         step: 10
       },
     };
+  },
+  created() {
+    const s = localStorage.getItem(latexLocalStorageKey);
+
+    if (s) {
+      this.body = JSON.parse(s);
+    } else {
+      this.body.latex = "Привет, это текст на $ \\LaTeX $, да. ";
+    }
+
+    if (this.body.created_date) {
+      this.body.restored = new Date(this.body.created_date).toLocaleDateString(
+        "ru-RU",
+        config.datetime_format
+      )
+    } else {
+      this.body.restored = 'неизвестного числа'
+    }
   },
   computed: {
     getCopyStatusClass() {
@@ -142,7 +165,11 @@ export default {
       );
     },
     onLatexChange() {
-      localStorage.setItem(latexLocalStorageKey, this.latex || "");
+      const json = JSON.stringify({
+        latex: this.body.latex || "",
+        created_date: Date.now()
+      });
+      localStorage.setItem(latexLocalStorageKey, json);
     }
   }
 };
@@ -153,6 +180,8 @@ export default {
 .ph-latex {
   display: flex;
   padding: 1em;
+  width: 100%;
+  -webkit-text-fill-color: initial;
 
   .ph-latex-editor-controls {
     display: flex;
@@ -192,20 +221,13 @@ export default {
     min-height: 15em;
   }
 
-  .ph-input {
-    border: 1px solid var(--foreground-primary-color);
-
-    textarea {
-      max-height: inherit;
-    }
-  }
-
-  .ph-input,
   .ph-mathjax-render {
-    width: 50%;
     margin: 1em;
     min-height: 25vh;
     overflow: auto;
+
+    word-wrap: break-word;
+    white-space: pre-wrap;
 
     background-color: var(--background-primary-color);
     color: var(--foreground-primary-color);

@@ -7,7 +7,7 @@
 
           <md-input
             type="text"
-            @change="onNumberChange"
+            @change="onFormChange"
             v-model.trim="form.number"
             name="form-number"
             id="form-number"
@@ -34,15 +34,7 @@
         :class="getValidationClass('latex')"
         class="ph-task-upsert-latex"
       >
-        <label>LaTeX...</label>
-        <md-textarea
-          cols="30"
-          rows="15"
-          v-model.trim="form.latex"
-          name="form-latex"
-          id="form-latex"
-        >
-        </md-textarea>
+        <Latex />
 
         <span class="md-error" v-if="!$v.form.latex.required"
           >Задача должна иметь условие</span
@@ -50,13 +42,6 @@
         <span class="md-error" v-if="!$v.form.latex.mustSeemOk"
           >В задаче из 3800 не может идти речь про LaTeX</span
         >
-
-        <div>
-          <vue-mathjax
-            class="ph-mathjax"
-            :formula="this.form.latex"
-          ></vue-mathjax>
-        </div>
       </md-field>
 
       <multiple-file-uploader
@@ -131,6 +116,7 @@
 
 <script>
 import MultipleFileUploader from "./MultipleFileUploader/MultipleFileUploader";
+import Latex from "./Latex";
 import config from "../config/api.js";
 import axios from "axios";
 {
@@ -139,7 +125,6 @@ import axios from "axios";
 import { required } from "vuelidate/lib/validators";
 import { validationMixin } from "vuelidate";
 import http_helper from "../lib/http";
-import VueMathjax from "./VueMathJax/vueMathJax";
 
 export default {
   name: "User",
@@ -199,7 +184,7 @@ export default {
   },
   components: {
     MultipleFileUploader,
-    VueMathjax
+    Latex
   },
   watch: {
     $route() {
@@ -210,6 +195,22 @@ export default {
     this.init();
   },
   methods: {
+    onFormChange() {
+      if (!this.form) {
+          return;
+      }
+
+      if (this.form.number) {
+        if (!this.form.number.includes(".")) {
+          this.form.number = this.form.number
+            .replace(",", ".")
+            .replace(" ", ".")
+            .replace("-", ".");
+        }
+      }
+
+      this.$v.$touch();
+    },
     remove() {
       const url = config.apiPrefix + "/tasks/" + this.$route.params.id;
       this.isLoading = true;
@@ -274,17 +275,6 @@ export default {
         this.form.images = [];
       }
     },
-    onNumberChange() {
-      if (!this.form.number.includes(".")) {
-        this.form.number = this.form.number
-          .replace(",", ".")
-          .replace(" ", ".")
-          .replace("-", ".");
-      }
-
-      this.$v.$touch();
-    },
-
     getValidationClass(fieldName) {
       const field = this.$v.form[fieldName];
 
@@ -436,46 +426,12 @@ export default {
   .ph-task-upsert-latex {
     display: flex;
     flex-direction: column;
-
-    textarea {
-      border-right: none;
-      border-bottom: 2px dotted var(--background-secondary-color);
-    }
-
-    textarea,
-    div {
-      width: 100%;
-    }
-
-    div {
-      display: block;
-      padding: 1em;
-      height: 10em;
-      width: 100%;
-
-      overflow: overlay;
-    }
   }
 
   @media (min-width: 756px) {
     .ph-task-upsert-latex {
       display: flex;
       flex-direction: row;
-
-      textarea.md-textarea {
-        border-right: 2px dotted var(--background-secondary-color);
-        border-bottom: none;
-      }
-
-      textarea,
-      div {
-        width: 50%;
-      }
-
-      div {
-        display: inline;
-        padding: 1em;
-      }
     }
   }
 }

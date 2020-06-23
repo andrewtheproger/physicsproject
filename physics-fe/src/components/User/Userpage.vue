@@ -283,7 +283,7 @@ export default {
           break;
         case "background_error":
           this.user.color_background_error = hex;
-          break
+          break;
         case "foreground_success":
           this.user.color_foreground_success = hex;
           break;
