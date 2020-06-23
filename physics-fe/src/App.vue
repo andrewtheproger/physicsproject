@@ -129,17 +129,17 @@ export default {
       );
       patchWithCssVariables(
         styles,
-        "--background-success-color",
+        "--foreground-success-color",
         this.user.color_foreground_success
       );
       patchWithCssVariables(
         styles,
-        "--background-warning-color",
+        "--foreground-warning-color",
         this.user.color_foreground_warning
       );
       patchWithCssVariables(
         styles,
-        "--background-error-color",
+        "--foreground-error-color",
         this.user.color_foreground_error
       );
       return styles;

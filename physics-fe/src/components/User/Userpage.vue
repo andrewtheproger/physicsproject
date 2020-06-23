@@ -89,6 +89,10 @@
             :value="this.user.color_foreground_action"
           ></color-field>
 
+          <Message text="Пример успешного результата" severity="success" />
+          <Message text="Пример предупреждения" severity="warning" />
+          <Message text="Пример ошибки" severity="error" />
+
           <color-field
             @color_changed="color_changed"
             @color_changing="color_changing"
@@ -118,7 +122,7 @@
             @color_changing="color_changing"
             @reset="reset"
             id="foreground_success"
-            title="Цвет фона успешного результата"
+            title="Цвет шрифта успешного результата"
             :value="this.user.color_foreground_success"
           ></color-field>
           <color-field
@@ -126,7 +130,7 @@
             @color_changing="color_changing"
             @reset="reset"
             id="foreground_warning"
-            title="Цвет фона предупреждения"
+            title="Цвет шрифта предупреждения"
             :value="this.user.color_foreground_warning"
           ></color-field>
           <color-field
@@ -134,7 +138,7 @@
             @color_changing="color_changing"
             @reset="reset"
             id="foreground_error"
-            title="Цвет фона ошибки"
+            title="Цвет шрифта ошибки"
             :value="this.user.color_foreground_error"
           ></color-field>
           <div class="ph-user-submit-controls">
@@ -145,12 +149,12 @@
             >
             </md-progress-spinner>
 
-            <span class="ph-success" v-if="isFlowFailed === false"
-              >Изменения сохранены</span
-            >
-            <span class="ph-success" v-if="isFlowFailed === true"
-              >Произошла ошибка, и изменения не сохранились</span
-            >
+            <md-snackbar md-position="center" md-duration="700" :md-active.sync="!this.allowSubmit && !this.isFlowFailed" md-persistent>
+              <Message text="Изменения сохранены" severity="success"></Message>
+            </md-snackbar>
+            <md-snackbar md-position="center" md-duration="2000" :md-active.sync="!this.allowSubmit && this.isFlowFailed" md-persistent>
+              <Message text="Произошла ошибка, и изменения не сохранились" severity="error"></Message>
+            </md-snackbar>
           </div>
         </form>
 
@@ -168,6 +172,7 @@ import axios from "axios";
   axios;
 }
 import Logout from "./Logout";
+import Message from "../Message/Message"
 import Color_Field from "./Color_Field";
 import config from "../../config/api.js";
 
@@ -175,6 +180,7 @@ export default {
   name: "Userpage",
   components: {
     Logout,
+    Message,
     "color-field": Color_Field
   },
   data() {
@@ -349,6 +355,13 @@ export default {
 <style lang="scss" scoped>
 @import "../../config/variables.scss";
 
+.md-snackbar.md-theme-default {
+  .md-snackbar-content {
+    background-color: inherit;
+    color: inherit;
+  }
+}
+
 .md-card-header {
   display: flex;
 
@@ -374,6 +387,11 @@ export default {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+
+  .ph-message,
+  .ph-color-field {
+    width: 30%;
+  }
 }
 
 .md-checkbox {

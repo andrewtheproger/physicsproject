@@ -16,7 +16,8 @@ import {
   MdMenu,
   MdList,
   MdCard,
-  MdCheckbox
+  MdCheckbox,
+  MdSnackbar
 } from "vue-material/dist/components";
 import gallery from "img-vuer";
 import { Photoshop } from "vue-color";
@@ -34,6 +35,7 @@ Vue.use(MdMenu);
 Vue.use(MdList);
 Vue.use(MdCard);
 Vue.use(MdCheckbox);
+Vue.use(MdSnackbar);
 Vue.use(gallery);
 Vue.use(VueClipboard);
 
