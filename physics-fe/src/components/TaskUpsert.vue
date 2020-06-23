@@ -116,7 +116,7 @@
 
 <script>
 import MultipleFileUploader from "./MultipleFileUploader/MultipleFileUploader";
-import Latex from "./Latex"
+import Latex from "./Latex";
 import config from "../config/api.js";
 import axios from "axios";
 {
@@ -197,7 +197,7 @@ export default {
   methods: {
     onFormChange() {
       if (!this.form) {
-          return
+          return;
       }
 
       if (this.form.number) {

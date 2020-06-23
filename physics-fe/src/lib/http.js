@@ -79,6 +79,24 @@ export default {
         user.color_foreground_action =
           user.color_foreground_action ||
           config.defaultUser.color_foreground_action;
+        user.color_background_success =
+          user.color_background_success ||
+          config.defaultUser.color_background_success;
+        user.color_background_warning =
+          user.color_background_warning ||
+          config.defaultUser.color_background_warning;
+        user.color_background_error =
+          user.color_background_error ||
+          config.defaultUser.color_background_error;
+        user.color_foreground_success =
+          user.color_foreground_success ||
+          config.defaultUser.color_foreground_success;
+        user.color_foreground_warning =
+          user.color_foreground_warning ||
+          config.defaultUser.color_foreground_warning;
+        user.color_foreground_error =
+          user.color_foreground_error ||
+          config.defaultUser.color_foreground_error;
 
         return {
           ...user,

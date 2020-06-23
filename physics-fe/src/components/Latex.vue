@@ -6,19 +6,50 @@
       <editor v-model="body.latex"
               @init="editorInit"
               lang="latex"
+              ref='myEditor'
               theme="tomorrow_night"
+              font-size="40px"
               width="100%"
               height="100%"/>
 
-      <md-button
-        class="md-dense md-icon-button ph-latex-copy-button"
-        @click="this.copyLatex"
-      >
-        <md-icon :class="this.getCopyStatusClass">file_copy</md-icon>
-      </md-button>
+      <div class="ph-latex-editor-controls">
+        <span v-if="this.aceZoom.current !== 100">{{this.aceZoom.current}} %</span>
+
+        <md-button
+          class="md-dense md-icon-button"
+          @click="this.copyLatex"
+        >
+          <md-icon :class="this.getCopyStatusClass">file_copy</md-icon>
+        </md-button>
+
+        <md-button class="md-dense md-icon-button" @click="this.onAceZoomIn">
+          <md-icon>zoom_in</md-icon>
+        </md-button>
+
+        <md-button class="md-dense md-icon-button" @click="this.onAceZoomOut">
+          <md-icon>zoom_out</md-icon>
+        </md-button>
+      </div>
     </div>
 
-    <vue-mathjax class="ph-mathjax" :formula="this.body.latex"></vue-mathjax>
+    <div class="ph-mathjax" :style="this.getMathjaxStyle()">
+      <vue-mathjax
+        class="ph-mathjax-render"
+        :formula="this.body.latex"
+      ></vue-mathjax>
+
+      <div class="ph-mathjax-controls">
+        <md-button class="md-dense md-icon-button" @click="this.onMathjaxZoomIn">
+          <md-icon>zoom_in</md-icon>
+        </md-button>
+
+        <md-button class="md-dense md-icon-button" @click="this.onMathjaxZoomOut">
+          <md-icon>zoom_out</md-icon>
+        </md-button>
+
+        <span v-if="this.mathjaxZoom.current !== 100">{{this.mathjaxZoom.current}} %</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -34,8 +65,24 @@ export default {
   },
   data() {
     return {
-      body: {},
-      copyStatus: null
+      body: {
+        latex:
+          localStorage.getItem(latexLocalStorageKey) ||
+          "Привет, это текст на $ \\LaTeX $, да. ",
+      },
+      copyStatus: null,
+      mathjaxZoom: {
+        current: 100,
+        min: 50,
+        max: 150,
+        step: 10
+      },
+      aceZoom: {
+        current: 100,
+        min: 50,
+        max: 150,
+        step: 10
+      },
     };
   },
   created() {
@@ -66,14 +113,42 @@ export default {
     }
   },
   methods: {
+    getMathjaxStyle: function() {
+      console.log(this.mathjaxZoom.current)
+      return {
+        fontSize: `${this.mathjaxZoom.current}%`
+      }
+    },
+    onAceZoomIn: function() {
+      if (this.aceZoom.current + this.aceZoom.step <= this.aceZoom.max) {
+        this.aceZoom.current += this.aceZoom.step;
+      }
+      this.$refs.myEditor.editor.setFontSize(`${this.aceZoom.current}%`)
+    },
+    onAceZoomOut: function() {
+      if (this.aceZoom.current - this.aceZoom.step >= this.aceZoom.min) {
+        this.aceZoom.current -= this.aceZoom.step;
+      }
+      this.$refs.myEditor.editor.setFontSize(`${this.aceZoom.current}%`)
+    },
+    onMathjaxZoomIn: function() {
+      if (this.mathjaxZoom.current + this.mathjaxZoom.step <= this.mathjaxZoom.max) {
+        this.mathjaxZoom.current += this.mathjaxZoom.step;
+      }
+    },
+    onMathjaxZoomOut: function() {
+      if (this.mathjaxZoom.current + this.mathjaxZoom.step >= this.mathjaxZoom.min) {
+        this.mathjaxZoom.current -= this.mathjaxZoom.step;
+      }
+    },
     editorInit: function (editor) {
-        require('brace/ext/language_tools');
-        require('brace/mode/latex');
-        require('brace/theme/tomorrow_night');
-        require('brace/snippets/latex');
+      require('brace/ext/language_tools');
+      require('brace/mode/latex');
+      require('brace/theme/tomorrow_night');
+      require('brace/snippets/latex');
 
-        editor.on('change', this.onLatexChange); // it doesn't work as @change dunno why
-        editor.setOption("wrap", true)
+      editor.on('change', this.onLatexChange); // it doesn't work as @change dunno why
+      editor.setOption("wrap", true)
     },
     copyLatex() {
       const setCopyStatusToNull = () => (this.copyStatus = null);
@@ -108,16 +183,13 @@ export default {
   width: 100%;
   -webkit-text-fill-color: initial;
 
-  .ph-latex-editor {
-    position: relative;
-    min-width: 50%;
-    min-height: 15em;
-  }
+  .ph-latex-editor-controls {
+    display: flex;
+    justify-content: flex-end;
 
-  .ph-latex-copy-button {
     position: absolute;
     bottom: 0;
-    right: 3em;
+    right: 0em;
 
     opacity: 0.3;
 
@@ -126,6 +198,27 @@ export default {
     .md-icon:hover {
       opacity: 0.8;
     }
+  }
+
+  .ph-mathjax-controls {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .ph-mathjax {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .ph-latex-editor {
+    position: relative;
+  }
+
+  .ph-mathjax,
+  .ph-latex-editor {
+    min-width: 50%;
+    min-height: 15em;
   }
 
   .ph-input {
@@ -137,10 +230,10 @@ export default {
   }
 
   .ph-input,
-  .ph-mathjax {
+  .ph-mathjax-render {
     width: 50%;
     margin: 1em;
-    max-height: 75vh;
+    min-height: 25vh;
     overflow: auto;
 
     background-color: var(--background-primary-color);
