@@ -22,11 +22,7 @@
       </md-tabs>
 
       <div>
-        <ul class="ph-warnings">
-          <li :class="getApiInfoClass">
-            Что-то не работает, мы уже чиним.
-          </li>
-        </ul>
+        <Message v-if="!this.isApiOk" text="Что-то не работает, мы уже чиним" severity="error"></Message>
       </div>
     </header>
 
@@ -38,8 +34,10 @@
 import axios from "axios";
 import config from "./config/api";
 import http_helper from "./lib/http";
+import Message from "./components/Message/Message";
 export default {
   name: "App",
+  components: {Message},
   data() {
     return {
       isApiOk: null,
@@ -47,13 +45,6 @@ export default {
     };
   },
   computed: {
-    getApiInfoClass() {
-      if (this.isApiOk === null) {
-        return "ph-hidden";
-      }
-
-      return this.isApiOk ? "ph-hidden" : "";
-    },
     getClass_body() {
       const parse = require("parse-color");
       const toColor = color => {
@@ -129,17 +120,17 @@ export default {
       );
       patchWithCssVariables(
         styles,
-        "--background-success-color",
+        "--foreground-success-color",
         this.user.color_foreground_success
       );
       patchWithCssVariables(
         styles,
-        "--background-warning-color",
+        "--foreground-warning-color",
         this.user.color_foreground_warning
       );
       patchWithCssVariables(
         styles,
-        "--background-error-color",
+        "--foreground-error-color",
         this.user.color_foreground_error
       );
       return styles;

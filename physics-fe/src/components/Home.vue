@@ -23,9 +23,7 @@
 
     <md-progress-bar md-mode="indeterminate" v-if="this.sending" />
 
-    <div class="ph-error-message" v-if="isHttpFailed">
-      Произошла ошибка: {{ this.flowFailed.message }}
-    </div>
+    <Message v-if="this.isHttpFailed" :text="'Произошла ошибка: ' + this.httpFailed.message" severity="error"></Message>
 
     <nav
       v-if="
@@ -52,9 +50,7 @@
       </li>
     </ul>
 
-    <div class="ph-nothing-found" v-if="this.tasks && this.tasks.length === 0">
-      Ничего не найдено.
-    </div>
+    <Message v-if="this.tasks && this.tasks.length === 0" text="Ничего не найдено" severity="warning"></Message>
   </div>
 </template>
 
@@ -64,12 +60,14 @@ import config from "../config/api";
 import axios from "axios";
 import Task from "./Task";
 import http_helper from "../lib/http";
+import Message from './Message/Message'
 
 export default {
   name: "Home",
   components: {
     Task,
-    vPagination
+    vPagination,
+    Message
   },
 
   data() {
