@@ -158,7 +158,8 @@ export default {
             config.defaultUser.color_background_secondary;
           break;
         case "action_background":
-          this.user.color_background_action = "#448aff";
+          this.user.color_background_action =
+            config.defaultUser.color_background_action;
           break;
         case "foreground_primary":
           this.user.color_foreground_primary =
@@ -169,7 +170,8 @@ export default {
             config.defaultUser.color_foreground_secondary;
           break;
         case "action_foreground":
-          this.user.color_foreground_action = "#ffffff";
+          this.user.color_foreground_action =
+            config.defaultUser.color_foreground_action;
           break;
 
         default:
