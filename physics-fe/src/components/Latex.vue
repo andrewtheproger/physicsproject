@@ -221,20 +221,13 @@ export default {
     min-height: 15em;
   }
 
-  .ph-input {
-    border: 1px solid var(--foreground-primary-color);
-
-    textarea {
-      max-height: inherit;
-    }
-  }
-
-  .ph-input,
   .ph-mathjax-render {
-    width: 50%;
     margin: 1em;
     min-height: 25vh;
     overflow: auto;
+
+    word-wrap: break-word;
+    white-space: pre-wrap;
 
     background-color: var(--background-primary-color);
     color: var(--foreground-primary-color);
