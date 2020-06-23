@@ -81,14 +81,7 @@ export default {
         slave[`${colorName}-b`] = color.b;
         return slave;
       };
-      const styles = {
-        "--background-success-color": "#050",
-        "--background-warning-color": "#550",
-        "--background-error-color": "#500",
-        "--foreground-success-color": "#0f0",
-        "--foreground-warning-color": "#ff0",
-        "--foreground-error-color": "#f00"
-      };
+      const styles = {};
       patchWithCssVariables(
         styles,
         "--background-primary-color",
@@ -118,6 +111,36 @@ export default {
         styles,
         "--action-foreground-color",
         this.user.color_foreground_action
+      );
+      patchWithCssVariables(
+        styles,
+        "--background-success-color",
+        this.user.color_background_success
+      );
+      patchWithCssVariables(
+        styles,
+        "--background-warning-color",
+        this.user.color_background_warning
+      );
+      patchWithCssVariables(
+        styles,
+        "--background-error-color",
+        this.user.color_background_error
+      );
+      patchWithCssVariables(
+        styles,
+        "--background-success-color",
+        this.user.color_foreground_success
+      );
+      patchWithCssVariables(
+        styles,
+        "--background-warning-color",
+        this.user.color_foreground_warning
+      );
+      patchWithCssVariables(
+        styles,
+        "--background-error-color",
+        this.user.color_foreground_error
       );
       return styles;
     }
