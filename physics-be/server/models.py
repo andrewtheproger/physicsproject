@@ -64,6 +64,12 @@ class User(db.Model):
     color_foreground_primary = db.Column(db.String(16))
     color_foreground_secondary = db.Column(db.String(16))
     color_foreground_action = db.Column(db.String(16))
+    color_background_success = db.Column(db.String(16))
+    color_background_warning = db.Column(db.String(16))
+    color_background_error = db.Column(db.String(16))
+    color_foreground_success = db.Column(db.String(16))
+    color_foreground_warning = db.Column(db.String(16))
+    color_foreground_error = db.Column(db.String(16))
 
     def set_password_hash(self, password):
         self.password_hash = generate_password_hash(password)

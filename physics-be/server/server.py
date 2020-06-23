@@ -493,6 +493,25 @@ def update_user(user_id):
     if user.color_foreground_action:
         db_user.color_foreground_action = user.color_foreground_action
 
+    if user.color_background_success:
+        db_user.color_background_success = user.color_background_success
+
+    if user.color_background_warning:
+        db_user.color_background_warning = user.color_background_warning
+
+    if user.color_background_error:
+        db_user.color_background_error = user.color_background_error
+
+    if user.color_foreground_success:
+        db_user.color_foreground_success = user.color_foreground_success
+
+    if user.color_foreground_warning:
+        db_user.color_foreground_warning = user.color_foreground_warning
+
+    if user.color_foreground_error:
+        db_user.color_foreground_error = user.color_foreground_error
+
+
     db.session.commit()
 
     return jsonify({'id': db_user.id})
@@ -527,6 +546,7 @@ def get_me():
     return jsonify(users_helpers.to_model(db_user, app.config['SECRET_JWT_KEY']))
 
 
+# todo drop it and use undateUser
 @app.route('/api/users/me', methods=['POST'])
 def update_me():
     bearer_token = request.headers.get('Authorization')
@@ -565,6 +585,24 @@ def update_me():
 
     if user.color_foreground_action:
         db_user.color_foreground_action = user.color_foreground_action
+
+    if user.color_background_success:
+        db_user.color_background_success = user.color_background_success
+
+    if user.color_background_warning:
+        db_user.color_background_warning = user.color_background_warning
+
+    if user.color_background_error:
+        db_user.color_background_error = user.color_background_error
+
+    if user.color_foreground_success:
+        db_user.color_foreground_success = user.color_foreground_success
+
+    if user.color_foreground_warning:
+        db_user.color_foreground_warning = user.color_foreground_warning
+
+    if user.color_foreground_error:
+        db_user.color_foreground_error = user.color_foreground_error
 
     db.session.commit()
 

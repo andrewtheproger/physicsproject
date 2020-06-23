@@ -10,7 +10,13 @@ export default {
     color_background_action: "#448aff",
     color_foreground_primary: "#cccccc",
     color_foreground_secondary: "#ccccff",
-    color_foreground_action: "#ffffff"
+    color_foreground_action: "#ffffff",
+    color_background_success: "#005500",
+    color_background_warning: "#555500",
+    color_background_error: "#550000",
+    color_foreground_success: "#00ff00",
+    color_foreground_warning: "#ffff00",
+    color_foreground_error: "#ff0000"
   },
   datetime_format: {
     day: "2-digit",

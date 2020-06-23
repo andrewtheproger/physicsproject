@@ -88,6 +88,55 @@
             title="Цвет шрифта кнопки действия"
             :value="this.user.color_foreground_action"
           ></color-field>
+
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            @reset="reset"
+            id="background_success"
+            title="Цвет фона успешного результата"
+            :value="this.user.color_background_success"
+          ></color-field>
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            @reset="reset"
+            id="background_warning"
+            title="Цвет фона предупреждения"
+            :value="this.user.color_background_warning"
+          ></color-field>
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            @reset="reset"
+            id="background_error"
+            title="Цвет фона ошибки"
+            :value="this.user.color_background_error"
+          ></color-field>
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            @reset="reset"
+            id="foreground_success"
+            title="Цвет фона успешного результата"
+            :value="this.user.color_foreground_success"
+          ></color-field>
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            @reset="reset"
+            id="foreground_warning"
+            title="Цвет фона предупреждения"
+            :value="this.user.color_foreground_warning"
+          ></color-field>
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            @reset="reset"
+            id="foreground_error"
+            title="Цвет фона ошибки"
+            :value="this.user.color_foreground_error"
+          ></color-field>
           <div class="ph-user-submit-controls">
             <md-progress-spinner
               v-if="!this.allowSubmit"
@@ -158,7 +207,8 @@ export default {
             config.defaultUser.color_background_secondary;
           break;
         case "action_background":
-          this.user.color_background_action = "#448aff";
+          this.user.color_background_action =
+            config.defaultUser.color_background_action;
           break;
         case "foreground_primary":
           this.user.color_foreground_primary =
@@ -169,9 +219,33 @@ export default {
             config.defaultUser.color_foreground_secondary;
           break;
         case "action_foreground":
-          this.user.color_foreground_action = "#ffffff";
+          this.user.color_foreground_action =
+            config.defaultUser.color_foreground_action;
           break;
-
+        case "background_success":
+          this.user.color_background_success =
+            config.defaultUser.color_background_success;
+          break;
+        case "background_warning":
+          this.user.color_background_warning =
+            config.defaultUser.color_background_warning;
+          break;
+        case "background_error":
+          this.user.color_background_error =
+            config.defaultUser.color_background_error;
+          break;
+        case "foreground_success":
+          this.user.color_foreground_success =
+            config.defaultUser.color_foreground_success;
+          break;
+        case "foreground_warning":
+          this.user.color_foreground_warning =
+            config.defaultUser.color_foreground_warning;
+          break;
+        case "foreground_error":
+          this.user.color_foreground_error =
+            config.defaultUser.color_foreground_error;
+          break;
         default:
           throw "This should not happens";
       }
@@ -201,6 +275,24 @@ export default {
         case "action_foreground":
           this.user.color_foreground_action = hex;
           break;
+        case "background_success":
+          this.user.color_background_success = hex;
+          break;
+        case "background_warning":
+          this.user.color_background_warning = hex;
+          break;
+        case "background_error":
+          this.user.color_background_error = hex;
+          break
+        case "foreground_success":
+          this.user.color_foreground_success = hex;
+          break;
+        case "foreground_warning":
+          this.user.color_foreground_warning = hex;
+          break;
+        case "foreground_error":
+          this.user.color_foreground_error = hex;
+          break;
         default:
           throw "This should not happens";
       }
@@ -222,7 +314,13 @@ export default {
           color_background_action: this.user.color_background_action,
           color_foreground_primary: this.user.color_foreground_primary,
           color_foreground_secondary: this.user.color_foreground_secondary,
-          color_foreground_action: this.user.color_foreground_action
+          color_foreground_action: this.user.color_foreground_action,
+          color_background_success: this.user.color_background_success,
+          color_background_warning: this.user.color_background_warning,
+          color_background_error: this.user.color_background_error,
+          color_foreground_success: this.user.color_foreground_success,
+          color_foreground_warning: this.user.color_foreground_warning,
+          color_foreground_error: this.user.color_foreground_error
         },
         headers: {
           Authorization: this.$store.getters.get_jwt
