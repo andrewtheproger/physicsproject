@@ -3,9 +3,9 @@
     <div class="ph-message-icons">
       <md-icon v-if="this.severity === 'success'">done</md-icon>
       <md-icon v-if="this.severity === 'warning'">report_problem</md-icon>
-      <md-icon v-if="this.severity === 'error'">clear</md-icon>
+      <md-icon v-if="this.severity === 'error'">error</md-icon>
     </div>
-    <md-divider class="md-inset"></md-divider>
+
     <span class="ph-message-content">{{text}}</span>
   </div>
 </template>

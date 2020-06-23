@@ -114,7 +114,6 @@ export default {
   },
   methods: {
     getMathjaxStyle: function() {
-      console.log(this.mathjaxZoom.current)
       return {
         fontSize: `${this.mathjaxZoom.current}%`
       }

@@ -22,6 +22,10 @@
         </md-checkbox>
       </md-card-header>
 
+      <span class="ph-registration-date">
+        Дата регистрации: {{ this.formatDate(this.user.created_date) }}
+      </span>
+
       <md-card-actions>
         <Logout></Logout>
       </md-card-actions>
@@ -149,18 +153,14 @@
             >
             </md-progress-spinner>
 
-            <md-snackbar md-position="center" md-duration="700" :md-active.sync="!this.allowSubmit && !this.isFlowFailed" md-persistent>
+            <md-snackbar md-position="center" :md-duration="700" :md-active.sync="!this.allowSubmit && !this.isFlowFailed" md-persistent>
               <Message text="Изменения сохранены" severity="success"></Message>
             </md-snackbar>
-            <md-snackbar md-position="center" md-duration="2000" :md-active.sync="!this.allowSubmit && this.isFlowFailed" md-persistent>
+            <md-snackbar md-position="center" :md-duration="2000" :md-active.sync="!this.allowSubmit && this.isFlowFailed" md-persistent>
               <Message text="Произошла ошибка, и изменения не сохранились" severity="error"></Message>
             </md-snackbar>
           </div>
         </form>
-
-        <span
-          >Дата регистрации: {{ this.formatDate(this.user.created_date) }}</span
-        >
       </md-card-content>
     </md-card>
   </div>
@@ -406,5 +406,9 @@ export default {
 
 .md-card {
   width: 70%;
+}
+
+.ph-registration-date {
+  margin-left: 1em;
 }
 </style>

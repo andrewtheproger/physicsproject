@@ -67,16 +67,18 @@
           Добавить
         </md-button>
 
-        <div class="ph-success" v-if="isFlowFailed === false">
-          Задача добавлена, спасибо
-        </div>
+        <md-snackbar md-position="center" :md-duration="700" :md-active.sync="this.isFlowFailed === false" md-persistent>
+          <Message v-if="!this.isFlowFailed" text="Задача добавлена, спасибо" severity="success"></Message>
+        </md-snackbar>
+
+        <md-snackbar md-position="center" :md-duration="700" :md-active.sync="this.isFlowFailed === true"  md-persistent>
+          <Message v-if="this.isFlowFailed"
+            :text="(this.flowFailed.http_code ? 'Произошла ошибка на стороне сервера' : 'Вы ошиблись') + ' : ' + this.flowFailed.message"
+            severity="success"></Message>
+        </md-snackbar>
 
         <div class="ph-failure" v-if="isFlowFailed === true">
-          {{
-            this.flowFailed.http_code
-              ? "Произошла ошибка на стороне сервера"
-              : "Вы ошиблись"
-          }}: {{ this.flowFailed.message }}
+
         </div>
       </div>
 
@@ -125,6 +127,7 @@ import axios from "axios";
 import { required } from "vuelidate/lib/validators";
 import { validationMixin } from "vuelidate";
 import http_helper from "../lib/http";
+import Message from "./Message/Message"
 
 export default {
   name: "User",
@@ -184,7 +187,8 @@ export default {
   },
   components: {
     MultipleFileUploader,
-    Latex
+    Latex,
+    Message
   },
   watch: {
     $route() {
