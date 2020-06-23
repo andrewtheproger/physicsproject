@@ -1,7 +1,7 @@
 <template>
   <div class="ph-latex">
     <div class="ph-latex-editor">
-      <editor v-model.trim="latex"
+      <editor v-model="latex"
               @init="editorInit"
               lang="latex"
               theme="tomorrow_night"
