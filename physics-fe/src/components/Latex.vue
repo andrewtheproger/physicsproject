@@ -8,15 +8,42 @@
               width="100%"
               height="100%"/>
 
-      <md-button
-        class="md-dense md-icon-button ph-latex-copy-button"
-        @click="this.copyLatex"
-      >
-        <md-icon :class="this.getCopyStatusClass">file_copy</md-icon>
-      </md-button>
+      <div class="ph-latex-editor-controls">
+        <md-button
+          class="md-dense md-icon-button"
+          @click="this.copyLatex"
+        >
+          <md-icon :class="this.getCopyStatusClass">file_copy</md-icon>
+        </md-button>
+
+        <md-button class="md-dense md-icon-button">
+          <md-icon>zoom_in</md-icon>
+        </md-button>
+
+        <md-button class="md-dense md-icon-button">
+          <md-icon>zoom_out</md-icon>
+        </md-button>
+      </div>
     </div>
 
-    <vue-mathjax class="ph-mathjax" :formula="this.latex"></vue-mathjax>
+    <div class="ph-mathjax" :style="this.getMathjaxStyle()">
+      <vue-mathjax
+        class="ph-mathjax-render"
+        :formula="this.latex"
+      ></vue-mathjax>
+
+      <div class="ph-mathjax-controls">
+        <md-button class="md-dense md-icon-button" @click="this.onMathjaxZoomIn">
+          <md-icon>zoom_in</md-icon>
+        </md-button>
+
+        <md-button class="md-dense md-icon-button" @click="this.onMathjaxZoomOut">
+          <md-icon>zoom_out</md-icon>
+        </md-button>
+
+        <span v-if="this.mathjaxZoom.current !== 100">{{this.mathjaxZoom.current}} %</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -34,7 +61,13 @@ export default {
       latex:
         localStorage.getItem(latexLocalStorageKey) ||
         "Привет, это текст на $ \\LaTeX $, да. ",
-      copyStatus: null
+      copyStatus: null,
+      mathjaxZoom: {
+        current: 100,
+        min: 50,
+        max: 150,
+        step: 10
+      },
     };
   },
   computed: {
@@ -47,14 +80,30 @@ export default {
     }
   },
   methods: {
+    getMathjaxStyle: function() {
+      console.log(this.mathjaxZoom.current)
+      return {
+        fontSize: `${this.mathjaxZoom.current}%`
+      }
+    },
+    onMathjaxZoomIn: function() {
+      if (this.mathjaxZoom.current + this.mathjaxZoom.step <= this.mathjaxZoom.max) {
+        this.mathjaxZoom.current += this.mathjaxZoom.step;
+      }
+    },
+    onMathjaxZoomOut: function() {
+      if (this.mathjaxZoom.current + this.mathjaxZoom.step >= this.mathjaxZoom.min) {
+        this.mathjaxZoom.current -= this.mathjaxZoom.step;
+      }
+    },
     editorInit: function (editor) {
-        require('brace/ext/language_tools');
-        require('brace/mode/latex');
-        require('brace/theme/tomorrow_night');
-        require('brace/snippets/latex');
+      require('brace/ext/language_tools');
+      require('brace/mode/latex');
+      require('brace/theme/tomorrow_night');
+      require('brace/snippets/latex');
 
-        editor.on('change', this.onLatexChange); // it doesn't work as @change dunno why
-        editor.setOption("wrap", true)
+      editor.on('change', this.onLatexChange); // it doesn't work as @change dunno why
+      editor.setOption("wrap", true)
     },
     copyLatex() {
       const setCopyStatusToNull = () => (this.copyStatus = null);
@@ -83,16 +132,13 @@ export default {
   display: flex;
   padding: 1em;
 
-  .ph-latex-editor {
-    position: relative;
-    min-width: 50%;
-    min-height: 15em;
-  }
+  .ph-latex-editor-controls {
+    display: flex;
+    justify-content: flex-end;
 
-  .ph-latex-copy-button {
     position: absolute;
     bottom: 0;
-    right: 3em;
+    right: 0em;
 
     opacity: 0.3;
 
@@ -101,6 +147,27 @@ export default {
     .md-icon:hover {
       opacity: 0.8;
     }
+  }
+
+  .ph-mathjax-controls {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .ph-mathjax {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .ph-latex-editor {
+    position: relative;
+  }
+
+  .ph-mathjax,
+  .ph-latex-editor {
+    min-width: 50%;
+    min-height: 15em;
   }
 
   .ph-input {
@@ -112,10 +179,10 @@ export default {
   }
 
   .ph-input,
-  .ph-mathjax {
+  .ph-mathjax-render {
     width: 50%;
     margin: 1em;
-    max-height: 75vh;
+    min-height: 25vh;
     overflow: auto;
 
     background-color: var(--background-primary-color);
