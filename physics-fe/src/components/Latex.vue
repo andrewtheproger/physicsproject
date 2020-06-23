@@ -4,11 +4,15 @@
       <editor v-model="latex"
               @init="editorInit"
               lang="latex"
+              ref='myEditor'
               theme="tomorrow_night"
+              font-size="40px"
               width="100%"
               height="100%"/>
 
       <div class="ph-latex-editor-controls">
+        <span v-if="this.aceZoom.current !== 100">{{this.aceZoom.current}} %</span>
+
         <md-button
           class="md-dense md-icon-button"
           @click="this.copyLatex"
@@ -16,11 +20,11 @@
           <md-icon :class="this.getCopyStatusClass">file_copy</md-icon>
         </md-button>
 
-        <md-button class="md-dense md-icon-button">
+        <md-button class="md-dense md-icon-button" @click="this.onAceZoomIn">
           <md-icon>zoom_in</md-icon>
         </md-button>
 
-        <md-button class="md-dense md-icon-button">
+        <md-button class="md-dense md-icon-button" @click="this.onAceZoomOut">
           <md-icon>zoom_out</md-icon>
         </md-button>
       </div>
@@ -68,6 +72,12 @@ export default {
         max: 150,
         step: 10
       },
+      aceZoom: {
+        current: 100,
+        min: 50,
+        max: 150,
+        step: 10
+      },
     };
   },
   computed: {
@@ -85,6 +95,18 @@ export default {
       return {
         fontSize: `${this.mathjaxZoom.current}%`
       }
+    },
+    onAceZoomIn: function() {
+      if (this.aceZoom.current + this.aceZoom.step <= this.aceZoom.max) {
+        this.aceZoom.current += this.aceZoom.step;
+      }
+      this.$refs.myEditor.editor.setFontSize(`${this.aceZoom.current}%`)
+    },
+    onAceZoomOut: function() {
+      if (this.aceZoom.current - this.aceZoom.step >= this.aceZoom.min) {
+        this.aceZoom.current -= this.aceZoom.step;
+      }
+      this.$refs.myEditor.editor.setFontSize(`${this.aceZoom.current}%`)
     },
     onMathjaxZoomIn: function() {
       if (this.mathjaxZoom.current + this.mathjaxZoom.step <= this.mathjaxZoom.max) {
