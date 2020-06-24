@@ -25,25 +25,18 @@
 
     <Message v-if="this.isHttpFailed" :text="'Произошла ошибка: ' + this.httpFailed.message" severity="error"></Message>
 
-    <nav
-      v-if="
-        this.tasks && Math.floor(this.tasks.length / this.page.itemsPerPage) > 0
-      "
-    >
+    <nav v-if="page.count && !number">
       <v-pagination
         v-model="page.currentPage"
-        :page-count="Math.floor(this.tasks.length / this.page.itemsPerPage) + 1"
+        :page-count="page.count"
         :labels="page.paginationAnchorTexts"
+        @input="changePage"
       ></v-pagination>
     </nav>
 
     <ul class="ph-tasks" v-if="this.tasks">
       <li
-        v-for="task in this.paginate(
-          this.tasks,
-          this.page.itemsPerPage,
-          this.page.currentPage
-        )"
+        v-for="task in this.tasks"
         :key="task.id"
       >
         <Task :task="task" />
@@ -61,6 +54,7 @@ import axios from "axios";
 import Task from "./Task";
 import http_helper from "../lib/http";
 import Message from './Message/Message'
+import BuildUrl from 'build-url'
 
 export default {
   name: "Home",
@@ -83,6 +77,7 @@ export default {
       page: {
         currentPage: 1,
         itemsPerPage: 5,
+        count: null,
         paginationAnchorTexts: {
           first: "Начало",
           prev: "Пред.",
@@ -115,12 +110,39 @@ export default {
     clearInterval(this.numberExampleInterval);
   },
   methods: {
-    paginate(array, page_size, page_number) {
-      return array.slice(
-        (page_number - 1) * page_size,
-        page_number * page_size
+    async changePage(page) {
+      const  url = BuildUrl(config.apiPrefix, {
+        path: "tasks",
+        queryParams:{
+          page: page,
+          count: this.page.itemsPerPage
+        }
+      });
+
+      await axios({
+        url: url,
+        method: "GET"
+      }).then(
+        result => {
+          this.isHttpFailed = false;
+          this.tasks = result.data;
+          this.page.count = Math.floor(this.existing_numbers.length / this.page.itemsPerPage)
+        },
+        error => {
+          this.isHttpFailed = true;
+
+          const data = error.response.data;
+
+          this.httpFailed = {
+            http_code: error.response.code,
+            internal_code: data.code,
+            message: http_helper.get_error_message(data.code)
+          };
+          this.tasks = [];
+        }
       );
     },
+
     getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min) + min);
     },
@@ -138,15 +160,28 @@ export default {
     },
 
     async getTaskByNumber(number) {
-      let url = config.apiPrefix + "/tasks";
+      let url;
 
       if (number) {
         const [base_number, task_number] = number.split(".");
-        url += "?filter_by_base_number=" + base_number; // todo make it looks ok
-        url += "&filter_by_task_number=" + task_number;
-        url += "&count=3800";
+
+        url = BuildUrl(config.apiPrefix, {
+          path: "tasks",
+          queryParams:{
+            page: '0',
+            count: this.page.itemsPerPage,
+            filter_by_base_number: base_number,
+            filter_by_task_number: task_number
+          }
+        });
       } else {
-        url += "?count=3800";
+        url = BuildUrl(config.apiPrefix, {
+          path: "tasks",
+          queryParams:{
+            page: '0',
+            count: this.page.itemsPerPage
+          }
+        });
       }
 
       await axios({
@@ -156,6 +191,8 @@ export default {
         result => {
           this.isHttpFailed = false;
           this.tasks = result.data;
+          this.page.count = Math.floor(this.existing_numbers.length / this.page.itemsPerPage)
+          this.page.currentPage = 1;
         },
         error => {
           this.isHttpFailed = true;
