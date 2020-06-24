@@ -44,15 +44,15 @@
           </md-field>
 
           <md-field>
-            <label for="color-schema-select">Выбор схемы</label>
+            <label for="color-schema-select">Изменить цветовую схему на...</label>
             <md-select
               v-model="colorSchema"
               name="color-schema-select"
               id="color-schema-select"
               @md-selected="setColorSchema"
             >
-              <md-option value="dark">Тёмная</md-option>
-              <md-option value="light">Светлая</md-option>
+              <md-option value="dark">...тёмную</md-option>
+              <md-option value="light">...светлую</md-option>
             </md-select>
           </md-field>
         </div>
