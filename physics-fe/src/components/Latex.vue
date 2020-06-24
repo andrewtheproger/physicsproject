@@ -1,7 +1,10 @@
 <template>
   <div class="ph-latex">
     <div class="ph-latex-editor">
-      <span v-if="body.created_date">Восстановлен LaTeX от {{body.restored}}</span>
+      <div>
+        <span v-if="body.created_date">Восстановлен LaTeX от {{body.restored}}</span>
+
+      </div>
 
       <editor v-model="body.latex"
               @init="editorInit"
@@ -33,6 +36,58 @@
     </div>
 
     <div class="ph-mathjax" :style="this.getMathjaxStyle()">
+      <md-field>
+        <label for="ace-editor-theme">Тема редактора</label>
+        <md-select
+          v-model="colorSchema"
+          name="ace-editor-theme"
+          id="ace-editor-theme"
+          @md-selected="setColorSchema"
+        >
+          <md-optgroup label="Светлые">
+            <md-option value="chrome">Chrome</md-option>
+            <md-option value="clouds">Clouds</md-option>
+            <md-option value="crimson_editor">Crimson_editor</md-option>
+            <md-option value="dawn">Dawn</md-option>
+            <md-option value="dreamweaver">Dreamweaver</md-option>
+            <md-option value="eclipse">Eclipse</md-option>
+            <md-option value="github">Github</md-option>
+            <md-option value="iplastic">Iplastic</md-option>
+            <md-option value="katzenmilch">Katzenmilch</md-option>
+            <md-option value="kuroir">Kuroir</md-option>
+            <md-option value="solarized_light">Solarized_light</md-option>
+            <md-option value="sqlserver">Sqlserver</md-option>
+            <md-option value="textmate">Textmate</md-option>
+            <md-option value="tomorrow">Tomorrow</md-option>
+            <md-option value="xcode">Xcode</md-option>
+          </md-optgroup>
+          <md-optgroup label="Тёмные">
+            <md-option value="ambiance">Ambiance</md-option>
+            <md-option value="chaos">Chaos</md-option>
+            <md-option value="clouds_midnight">Clouds_midnight</md-option>
+            <md-option value="cobalt">Cobalt</md-option>
+            <md-option value="dracula">Dracula</md-option>
+            <md-option value="gob">Gob</md-option>
+            <md-option value="gruvbox">Gruvbox</md-option>
+            <md-option value="idle_fingers">Idle_fingers</md-option>
+            <md-option value="kr_theme">Kr_theme</md-option>
+            <md-option value="merbivore">Merbivore</md-option>
+            <md-option value="merbivore_soft">Merbivore_soft</md-option>
+            <md-option value="mono_industrial">Mono_industrial</md-option>
+            <md-option value="monokai">Monokai</md-option>
+            <md-option value="pastel_on_dark">Pastel_on_dark</md-option>
+            <md-option value="solarized_dark">Solarized_dark</md-option>
+            <md-option value="terminal">Terminal</md-option>
+            <md-option value="tomorrow_night">Tomorrow_night</md-option>
+            <md-option value="tomorrow_night_blue">Tomorrow_night_blue</md-option>
+            <md-option value="tomorrow_night_bright">Tomorrow_night_bright</md-option>
+            <md-option value="tomorrow_night_eighties">Tomorrow_night_eighties</md-option>
+            <md-option value="twilight">Twilight</md-option>
+            <md-option value="vibrant_ink">Vibrant_ink</md-option>
+          </md-optgroup>
+        </md-select>
+      </md-field>
+
       <vue-mathjax
         class="ph-mathjax-render"
         :formula="this.body.latex"
@@ -71,6 +126,7 @@ export default {
           "Привет, это текст на $ \\LaTeX $, да. ",
       },
       copyStatus: null,
+      colorSchema: null,
       mathjaxZoom: {
         current: 100,
         min: 50,
@@ -113,6 +169,9 @@ export default {
     }
   },
   methods: {
+    setColorSchema: function(e) {
+      this.$refs.myEditor.editor.setTheme(`ace/theme/${e}`);
+    },
     getMathjaxStyle: function() {
       return {
         fontSize: `${this.mathjaxZoom.current}%`
@@ -143,11 +202,47 @@ export default {
     editorInit: function (editor) {
       require('brace/ext/language_tools');
       require('brace/mode/latex');
-      require('brace/theme/tomorrow_night');
       require('brace/snippets/latex');
+      require('brace/theme/ambiance');
+      require('brace/theme/chaos');
+      require('brace/theme/chrome');
+      require('brace/theme/clouds');
+      require('brace/theme/clouds_midnight');
+      require('brace/theme/cobalt');
+      require('brace/theme/crimson_editor');
+      require('brace/theme/dawn');
+      require('brace/theme/dracula');
+      require('brace/theme/dreamweaver');
+      require('brace/theme/eclipse');
+      require('brace/theme/github');
+      require('brace/theme/gob');
+      require('brace/theme/gruvbox');
+      require('brace/theme/idle_fingers');
+      require('brace/theme/iplastic');
+      require('brace/theme/katzenmilch');
+      require('brace/theme/kr_theme');
+      require('brace/theme/kuroir');
+      require('brace/theme/merbivore');
+      require('brace/theme/merbivore_soft');
+      require('brace/theme/mono_industrial');
+      require('brace/theme/monokai');
+      require('brace/theme/pastel_on_dark');
+      require('brace/theme/solarized_dark');
+      require('brace/theme/solarized_light');
+      require('brace/theme/sqlserver');
+      require('brace/theme/terminal');
+      require('brace/theme/textmate');
+      require('brace/theme/tomorrow');
+      require('brace/theme/tomorrow_night');
+      require('brace/theme/tomorrow_night_blue');
+      require('brace/theme/tomorrow_night_bright');
+      require('brace/theme/tomorrow_night_eighties');
+      require('brace/theme/twilight');
+      require('brace/theme/vibrant_ink');
+      require('brace/theme/xcode');
 
       editor.on('change', this.onLatexChange); // it doesn't work as @change dunno why
-      editor.setOption("wrap", true)
+      editor.setOption("wrap", true);
     },
     copyLatex() {
       const setCopyStatusToNull = () => (this.copyStatus = null);
