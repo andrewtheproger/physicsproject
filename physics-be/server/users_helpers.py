@@ -30,6 +30,7 @@ def to_model(user, secret):
         'role': user.role.value if user.role else None,
         'is_token_expired': is_token_expired,
 
+        'ace_theme': str_or_none(user.ace_theme),
         'color_background_primary': str_or_none(user.color_background_primary),
         'color_background_secondary': str_or_none(user.color_background_secondary),
         'color_background_action': str_or_none(user.color_background_action),
@@ -54,6 +55,7 @@ def from_register_model(model):
     email = get_or_none(model, 'email')
     password = get_or_none(model, 'password')
     role = get_or_none(model, 'role')
+    ace_theme = get_or_none(model, 'ace_theme')
     color_background_primary = get_or_none(model, 'color_background_primary')
     color_background_secondary = get_or_none(model, 'color_background_secondary')
     color_background_action = get_or_none(model, 'color_background_action')
@@ -83,7 +85,8 @@ def from_register_model(model):
                 color_background_error=color_background_error,
                 color_foreground_success=color_foreground_success,
                 color_foreground_warning=color_foreground_warning,
-                color_foreground_error=color_foreground_error),\
+                color_foreground_error=color_foreground_error,
+                ace_theme=ace_theme),\
         password
 
 

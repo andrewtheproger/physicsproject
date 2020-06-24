@@ -1,20 +1,15 @@
 <template>
   <div class="ph-latex">
     <div class="ph-latex-editor">
-      <div>
-        <span v-if="body.created_date">Восстановлен LaTeX от {{body.restored}}</span>
-
-      </div>
-
       <editor v-model="body.latex"
               @init="editorInit"
               lang="latex"
-              ref='myEditor'
-              theme="tomorrow_night"
+              ref='aceEditor'
               font-size="40px"
               width="100%"
               height="100%"/>
 
+<!--      todo how to place these controls inside ace editor block? Now it squeezes when page scrolls -->
       <div class="ph-latex-editor-controls">
         <span v-if="this.aceZoom.current !== 100">{{this.aceZoom.current}} %</span>
 
@@ -36,7 +31,7 @@
     </div>
 
     <div class="ph-mathjax" :style="this.getMathjaxStyle()">
-      <md-field>
+      <md-field class="ph-ace-theme-editor">
         <label for="ace-editor-theme">Тема редактора</label>
         <md-select
           v-model="colorSchema"
@@ -45,48 +40,50 @@
           @md-selected="setColorSchema"
         >
           <md-optgroup label="Светлые">
-            <md-option value="chrome">Chrome</md-option>
-            <md-option value="clouds">Clouds</md-option>
-            <md-option value="crimson_editor">Crimson_editor</md-option>
-            <md-option value="dawn">Dawn</md-option>
-            <md-option value="dreamweaver">Dreamweaver</md-option>
-            <md-option value="eclipse">Eclipse</md-option>
-            <md-option value="github">Github</md-option>
-            <md-option value="iplastic">Iplastic</md-option>
-            <md-option value="katzenmilch">Katzenmilch</md-option>
-            <md-option value="kuroir">Kuroir</md-option>
-            <md-option value="solarized_light">Solarized_light</md-option>
-            <md-option value="sqlserver">Sqlserver</md-option>
-            <md-option value="textmate">Textmate</md-option>
-            <md-option value="tomorrow">Tomorrow</md-option>
-            <md-option value="xcode">Xcode</md-option>
+            <md-option value="ace/theme/chrome">Chrome</md-option>
+            <md-option value="ace/theme/clouds">Clouds</md-option>
+            <md-option value="ace/theme/crimson_editor">Crimson_editor</md-option>
+            <md-option value="ace/theme/dawn">Dawn</md-option>
+            <md-option value="ace/theme/dreamweaver">Dreamweaver</md-option>
+            <md-option value="ace/theme/eclipse">Eclipse</md-option>
+            <md-option value="ace/theme/github">Github</md-option>
+            <md-option value="ace/theme/iplastic">Iplastic</md-option>
+            <md-option value="ace/theme/katzenmilch">Katzenmilch</md-option>
+            <md-option value="ace/theme/kuroir">Kuroir</md-option>
+            <md-option value="ace/theme/solarized_light">Solarized_light</md-option>
+            <md-option value="ace/theme/sqlserver">Sqlserver</md-option>
+            <md-option value="ace/theme/textmate">Textmate</md-option>
+            <md-option value="ace/theme/tomorrow">Tomorrow</md-option>
+            <md-option value="ace/theme/xcode">Xcode</md-option>
           </md-optgroup>
           <md-optgroup label="Тёмные">
-            <md-option value="ambiance">Ambiance</md-option>
-            <md-option value="chaos">Chaos</md-option>
-            <md-option value="clouds_midnight">Clouds_midnight</md-option>
-            <md-option value="cobalt">Cobalt</md-option>
-            <md-option value="dracula">Dracula</md-option>
-            <md-option value="gob">Gob</md-option>
-            <md-option value="gruvbox">Gruvbox</md-option>
-            <md-option value="idle_fingers">Idle_fingers</md-option>
-            <md-option value="kr_theme">Kr_theme</md-option>
-            <md-option value="merbivore">Merbivore</md-option>
-            <md-option value="merbivore_soft">Merbivore_soft</md-option>
-            <md-option value="mono_industrial">Mono_industrial</md-option>
-            <md-option value="monokai">Monokai</md-option>
-            <md-option value="pastel_on_dark">Pastel_on_dark</md-option>
-            <md-option value="solarized_dark">Solarized_dark</md-option>
-            <md-option value="terminal">Terminal</md-option>
-            <md-option value="tomorrow_night">Tomorrow_night</md-option>
-            <md-option value="tomorrow_night_blue">Tomorrow_night_blue</md-option>
-            <md-option value="tomorrow_night_bright">Tomorrow_night_bright</md-option>
-            <md-option value="tomorrow_night_eighties">Tomorrow_night_eighties</md-option>
-            <md-option value="twilight">Twilight</md-option>
-            <md-option value="vibrant_ink">Vibrant_ink</md-option>
+            <md-option value="ace/theme/ambiance">Ambiance</md-option>
+            <md-option value="ace/theme/chaos">Chaos</md-option>
+            <md-option value="ace/theme/clouds_midnight">Clouds_midnight</md-option>
+            <md-option value="ace/theme/cobalt">Cobalt</md-option>
+            <md-option value="ace/theme/dracula">Dracula</md-option>
+            <md-option value="ace/theme/gob">Gob</md-option>
+            <md-option value="ace/theme/gruvbox">Gruvbox</md-option>
+            <md-option value="ace/theme/idle_fingers">Idle_fingers</md-option>
+            <md-option value="ace/theme/kr_theme">Kr_theme</md-option>
+            <md-option value="ace/theme/merbivore">Merbivore</md-option>
+            <md-option value="ace/theme/merbivore_soft">Merbivore_soft</md-option>
+            <md-option value="ace/theme/mono_industrial">Mono_industrial</md-option>
+            <md-option value="ace/theme/monokai">Monokai</md-option>
+            <md-option value="ace/theme/pastel_on_dark">Pastel_on_dark</md-option>
+            <md-option value="ace/theme/solarized_dark">Solarized_dark</md-option>
+            <md-option value="ace/theme/terminal">Terminal</md-option>
+            <md-option value="ace/theme/tomorrow_night">Tomorrow_night</md-option>
+            <md-option value="ace/theme/tomorrow_night_blue">Tomorrow_night_blue</md-option>
+            <md-option value="ace/theme/tomorrow_night_bright">Tomorrow_night_bright</md-option>
+            <md-option value="ace/theme/tomorrow_night_eighties">Tomorrow_night_eighties</md-option>
+            <md-option value="ace/theme/twilight">Twilight</md-option>
+            <md-option value="ace/theme/vibrant_ink">Vibrant_ink</md-option>
           </md-optgroup>
         </md-select>
       </md-field>
+
+
 
       <vue-mathjax
         class="ph-mathjax-render"
@@ -103,6 +100,8 @@
         </md-button>
 
         <span v-if="this.mathjaxZoom.current !== 100">{{this.mathjaxZoom.current}} %</span>
+
+        <span v-if="body.created_date">Восстановлен LaTeX от {{body.restored}}</span>
       </div>
     </div>
   </div>
@@ -111,6 +110,10 @@
 <script>
 import VueMathjax from "./VueMathJax/vueMathJax";
 import config from "../config/api";
+import axios from "axios";
+{
+  axios;
+}
 const latexLocalStorageKey = "ph-3800-latex-input";
 export default {
   name: "Latex",
@@ -159,6 +162,11 @@ export default {
       this.body.restored = 'неизвестного числа'
     }
   },
+  mounted() {
+    const theme = (this.user && this.user.ace_theme) ? this.user.ace_theme : 'brace/theme/tomorrow_night';
+    this.$refs.aceEditor.editor.setTheme(theme);
+    this.colorSchema = theme;
+  },
   computed: {
     getCopyStatusClass() {
       if (this.copyStatus === null) {
@@ -166,11 +174,29 @@ export default {
       }
 
       return this.copyStatus ? "ph-success" : "ph-failure";
+    },
+    user() {
+      return this.$store.getters.get_user;
     }
   },
   methods: {
     setColorSchema: function(e) {
-      this.$refs.myEditor.editor.setTheme(`ace/theme/${e}`);
+      const url = config.apiPrefix + "/users/me";
+      this.$refs.aceEditor.editor.setTheme(e);
+
+      axios({
+        url: url,
+        method: "POST",
+        data: {
+          ace_theme: e,
+        },
+        headers: {
+          Authorization: this.$store.getters.get_jwt
+        }
+      }).then(
+        ({data}) => this.$store.commit("set_user", data),
+        error => console.log(error)
+      );
     },
     getMathjaxStyle: function() {
       return {
@@ -181,13 +207,13 @@ export default {
       if (this.aceZoom.current + this.aceZoom.step <= this.aceZoom.max) {
         this.aceZoom.current += this.aceZoom.step;
       }
-      this.$refs.myEditor.editor.setFontSize(`${this.aceZoom.current}%`)
+      this.$refs.aceEditor.editor.setFontSize(`${this.aceZoom.current}%`)
     },
     onAceZoomOut: function() {
       if (this.aceZoom.current - this.aceZoom.step >= this.aceZoom.min) {
         this.aceZoom.current -= this.aceZoom.step;
       }
-      this.$refs.myEditor.editor.setFontSize(`${this.aceZoom.current}%`)
+      this.$refs.aceEditor.editor.setFontSize(`${this.aceZoom.current}%`)
     },
     onMathjaxZoomIn: function() {
       if (this.mathjaxZoom.current + this.mathjaxZoom.step <= this.mathjaxZoom.max) {
@@ -243,6 +269,8 @@ export default {
 
       editor.on('change', this.onLatexChange); // it doesn't work as @change dunno why
       editor.setOption("wrap", true);
+
+
     },
     copyLatex() {
       const setCopyStatusToNull = () => (this.copyStatus = null);
@@ -271,6 +299,11 @@ export default {
 
 <style scoped lang="scss">
 @import "../config/variables.scss";
+
+.ph-ace-theme-editor {
+  margin: 0 1em;
+}
+
 .ph-latex {
   display: flex;
   padding: 1em;
@@ -307,6 +340,10 @@ export default {
 
   .ph-latex-editor {
     position: relative;
+
+    .ace_editor {
+      max-height: 70vh; // ace editor bugs when the content is too high
+    }
   }
 
   .ph-mathjax,

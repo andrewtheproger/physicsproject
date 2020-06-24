@@ -58,6 +58,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(128))  # hash stores as string
     role = db.Column(db.Enum(UserRole))
     auth_token = db.Column(db.String(512))  # jwt has no max length, but 512 is fine for now
+    ace_theme = db.Column(db.String(64))
     color_background_primary = db.Column(db.String(16))  # sqlalchemy ColorType is fine but
     color_background_secondary = db.Column(db.String(16))  # sqlalchemy breaks the `flask db upgrade` flow
     color_background_action = db.Column(db.String(16))  # see https://github.com/miguelgrinberg/Flask-Migrate/issues/62

@@ -511,6 +511,8 @@ def update_user(user_id):
     if user.color_foreground_error:
         db_user.color_foreground_error = user.color_foreground_error
 
+    if user.ace_theme:
+        db_user.ace_theme = user.ace_theme
 
     db.session.commit()
 
@@ -603,6 +605,9 @@ def update_me():
 
     if user.color_foreground_error:
         db_user.color_foreground_error = user.color_foreground_error
+
+    if user.ace_theme:
+        db_user.ace_theme = user.ace_theme
 
     db.session.commit()
 
