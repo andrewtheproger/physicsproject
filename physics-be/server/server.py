@@ -13,6 +13,7 @@ from flask_restful import HTTPException
 from flask_migrate import Migrate
 from flask_jsonschema_validator import JSONSchemaValidator
 from flask_cors import CORS
+from sqlalchemy.orm import load_only
 from sqlalchemy.sql import text
 
 from .models import db, Task, Hint, HintStatus, Image, User
@@ -697,6 +698,35 @@ def logout():
     db.session.commit()
 
     return jsonify({'id': db_user.id})
+
+
+@app.route('/api/statistics', methods=['GET'])
+def get_statistics():
+    result = {
+        'users': [],
+        'tasks': []
+    }
+
+    user_fields = ['created_date']
+    users = db.session.query(User).options(load_only(*user_fields)).all()
+    for user in users:
+        result['users'].append({
+            'created_date': user.created_date
+        })
+
+    task_fields = ['created_date', 'base_number', 'task_number', 'creator']
+    for task in db.session.query(Task).options(load_only(*task_fields)).all():
+        result['tasks'].append({
+            'created_date': task.created_date,
+            'base_number': task.base_number,
+            'task_number': task.task_number,
+            'creator': {
+                'id': task.creator,
+                'name': [user for user in users if user.id == task.creator][0].email.split('@')[0]
+            }
+        })
+
+    return jsonify(result)
 
 
 if __name__ == '__main__':
