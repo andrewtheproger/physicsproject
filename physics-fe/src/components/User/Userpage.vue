@@ -31,7 +31,7 @@
       </md-card-actions>
 
       <md-card-content>
-        <div class="md-layout-item md-small-size-100">
+        <div class="ph-main-info md-layout-item md-small-size-100">
           <md-field>
             <label>Почта</label>
             <md-input
@@ -42,7 +42,21 @@
               :disabled="true"
             />
           </md-field>
+
+          <md-field>
+            <label for="color-schema-select">Выбор схемы</label>
+            <md-select
+              v-model="colorSchema"
+              name="color-schema-select"
+              id="color-schema-select"
+              @md-selected="setColorSchema"
+            >
+              <md-option value="dark">Тёмная</md-option>
+              <md-option value="light">Светлая</md-option>
+            </md-select>
+          </md-field>
         </div>
+
         <form class="ph-color-fields" @submit.prevent="onSubmit">
           <color-field
             @color_changed="color_changed"
@@ -175,6 +189,7 @@ import Logout from "./Logout";
 import Message from "../Message/Message"
 import Color_Field from "./Color_Field";
 import config from "../../config/api.js";
+import colorSchema from "../../config/colorSchema";
 
 export default {
   name: "Userpage",
@@ -188,6 +203,7 @@ export default {
       isLoading: false,
       isFlowFailed: null,
       flowFailed: null,
+      colorSchema: null,
       allowSubmit: true // todo to dict [child_id, locks_count]
     };
   },
@@ -197,6 +213,40 @@ export default {
     }
   },
   methods: {
+    setColorSchema(e) {
+      switch (e) {
+        case 'dark':
+          this.user.color_background_primary = colorSchema.dark.color_background_primary;
+          this.user.color_background_secondary = colorSchema.dark.color_background_secondary;
+          this.user.color_background_action = colorSchema.dark.color_background_action;
+          this.user.color_foreground_primary = colorSchema.dark.color_foreground_primary;
+          this.user.color_foreground_secondary = colorSchema.dark.color_foreground_secondary;
+          this.user.color_foreground_action = colorSchema.dark.color_foreground_action;
+          this.user.color_background_success = colorSchema.dark.color_background_success;
+          this.user.color_background_warning = colorSchema.dark.color_background_warning;
+          this.user.color_background_error = colorSchema.dark.color_background_error;
+          this.user.color_foreground_success = colorSchema.dark.color_foreground_success;
+          this.user.color_foreground_warning = colorSchema.dark.color_foreground_warning;
+          this.user.color_foreground_error = colorSchema.dark.color_foreground_error;
+          break;
+        case 'light':
+          this.user.color_background_primary = colorSchema.light.color_background_primary;
+          this.user.color_background_secondary = colorSchema.light.color_background_secondary;
+          this.user.color_background_action = colorSchema.light.color_background_action;
+          this.user.color_foreground_primary = colorSchema.light.color_foreground_primary;
+          this.user.color_foreground_secondary = colorSchema.light.color_foreground_secondary;
+          this.user.color_foreground_action = colorSchema.light.color_foreground_action;
+          this.user.color_background_success = colorSchema.light.color_background_success;
+          this.user.color_background_warning = colorSchema.light.color_background_warning;
+          this.user.color_background_error = colorSchema.light.color_background_error;
+          this.user.color_foreground_success = colorSchema.light.color_foreground_success;
+          this.user.color_foreground_warning = colorSchema.light.color_foreground_warning;
+          this.user.color_foreground_error = colorSchema.light.color_foreground_error;
+          break;
+        default:
+          break;
+      }
+    },
     formatDate(timestamp) {
       const date = new Date(timestamp);
 
@@ -380,6 +430,14 @@ export default {
 .md-card-content {
   display: flex;
   flex-direction: column;
+
+  .ph-main-info {
+    display: flex;
+
+    .md-field {
+      margin: 0 1em;
+    }
+  }
 }
 
 .ph-color-fields {
