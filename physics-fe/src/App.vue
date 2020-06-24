@@ -22,11 +22,7 @@
       </md-tabs>
 
       <div>
-        <ul class="ph-warnings">
-          <li :class="getApiInfoClass">
-            Что-то не работает, мы уже чиним.
-          </li>
-        </ul>
+        <Message v-if="!this.isApiOk" text="Что-то не работает, мы уже чиним" severity="error"></Message>
       </div>
     </header>
 
@@ -38,8 +34,10 @@
 import axios from "axios";
 import config from "./config/api";
 import http_helper from "./lib/http";
+import Message from "./components/Message/Message";
 export default {
   name: "App",
+  components: {Message},
   data() {
     return {
       isApiOk: null,
@@ -47,13 +45,6 @@ export default {
     };
   },
   computed: {
-    getApiInfoClass() {
-      if (this.isApiOk === null) {
-        return "ph-hidden";
-      }
-
-      return this.isApiOk ? "ph-hidden" : "";
-    },
     getClass_body() {
       const parse = require("parse-color");
       const toColor = color => {
@@ -81,14 +72,7 @@ export default {
         slave[`${colorName}-b`] = color.b;
         return slave;
       };
-      const styles = {
-        "--background-success-color": "#050",
-        "--background-warning-color": "#550",
-        "--background-error-color": "#500",
-        "--foreground-success-color": "#0f0",
-        "--foreground-warning-color": "#ff0",
-        "--foreground-error-color": "#f00"
-      };
+      const styles = {};
       patchWithCssVariables(
         styles,
         "--background-primary-color",
@@ -118,6 +102,36 @@ export default {
         styles,
         "--action-foreground-color",
         this.user.color_foreground_action
+      );
+      patchWithCssVariables(
+        styles,
+        "--background-success-color",
+        this.user.color_background_success
+      );
+      patchWithCssVariables(
+        styles,
+        "--background-warning-color",
+        this.user.color_background_warning
+      );
+      patchWithCssVariables(
+        styles,
+        "--background-error-color",
+        this.user.color_background_error
+      );
+      patchWithCssVariables(
+        styles,
+        "--foreground-success-color",
+        this.user.color_foreground_success
+      );
+      patchWithCssVariables(
+        styles,
+        "--foreground-warning-color",
+        this.user.color_foreground_warning
+      );
+      patchWithCssVariables(
+        styles,
+        "--foreground-error-color",
+        this.user.color_foreground_error
       );
       return styles;
     }

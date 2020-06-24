@@ -104,3 +104,8 @@ yarn run serve
 1. Run `flask run --host 0.0.0.0 --port 5000`
 
     Interface `0.0.0.0` is required due to Flask server stuff. If the interface will be mismatched you will not be able to communicate with docker container (it will looks like 404). For local runs I prefer to use `0.0.0.0` anyway.
+
+## FAQ
+
+- How to export sqlite to .sql?
+    - `sqlite my.db .dump > data.sql`

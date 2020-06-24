@@ -22,12 +22,16 @@
         </md-checkbox>
       </md-card-header>
 
+      <span class="ph-registration-date">
+        Дата регистрации: {{ this.formatDate(this.user.created_date) }}
+      </span>
+
       <md-card-actions>
         <Logout></Logout>
       </md-card-actions>
 
       <md-card-content>
-        <div class="md-layout-item md-small-size-100">
+        <div class="ph-main-info md-layout-item md-small-size-100">
           <md-field>
             <label>Почта</label>
             <md-input
@@ -38,7 +42,21 @@
               :disabled="true"
             />
           </md-field>
+
+          <md-field>
+            <label for="color-schema-select">Изменить цветовую схему на...</label>
+            <md-select
+              v-model="colorSchema"
+              name="color-schema-select"
+              id="color-schema-select"
+              @md-selected="setColorSchema"
+            >
+              <md-option value="dark">...тёмную</md-option>
+              <md-option value="light">...светлую</md-option>
+            </md-select>
+          </md-field>
         </div>
+
         <form class="ph-color-fields" @submit.prevent="onSubmit">
           <color-field
             @color_changed="color_changed"
@@ -88,6 +106,59 @@
             title="Цвет шрифта кнопки действия"
             :value="this.user.color_foreground_action"
           ></color-field>
+
+          <Message text="Пример успешного результата" severity="success" />
+          <Message text="Пример предупреждения" severity="warning" />
+          <Message text="Пример ошибки" severity="error" />
+
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            @reset="reset"
+            id="background_success"
+            title="Цвет фона успешного результата"
+            :value="this.user.color_background_success"
+          ></color-field>
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            @reset="reset"
+            id="background_warning"
+            title="Цвет фона предупреждения"
+            :value="this.user.color_background_warning"
+          ></color-field>
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            @reset="reset"
+            id="background_error"
+            title="Цвет фона ошибки"
+            :value="this.user.color_background_error"
+          ></color-field>
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            @reset="reset"
+            id="foreground_success"
+            title="Цвет шрифта успешного результата"
+            :value="this.user.color_foreground_success"
+          ></color-field>
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            @reset="reset"
+            id="foreground_warning"
+            title="Цвет шрифта предупреждения"
+            :value="this.user.color_foreground_warning"
+          ></color-field>
+          <color-field
+            @color_changed="color_changed"
+            @color_changing="color_changing"
+            @reset="reset"
+            id="foreground_error"
+            title="Цвет шрифта ошибки"
+            :value="this.user.color_foreground_error"
+          ></color-field>
           <div class="ph-user-submit-controls">
             <md-progress-spinner
               v-if="!this.allowSubmit"
@@ -96,18 +167,14 @@
             >
             </md-progress-spinner>
 
-            <span class="ph-success" v-if="isFlowFailed === false"
-              >Изменения сохранены</span
-            >
-            <span class="ph-success" v-if="isFlowFailed === true"
-              >Произошла ошибка, и изменения не сохранились</span
-            >
+            <md-snackbar md-position="center" :md-duration="700" :md-active.sync="!this.allowSubmit && !this.isFlowFailed" md-persistent>
+              <Message text="Изменения сохранены" severity="success"></Message>
+            </md-snackbar>
+            <md-snackbar md-position="center" :md-duration="2000" :md-active.sync="!this.allowSubmit && this.isFlowFailed" md-persistent>
+              <Message text="Произошла ошибка, и изменения не сохранились" severity="error"></Message>
+            </md-snackbar>
           </div>
         </form>
-
-        <span
-          >Дата регистрации: {{ this.formatDate(this.user.created_date) }}</span
-        >
       </md-card-content>
     </md-card>
   </div>
@@ -119,13 +186,16 @@ import axios from "axios";
   axios;
 }
 import Logout from "./Logout";
+import Message from "../Message/Message"
 import Color_Field from "./Color_Field";
 import config from "../../config/api.js";
+import colorSchema from "../../config/colorSchema";
 
 export default {
   name: "Userpage",
   components: {
     Logout,
+    Message,
     "color-field": Color_Field
   },
   data() {
@@ -133,6 +203,7 @@ export default {
       isLoading: false,
       isFlowFailed: null,
       flowFailed: null,
+      colorSchema: null,
       allowSubmit: true // todo to dict [child_id, locks_count]
     };
   },
@@ -142,6 +213,40 @@ export default {
     }
   },
   methods: {
+    setColorSchema(e) {
+      switch (e) {
+        case 'dark':
+          this.user.color_background_primary = colorSchema.dark.color_background_primary;
+          this.user.color_background_secondary = colorSchema.dark.color_background_secondary;
+          this.user.color_background_action = colorSchema.dark.color_background_action;
+          this.user.color_foreground_primary = colorSchema.dark.color_foreground_primary;
+          this.user.color_foreground_secondary = colorSchema.dark.color_foreground_secondary;
+          this.user.color_foreground_action = colorSchema.dark.color_foreground_action;
+          this.user.color_background_success = colorSchema.dark.color_background_success;
+          this.user.color_background_warning = colorSchema.dark.color_background_warning;
+          this.user.color_background_error = colorSchema.dark.color_background_error;
+          this.user.color_foreground_success = colorSchema.dark.color_foreground_success;
+          this.user.color_foreground_warning = colorSchema.dark.color_foreground_warning;
+          this.user.color_foreground_error = colorSchema.dark.color_foreground_error;
+          break;
+        case 'light':
+          this.user.color_background_primary = colorSchema.light.color_background_primary;
+          this.user.color_background_secondary = colorSchema.light.color_background_secondary;
+          this.user.color_background_action = colorSchema.light.color_background_action;
+          this.user.color_foreground_primary = colorSchema.light.color_foreground_primary;
+          this.user.color_foreground_secondary = colorSchema.light.color_foreground_secondary;
+          this.user.color_foreground_action = colorSchema.light.color_foreground_action;
+          this.user.color_background_success = colorSchema.light.color_background_success;
+          this.user.color_background_warning = colorSchema.light.color_background_warning;
+          this.user.color_background_error = colorSchema.light.color_background_error;
+          this.user.color_foreground_success = colorSchema.light.color_foreground_success;
+          this.user.color_foreground_warning = colorSchema.light.color_foreground_warning;
+          this.user.color_foreground_error = colorSchema.light.color_foreground_error;
+          break;
+        default:
+          break;
+      }
+    },
     formatDate(timestamp) {
       const date = new Date(timestamp);
 
@@ -158,7 +263,8 @@ export default {
             config.defaultUser.color_background_secondary;
           break;
         case "action_background":
-          this.user.color_background_action = "#448aff";
+          this.user.color_background_action =
+            config.defaultUser.color_background_action;
           break;
         case "foreground_primary":
           this.user.color_foreground_primary =
@@ -169,9 +275,33 @@ export default {
             config.defaultUser.color_foreground_secondary;
           break;
         case "action_foreground":
-          this.user.color_foreground_action = "#ffffff";
+          this.user.color_foreground_action =
+            config.defaultUser.color_foreground_action;
           break;
-
+        case "background_success":
+          this.user.color_background_success =
+            config.defaultUser.color_background_success;
+          break;
+        case "background_warning":
+          this.user.color_background_warning =
+            config.defaultUser.color_background_warning;
+          break;
+        case "background_error":
+          this.user.color_background_error =
+            config.defaultUser.color_background_error;
+          break;
+        case "foreground_success":
+          this.user.color_foreground_success =
+            config.defaultUser.color_foreground_success;
+          break;
+        case "foreground_warning":
+          this.user.color_foreground_warning =
+            config.defaultUser.color_foreground_warning;
+          break;
+        case "foreground_error":
+          this.user.color_foreground_error =
+            config.defaultUser.color_foreground_error;
+          break;
         default:
           throw "This should not happens";
       }
@@ -201,6 +331,24 @@ export default {
         case "action_foreground":
           this.user.color_foreground_action = hex;
           break;
+        case "background_success":
+          this.user.color_background_success = hex;
+          break;
+        case "background_warning":
+          this.user.color_background_warning = hex;
+          break;
+        case "background_error":
+          this.user.color_background_error = hex;
+          break;
+        case "foreground_success":
+          this.user.color_foreground_success = hex;
+          break;
+        case "foreground_warning":
+          this.user.color_foreground_warning = hex;
+          break;
+        case "foreground_error":
+          this.user.color_foreground_error = hex;
+          break;
         default:
           throw "This should not happens";
       }
@@ -222,7 +370,13 @@ export default {
           color_background_action: this.user.color_background_action,
           color_foreground_primary: this.user.color_foreground_primary,
           color_foreground_secondary: this.user.color_foreground_secondary,
-          color_foreground_action: this.user.color_foreground_action
+          color_foreground_action: this.user.color_foreground_action,
+          color_background_success: this.user.color_background_success,
+          color_background_warning: this.user.color_background_warning,
+          color_background_error: this.user.color_background_error,
+          color_foreground_success: this.user.color_foreground_success,
+          color_foreground_warning: this.user.color_foreground_warning,
+          color_foreground_error: this.user.color_foreground_error
         },
         headers: {
           Authorization: this.$store.getters.get_jwt
@@ -251,6 +405,13 @@ export default {
 <style lang="scss" scoped>
 @import "../../config/variables.scss";
 
+.md-snackbar.md-theme-default {
+  .md-snackbar-content {
+    background-color: inherit;
+    color: inherit;
+  }
+}
+
 .md-card-header {
   display: flex;
 
@@ -269,6 +430,14 @@ export default {
 .md-card-content {
   display: flex;
   flex-direction: column;
+
+  .ph-main-info {
+    display: flex;
+
+    .md-field {
+      margin: 0 1em;
+    }
+  }
 }
 
 .ph-color-fields {
@@ -276,6 +445,11 @@ export default {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+
+  .ph-message,
+  .ph-color-field {
+    width: 30%;
+  }
 }
 
 .md-checkbox {
@@ -290,5 +464,9 @@ export default {
 
 .md-card {
   width: 70%;
+}
+
+.ph-registration-date {
+  margin-left: 1em;
 }
 </style>

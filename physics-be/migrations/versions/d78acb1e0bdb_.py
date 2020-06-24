@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 7586684171bb
+Revision ID: d78acb1e0bdb
 Revises: 
-Create Date: 2020-05-17 21:41:14.307254
+Create Date: 2020-06-24 10:53:12.850882
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7586684171bb'
+revision = 'd78acb1e0bdb'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -37,12 +37,19 @@ def upgrade():
     sa.Column('password_hash', sa.String(length=128), nullable=True),
     sa.Column('role', sa.Enum('user', 'admin', name='userrole'), nullable=True),
     sa.Column('auth_token', sa.String(length=512), nullable=True),
+    sa.Column('ace_theme', sa.String(length=64), nullable=True),
     sa.Column('color_background_primary', sa.String(length=16), nullable=True),
     sa.Column('color_background_secondary', sa.String(length=16), nullable=True),
     sa.Column('color_background_action', sa.String(length=16), nullable=True),
     sa.Column('color_foreground_primary', sa.String(length=16), nullable=True),
     sa.Column('color_foreground_secondary', sa.String(length=16), nullable=True),
     sa.Column('color_foreground_action', sa.String(length=16), nullable=True),
+    sa.Column('color_background_success', sa.String(length=16), nullable=True),
+    sa.Column('color_background_warning', sa.String(length=16), nullable=True),
+    sa.Column('color_background_error', sa.String(length=16), nullable=True),
+    sa.Column('color_foreground_success', sa.String(length=16), nullable=True),
+    sa.Column('color_foreground_warning', sa.String(length=16), nullable=True),
+    sa.Column('color_foreground_error', sa.String(length=16), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email')
     )
