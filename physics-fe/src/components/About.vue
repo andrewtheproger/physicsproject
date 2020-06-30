@@ -113,12 +113,8 @@
         <div>
           <span>Активность пользователей:</span>
           <ul>
-            <li v-for="result in this.grouped()" :key="result">
-              {{ result[0].creator.name }} -
-              {{
-                result.filter(x => x.creator.name === result[0].creator.name)
-                  .length
-              }}
+            <li v-for="result in this.grouped()" :key="result.creatorName">
+              {{ result.creatorName }} - {{ result.count }}
             </li>
           </ul>
         </div>
@@ -254,10 +250,18 @@ export default {
         return [];
       }
 
-      return this.statistics.tasks.reduce((acc, cur) => {
+      const a = this.statistics.tasks.reduce((acc, cur) => {
         acc[cur.creator.name] = [...(acc[cur.creator.name] || []), cur];
         return acc;
       }, {});
+
+      const array = Object.entries(a);
+      return array
+        .map(x => ({
+          creatorName: x[0],
+          count: x[1].length
+        }))
+        .sort((lhs, rhs) => (lhs.count < rhs.count ? 1 : -1));
     },
     getParagraphStatistics(number) {
       const count = this.statistics.tasks.filter(x => x.base_number === number)
