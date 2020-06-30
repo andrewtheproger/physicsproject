@@ -81,11 +81,10 @@
 import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
 import { validationMixin } from "vuelidate";
 import config from "../../config/api.js";
-import axios from "axios";
 import http_helper from "../../lib/http";
-{
-  axios;
-}
+
+const axios = () => import(/* webpackChunkName: "axios" */ "axios");
+
 export default {
   name: "Registration",
   mixins: [validationMixin],
@@ -136,48 +135,48 @@ export default {
         return;
       }
 
-      axios
-        .post(`${config.apiPrefix}/users/register`, {
-          email: this.form.email,
-          password: this.form.password
-        })
-        .then(response => {
-          this.isLoading = false;
-          this.isFlowFailed = false;
+      axios().then(ax =>
+        ax
+          .post(`${config.apiPrefix}/users/register`, {
+            email: this.form.email,
+            password: this.form.password
+          })
+          .then(response => {
+            this.isLoading = false;
+            this.isFlowFailed = false;
 
-          this.$store.commit("set_jwt", response.data.token);
-          window.location.reload();
+            this.$store.commit("set_jwt", response.data.token);
+            window.location.reload();
 
-          return response;
-        })
-        .catch(error => {
-          this.isFlowFailed = true;
+            return response;
+          })
+          .catch(error => {
+            this.isFlowFailed = true;
 
-          try {
-            const data = error.response.data;
+            try {
+              const data = error.response.data;
 
-            this.flowFailed = {
-              http_code: error.response.code,
-              internal_code: data.code,
-              message: http_helper.get_error_message(data.code)
-            };
-          } catch {
-            this.flowFailed = {
-              http_code: null,
-              internal_code: 1,
-              message: http_helper.get_error_message(1)
-            };
-          }
+              this.flowFailed = {
+                http_code: error.response.code,
+                internal_code: data.code,
+                message: http_helper.get_error_message(data.code)
+              };
+            } catch {
+              this.flowFailed = {
+                http_code: null,
+                internal_code: 1,
+                message: http_helper.get_error_message(1)
+              };
+            }
 
-          this.isLoading = false;
-        });
+            this.isLoading = false;
+          })
+      );
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-@import "../../config/variables.scss";
-
 .ph-registration-submit-controls {
   display: flex;
   flex-direction: row-reverse;

@@ -66,8 +66,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "../config/variables.scss";
-
 .ph-task-no-hints-available {
   font-size: 80%;
 }
@@ -84,7 +82,7 @@ export default {
 
   h3 {
     margin-top: 3em;
-    text-decoration: bold;
+    text-decoration: double;
   }
 
   .ph-latex {

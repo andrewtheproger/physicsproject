@@ -136,15 +136,16 @@
 <script>
 import MultipleFileUploader from "./MultipleFileUploader/MultipleFileUploader";
 import Latex from "./Latex";
-import config from "../config/api.js";
-import axios from "axios";
-{
-  axios;
-}
 import { required } from "vuelidate/lib/validators";
 import { validationMixin } from "vuelidate";
+import config from "../config/api.js";
 import http_helper from "../lib/http";
-import Message from "./Message/Message";
+
+const Message = () =>
+  import(
+    /* webpackChunkName: "components_Message_Message" */ "./Message/Message"
+  );
+const axios = () => import(/* webpackChunkName: "axios" */ "axios");
 
 export default {
   name: "User",
@@ -230,23 +231,27 @@ export default {
       this.isLoading = true;
       this.isFlowFailed = null;
 
-      return axios({
-        url: url,
-        method: "DELETE",
-        headers: {
-          Authorization: this.$store.getters.get_jwt
-        }
-      }).then(
-        () => {
-          this.isLoading = false;
-          this.isFlowFailed = false;
-        },
-        error => {
-          console.log(error);
+      return axios().then(ax =>
+        ax
+          .request({
+            url: url,
+            method: "DELETE",
+            headers: {
+              Authorization: this.$store.getters.get_jwt
+            }
+          })
+          .then(
+            () => {
+              this.isLoading = false;
+              this.isFlowFailed = false;
+            },
+            error => {
+              console.log(error);
 
-          this.isLoading = false;
-          this.isFlowFailed = true;
-        }
+              this.isLoading = false;
+              this.isFlowFailed = true;
+            }
+          )
       );
     },
     init() {
@@ -267,21 +272,25 @@ export default {
       if (this.$route.params.id) {
         const url = config.apiPrefix + "/tasks/" + this.$route.params.id;
 
-        return axios({
-          url: url,
-          method: "GET"
-        }).then(
-          result => {
-            const data = result.data;
+        return axios().then(ax =>
+          ax
+            .request({
+              url: url,
+              method: "GET"
+            })
+            .then(
+              result => {
+                const data = result.data;
 
-            this.originalData = data;
-            this.form.latex = data.body.latex;
-            this.form.number = `${data.base_number}.${data.task_number}`;
-            this.form.images = data.body.images;
-          },
-          error => {
-            console.log(error);
-          }
+                this.originalData = data;
+                this.form.latex = data.body.latex;
+                this.form.number = `${data.base_number}.${data.task_number}`;
+                this.form.images = data.body.images;
+              },
+              error => {
+                console.log(error);
+              }
+            )
         );
       } else {
         this.form.latex = "Привет, это текст на $ \\LaTeX $, да";
@@ -340,24 +349,27 @@ export default {
         ? parseInt(this.$route.params.id)
         : undefined;
 
-      return axios({
-        url: `${config.apiPrefix}/tasks`,
-        method: "POST",
-        data: {
-          id: id,
-          base_number: base_number,
-          task_number: task_number,
-          body: {
-            latex: this.form.latex,
-            image_ids: images_ids
-          }
-        },
-        headers: {
-          Authorization: this.$store.getters.get_jwt
-        }
-      })
-        .then(response => response)
-        .catch(error => this.handleError(error));
+      return axios().then(ax =>
+        ax
+          .request({
+            url: `${config.apiPrefix}/tasks`,
+            method: "POST",
+            data: {
+              id: id,
+              base_number: base_number,
+              task_number: task_number,
+              body: {
+                latex: this.form.latex,
+                image_ids: images_ids
+              }
+            },
+            headers: {
+              Authorization: this.$store.getters.get_jwt
+            }
+          })
+          .then(response => response)
+          .catch(error => this.handleError(error))
+      );
     },
     handleError(error) {
       this.isFlowFailed = true;
@@ -378,14 +390,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.md-tooltip.md-tooltip-bottom.md-theme-default#isbn_help {
-  height: 5em;
-}
-</style>
-
 <style lang="scss" scoped>
-@import "../config/variables.scss";
 .ph-task-upsert {
   padding: 2em;
 

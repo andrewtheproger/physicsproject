@@ -1,8 +1,5 @@
 import config from "../config/api.js";
-import axios from "axios";
-{
-  axios;
-}
+const axios = () => import(/* webpackChunkName: "axios" */ "axios");
 
 export default {
   predicate_numbers() {
@@ -47,65 +44,69 @@ export default {
   getMeAsUser(jwt) {
     const url = config.apiPrefix + "/users/me";
 
-    return axios({
-      url: url,
-      method: "GET",
-      headers: {
-        Authorization: jwt
-      }
-    }).then(
-      response => {
-        let user = response.data;
+    return axios().then(ax =>
+      ax
+        .request({
+          url: url,
+          method: "GET",
+          headers: {
+            Authorization: jwt
+          }
+        })
+        .then(
+          response => {
+            let user = response.data;
 
-        if (!user.email) {
-          user = config.defaultUser;
-        }
+            if (!user.email) {
+              user = config.defaultUser;
+            }
 
-        user.color_background_primary =
-          user.color_background_primary ||
-          config.defaultUser.color_background_primary;
-        user.color_background_secondary =
-          user.color_background_secondary ||
-          config.defaultUser.color_background_secondary;
-        user.color_background_action =
-          user.color_background_action ||
-          config.defaultUser.color_background_action;
-        user.color_foreground_primary =
-          user.color_foreground_primary ||
-          config.defaultUser.color_foreground_primary;
-        user.color_foreground_secondary =
-          user.color_foreground_secondary ||
-          config.defaultUser.color_foreground_secondary;
-        user.color_foreground_action =
-          user.color_foreground_action ||
-          config.defaultUser.color_foreground_action;
-        user.color_background_success =
-          user.color_background_success ||
-          config.defaultUser.color_background_success;
-        user.color_background_warning =
-          user.color_background_warning ||
-          config.defaultUser.color_background_warning;
-        user.color_background_error =
-          user.color_background_error ||
-          config.defaultUser.color_background_error;
-        user.color_foreground_success =
-          user.color_foreground_success ||
-          config.defaultUser.color_foreground_success;
-        user.color_foreground_warning =
-          user.color_foreground_warning ||
-          config.defaultUser.color_foreground_warning;
-        user.color_foreground_error =
-          user.color_foreground_error ||
-          config.defaultUser.color_foreground_error;
+            user.color_background_primary =
+              user.color_background_primary ||
+              config.defaultUser.color_background_primary;
+            user.color_background_secondary =
+              user.color_background_secondary ||
+              config.defaultUser.color_background_secondary;
+            user.color_background_action =
+              user.color_background_action ||
+              config.defaultUser.color_background_action;
+            user.color_foreground_primary =
+              user.color_foreground_primary ||
+              config.defaultUser.color_foreground_primary;
+            user.color_foreground_secondary =
+              user.color_foreground_secondary ||
+              config.defaultUser.color_foreground_secondary;
+            user.color_foreground_action =
+              user.color_foreground_action ||
+              config.defaultUser.color_foreground_action;
+            user.color_background_success =
+              user.color_background_success ||
+              config.defaultUser.color_background_success;
+            user.color_background_warning =
+              user.color_background_warning ||
+              config.defaultUser.color_background_warning;
+            user.color_background_error =
+              user.color_background_error ||
+              config.defaultUser.color_background_error;
+            user.color_foreground_success =
+              user.color_foreground_success ||
+              config.defaultUser.color_foreground_success;
+            user.color_foreground_warning =
+              user.color_foreground_warning ||
+              config.defaultUser.color_foreground_warning;
+            user.color_foreground_error =
+              user.color_foreground_error ||
+              config.defaultUser.color_foreground_error;
 
-        return {
-          ...user,
-          isAdmin: response.data.role === "admin"
-        };
-      },
-      error => {
-        console.log(error);
-      }
+            return {
+              ...user,
+              isAdmin: response.data.role === "admin"
+            };
+          },
+          error => {
+            console.log(error);
+          }
+        )
     );
   }
 };

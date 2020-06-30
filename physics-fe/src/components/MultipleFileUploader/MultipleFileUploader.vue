@@ -20,10 +20,8 @@
 require("es6-promise").polyfill();
 import Dragndrop from "./Dragndrop";
 import LinksImport from "./LinksImport";
-import axios from "axios";
-{
-  axios;
-}
+const axios = () => import(/* webpackChunkName: "axios" */ "axios");
+
 export default {
   props: {
     postURL: {
@@ -243,8 +241,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../config/variables.scss";
-
 .mfu-buttons-wrapper {
   display: flex;
   flex-direction: row-reverse;

@@ -222,11 +222,12 @@
 </template>
 
 <script>
-import axios from "axios";
-import config from "../config/api";
 import Message from "./Message/Message";
 import Trend from "vuetrend";
 import paragraps from "../config/3800";
+import config from "../config/api.js";
+
+const axios = () => import(/* webpackChunkName: "axios" */ "axios");
 
 export default {
   name: "About",
@@ -352,17 +353,21 @@ export default {
     const githubUri =
       "https://api.github.com/repos/andrewtheproger/physicsproject/branches/master";
 
-    axios.get(githubUri).then(
-      result => this.get_last_change_block(result),
-      error => console.log(error)
+    axios().then(ax =>
+      ax.get(githubUri).then(
+        result => this.get_last_change_block(result),
+        error => console.log(error)
+      )
     );
 
     const statisticsUri = config.apiPrefix + "/statistics";
-    axios.get(statisticsUri).then(
-      result => {
-        this.statistics = result.data;
-      },
-      error => console.log(error)
+    axios().then(ax =>
+      ax.get(statisticsUri).then(
+        result => {
+          this.statistics = result.data;
+        },
+        error => console.log(error)
+      )
     );
   }
 };
