@@ -133,30 +133,34 @@ export default {
         }
       });
 
-      axios().then(ax => ax.request({
-        url: url,
-        method: "GET"
-      }).then(
-        result => {
-          this.isHttpFailed = false;
-          this.tasks = result.data;
-          this.page.count = Math.floor(
-            this.existing_numbers.length / this.page.itemsPerPage
-          );
-        },
-        error => {
-          this.isHttpFailed = true;
+      axios().then(ax =>
+        ax
+          .request({
+            url: url,
+            method: "GET"
+          })
+          .then(
+            result => {
+              this.isHttpFailed = false;
+              this.tasks = result.data;
+              this.page.count = Math.floor(
+                this.existing_numbers.length / this.page.itemsPerPage
+              );
+            },
+            error => {
+              this.isHttpFailed = true;
 
-          const data = error.response.data;
+              const data = error.response.data;
 
-          this.httpFailed = {
-            http_code: error.response.code,
-            internal_code: data.code,
-            message: http_helper.get_error_message(data.code)
-          };
-          this.tasks = [];
-        }
-      ));
+              this.httpFailed = {
+                http_code: error.response.code,
+                internal_code: data.code,
+                message: http_helper.get_error_message(data.code)
+              };
+              this.tasks = [];
+            }
+          )
+      );
     },
 
     getRandomInt(min, max) {
@@ -200,31 +204,35 @@ export default {
         });
       }
 
-      axios().then(ax => ax.request({
-        url: url,
-        method: "GET"
-      }).then(
-        result => {
-          this.isHttpFailed = false;
-          this.tasks = result.data;
-          this.page.count = Math.floor(
-            this.existing_numbers.length / this.page.itemsPerPage
-          );
-          this.page.currentPage = 1;
-        },
-        error => {
-          this.isHttpFailed = true;
+      axios().then(ax =>
+        ax
+          .request({
+            url: url,
+            method: "GET"
+          })
+          .then(
+            result => {
+              this.isHttpFailed = false;
+              this.tasks = result.data;
+              this.page.count = Math.floor(
+                this.existing_numbers.length / this.page.itemsPerPage
+              );
+              this.page.currentPage = 1;
+            },
+            error => {
+              this.isHttpFailed = true;
 
-          const data = error.response.data;
+              const data = error.response.data;
 
-          this.httpFailed = {
-            http_code: error.response.code,
-            internal_code: data.code,
-            message: http_helper.get_error_message(data.code)
-          };
-          this.tasks = [];
-        }
-      ));
+              this.httpFailed = {
+                http_code: error.response.code,
+                internal_code: data.code,
+                message: http_helper.get_error_message(data.code)
+              };
+              this.tasks = [];
+            }
+          )
+      );
     }
   }
 };

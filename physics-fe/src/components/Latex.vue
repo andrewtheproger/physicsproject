@@ -144,6 +144,47 @@ import VueMathjax from "./VueMathJax/vueMathJax";
 import config from "../config/api.js";
 const axios = () => import(/* webpackChunkName: "axios" */ "axios");
 
+require("brace/ext/language_tools");
+require("brace/mode/latex");
+require("brace/snippets/latex");
+require("brace/theme/ambiance");
+require("brace/theme/chaos");
+require("brace/theme/chrome");
+require("brace/theme/clouds");
+require("brace/theme/clouds_midnight");
+require("brace/theme/cobalt");
+require("brace/theme/crimson_editor");
+require("brace/theme/dawn");
+require("brace/theme/dracula");
+require("brace/theme/dreamweaver");
+require("brace/theme/eclipse");
+require("brace/theme/github");
+require("brace/theme/gob");
+require("brace/theme/gruvbox");
+require("brace/theme/idle_fingers");
+require("brace/theme/iplastic");
+require("brace/theme/katzenmilch");
+require("brace/theme/kr_theme");
+require("brace/theme/kuroir");
+require("brace/theme/merbivore");
+require("brace/theme/merbivore_soft");
+require("brace/theme/mono_industrial");
+require("brace/theme/monokai");
+require("brace/theme/pastel_on_dark");
+require("brace/theme/solarized_dark");
+require("brace/theme/solarized_light");
+require("brace/theme/sqlserver");
+require("brace/theme/terminal");
+require("brace/theme/textmate");
+require("brace/theme/tomorrow");
+require("brace/theme/tomorrow_night");
+require("brace/theme/tomorrow_night_blue");
+require("brace/theme/tomorrow_night_bright");
+require("brace/theme/tomorrow_night_eighties");
+require("brace/theme/twilight");
+require("brace/theme/vibrant_ink");
+require("brace/theme/xcode");
+
 const latexLocalStorageKey = "ph-3800-latex-input";
 
 export default {
@@ -270,47 +311,6 @@ export default {
       }
     },
     editorInit: function(editor) {
-      require("brace/ext/language_tools");
-      require("brace/mode/latex");
-      require("brace/snippets/latex");
-      require("brace/theme/ambiance");
-      require("brace/theme/chaos");
-      require("brace/theme/chrome");
-      require("brace/theme/clouds");
-      require("brace/theme/clouds_midnight");
-      require("brace/theme/cobalt");
-      require("brace/theme/crimson_editor");
-      require("brace/theme/dawn");
-      require("brace/theme/dracula");
-      require("brace/theme/dreamweaver");
-      require("brace/theme/eclipse");
-      require("brace/theme/github");
-      require("brace/theme/gob");
-      require("brace/theme/gruvbox");
-      require("brace/theme/idle_fingers");
-      require("brace/theme/iplastic");
-      require("brace/theme/katzenmilch");
-      require("brace/theme/kr_theme");
-      require("brace/theme/kuroir");
-      require("brace/theme/merbivore");
-      require("brace/theme/merbivore_soft");
-      require("brace/theme/mono_industrial");
-      require("brace/theme/monokai");
-      require("brace/theme/pastel_on_dark");
-      require("brace/theme/solarized_dark");
-      require("brace/theme/solarized_light");
-      require("brace/theme/sqlserver");
-      require("brace/theme/terminal");
-      require("brace/theme/textmate");
-      require("brace/theme/tomorrow");
-      require("brace/theme/tomorrow_night");
-      require("brace/theme/tomorrow_night_blue");
-      require("brace/theme/tomorrow_night_bright");
-      require("brace/theme/tomorrow_night_eighties");
-      require("brace/theme/twilight");
-      require("brace/theme/vibrant_ink");
-      require("brace/theme/xcode");
-
       editor.on("change", this.onLatexChange); // it doesn't work as @change dunno why
       editor.setOption("wrap", true);
     },
