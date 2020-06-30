@@ -15,9 +15,14 @@
 </template>
 
 <script>
-import Registration from "./User/Registration";
-import Login from "./User/Login";
-import Userpage from "./User/Userpage";
+const Registration = () =>
+  import(
+    /* webpackChunkName: "components_User_Registration" */ "./User/Registration"
+  );
+const Login = () =>
+  import(/* webpackChunkName: "components_User_Login" */ "./User/Login");
+const Userpage = () =>
+  import(/* webpackChunkName: "components_User_Userpage" */ "./User/Userpage");
 
 export default {
   name: "User",
@@ -58,6 +63,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-@import "../config/variables.scss";
-</style>
+<style lang="scss" scoped></style>

@@ -35,10 +35,15 @@
 </template>
 
 <script>
-import axios from "axios";
-import config from "./config/api";
+import config from "./config/api.js";
 import http_helper from "./lib/http";
-import Message from "./components/Message/Message";
+
+const Message = () =>
+  import(
+    /* webpackChunkName: "components_Message_Message" */ "./components/Message/Message"
+  );
+const axios = () => import(/* webpackChunkName: "axios" */ "axios");
+
 export default {
   name: "App",
   components: { Message },
@@ -142,18 +147,22 @@ export default {
   },
   methods: {
     checkApiOk() {
-      axios({
-        url: config.apiPrefix + "/health",
-        method: "GET"
-      }).then(
-        result => {
-          this.isApiOk = result.data.status === "ok";
-          console.log("api is " + this.isApiOk);
-        },
-        error => {
-          console.log(error);
-          this.isApiOk = false;
-        }
+      axios().then(ax =>
+        ax
+          .request({
+            url: config.apiPrefix + "/health",
+            method: "GET"
+          })
+          .then(
+            result => {
+              this.isApiOk = result.data.status === "ok";
+              console.log("api is " + this.isApiOk);
+            },
+            error => {
+              console.log(error);
+              this.isApiOk = false;
+            }
+          )
       );
     }
   },
@@ -169,9 +178,10 @@ export default {
   }
 };
 </script>
-
 <style lang="scss">
-@import "config/variables.scss";
+.md-tooltip.md-tooltip-bottom.md-theme-default#isbn_help {
+  height: 5em;
+}
 a {
   color: var(--foreground-secondary-color);
 }

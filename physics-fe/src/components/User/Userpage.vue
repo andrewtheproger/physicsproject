@@ -196,15 +196,14 @@
 </template>
 
 <script>
-import axios from "axios";
-{
-  axios;
-}
-import Logout from "./Logout";
 import Message from "../Message/Message";
 import Color_Field from "./Color_Field";
 import config from "../../config/api.js";
 import colorSchema from "../../config/colorSchema";
+
+const axios = () => import(/* webpackChunkName: "axios" */ "axios");
+const Logout = () =>
+  import(/* webpackChunkName: "components_Logout" */ "./Logout");
 
 export default {
   name: "Userpage",
@@ -400,41 +399,45 @@ export default {
       this.isLoading = true;
       this.allowSubmit = false;
 
-      axios({
-        url: url,
-        method: "POST",
-        data: {
-          color_background_primary: this.user.color_background_primary,
-          color_background_secondary: this.user.color_background_secondary,
-          color_background_action: this.user.color_background_action,
-          color_foreground_primary: this.user.color_foreground_primary,
-          color_foreground_secondary: this.user.color_foreground_secondary,
-          color_foreground_action: this.user.color_foreground_action,
-          color_background_success: this.user.color_background_success,
-          color_background_warning: this.user.color_background_warning,
-          color_background_error: this.user.color_background_error,
-          color_foreground_success: this.user.color_foreground_success,
-          color_foreground_warning: this.user.color_foreground_warning,
-          color_foreground_error: this.user.color_foreground_error
-        },
-        headers: {
-          Authorization: this.$store.getters.get_jwt
-        }
-      }).then(
-        () => {
-          this.isLoading = false;
-          this.isFlowFailed = false;
-          this.flowFailed = null;
-          this.allowSubmit = true;
-        },
-        error => {
-          this.isLoading = false;
-          this.isFlowFailed = true;
-          this.flowFailed = null; // todo
-          this.allowSubmit = true;
+      axios().then(ax =>
+        ax
+          .request({
+            url: url,
+            method: "POST",
+            data: {
+              color_background_primary: this.user.color_background_primary,
+              color_background_secondary: this.user.color_background_secondary,
+              color_background_action: this.user.color_background_action,
+              color_foreground_primary: this.user.color_foreground_primary,
+              color_foreground_secondary: this.user.color_foreground_secondary,
+              color_foreground_action: this.user.color_foreground_action,
+              color_background_success: this.user.color_background_success,
+              color_background_warning: this.user.color_background_warning,
+              color_background_error: this.user.color_background_error,
+              color_foreground_success: this.user.color_foreground_success,
+              color_foreground_warning: this.user.color_foreground_warning,
+              color_foreground_error: this.user.color_foreground_error
+            },
+            headers: {
+              Authorization: this.$store.getters.get_jwt
+            }
+          })
+          .then(
+            () => {
+              this.isLoading = false;
+              this.isFlowFailed = false;
+              this.flowFailed = null;
+              this.allowSubmit = true;
+            },
+            error => {
+              this.isLoading = false;
+              this.isFlowFailed = true;
+              this.flowFailed = null; // todo
+              this.allowSubmit = true;
 
-          console.log(error);
-        }
+              console.log(error);
+            }
+          )
       );
     }
   }
@@ -442,8 +445,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../config/variables.scss";
-
 .md-snackbar.md-theme-default {
   .md-snackbar-content {
     background-color: inherit;
