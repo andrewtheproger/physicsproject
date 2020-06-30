@@ -39,9 +39,6 @@
         <span class="md-error" v-if="!$v.form.latex.required"
           >Задача должна иметь условие</span
         >
-        <span class="md-error" v-if="!$v.form.latex.mustSeemOk"
-          >В задаче из 3800 не может идти речь про LaTeX</span
-        >
       </md-field>
 
       <multiple-file-uploader
@@ -172,14 +169,7 @@ export default {
   validations: {
     form: {
       latex: {
-        required,
-        mustSeemOk(v) {
-          if (v) {
-            return !v.includes("LaTeX");
-          }
-
-          return true;
-        }
+        required
       },
       number: {
         required,
