@@ -52,7 +52,7 @@
 
         <ul>
           <li>Всего пользователей: {{ this.statistics.users.length }}</li>
-          <li>Всего задач: {{ this.statistics.tasks.length }}</li>
+          <li>Всего задач: {{ this.formatTotalStatistics() }}</li>
           <li>
             Заполненность разделов:
             <ul>
@@ -226,6 +226,7 @@ import axios from "axios";
 import config from "../config/api";
 import Message from "./Message/Message";
 import Trend from "vuetrend";
+import paragraps from "../config/3800";
 
 export default {
   name: "About",
@@ -245,6 +246,16 @@ export default {
     };
   },
   methods: {
+    formatTotalStatistics() {
+      const currentTaskCount = this.statistics.tasks.length;
+      const totalTaskCount = Object.values(paragraps).reduce(
+        (acc, val) => acc + val.total || 0,
+        0
+      );
+      return `${currentTaskCount} / ${totalTaskCount} (${Math.round(
+        (currentTaskCount / totalTaskCount) * 100
+      )}%)`;
+    },
     grouped() {
       if (!this.statistics.tasks) {
         return [];
@@ -266,34 +277,10 @@ export default {
     getParagraphStatistics(number) {
       const count = this.statistics.tasks.filter(x => x.base_number === number)
         .length;
-      const paragraps = {
-        1: { title: "Кинематика", total: 294 },
-        2: { title: "Динамика", total: 202 },
-        3: { title: "Работа", total: 270 },
-        4: { title: "Статика", total: 98 },
-        5: { title: "Гравитация", total: 82 },
-        6: { title: "Механическое колебания и волны", total: 151 },
-        7: { title: "Динамика ТТ", total: 42 },
-        8: { title: "Гидростатика", total: 189 },
-        9: { title: "МКТ", total: 232 },
-        10: { title: "Термодинакмика", total: 365 },
 
-        11: { title: "Электростатика", total: 391 },
-        12: { title: "Постоянный ток", total: 323 },
-        13: { title: "Магнетизм", total: 296 },
-        14: { title: "Электрические колебания и волны", total: 152 },
-        15: { title: "Геометрическая оптика", total: 310 },
-        16: { title: "Фотометрия", total: 32 },
-        17: { title: "Волновая оптика", total: 96 },
-        18: { title: "Теория относительности", total: 45 },
-        19: { title: "Кванто-оптическе явления", total: 100 },
-        20: { title: "Атомная физика", total: 71 },
-
-        21: { title: "Ядерная физика", total: 91 }
-      };
-      return `${number}. - ${count} / ${paragraps[number].total} (${Math.round(
-        (count / paragraps[number].total) * 100
-      )}%)`;
+      return `${number}. ${paragraps[number].title} - ${count} / ${
+        paragraps[number].total
+      } (${Math.round((count / paragraps[number].total) * 100)}%)`;
     },
     getTasksStatistics() {
       if (!this.statistics.tasks) {
