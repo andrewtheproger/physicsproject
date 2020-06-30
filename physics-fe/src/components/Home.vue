@@ -53,13 +53,18 @@
 </template>
 
 <script>
-import vPagination from "vue-plain-pagination";
-import config from "../config/api";
-import axios from "axios";
-import Task from "./Task";
+import config from "../config/api.js";
 import http_helper from "../lib/http";
-import Message from "./Message/Message";
 import BuildUrl from "build-url";
+
+const vPagination = () =>
+  import(/* webpackChunkName: "vue-plain-pagination" */ "vue-plain-pagination");
+const Task = () => import(/* webpackChunkName: "components_Task" */ "./Task");
+const Message = () =>
+  import(
+    /* webpackChunkName: "components_Message_Message" */ "./Message/Message"
+  );
+const axios = () => import(/* webpackChunkName: "axios" */ "axios");
 
 export default {
   name: "Home",
@@ -97,18 +102,22 @@ export default {
     this.numberExampleInterval = setInterval(this.setNewNumberExample, 1000);
     const url = config.apiPrefix + "/tasks/predicate_numbers";
 
-    axios({
-      url: url,
-      method: "GET"
-    }).then(
-      result => {
-        this.existing_numbers = result.data.map(
-          x => x.base_number + "." + x.task_number
-        );
-      },
-      error => {
-        console.log(error);
-      }
+    axios().then(ax =>
+      ax
+        .request({
+          url: url,
+          method: "GET"
+        })
+        .then(
+          result => {
+            this.existing_numbers = result.data.map(
+              x => x.base_number + "." + x.task_number
+            );
+          },
+          error => {
+            console.log(error);
+          }
+        )
     );
   },
   beforeDestroy() {
@@ -120,11 +129,11 @@ export default {
         path: "tasks",
         queryParams: {
           page: page,
-          count: this.page.itemsPerPage
+          count: this.page.itemsPerPage.toString()
         }
       });
 
-      await axios({
+      axios().then(ax => ax.request({
         url: url,
         method: "GET"
       }).then(
@@ -147,7 +156,7 @@ export default {
           };
           this.tasks = [];
         }
-      );
+      ));
     },
 
     getRandomInt(min, max) {
@@ -191,7 +200,7 @@ export default {
         });
       }
 
-      await axios({
+      axios().then(ax => ax.request({
         url: url,
         method: "GET"
       }).then(
@@ -215,14 +224,14 @@ export default {
           };
           this.tasks = [];
         }
-      );
+      ));
     }
   }
 };
 </script>
 
 <style lang="scss">
-@import "../config/variables.scss";
+@import "../config/mixins";
 // for some reason the pagination could not access scoped classes
 // todo
 .pagination {
@@ -282,8 +291,6 @@ export default {
 </style>
 
 <style scoped lang="scss">
-@import "../config/variables.scss";
-
 .slide-fade-enter-active {
   transition: all 0.3s ease;
 }

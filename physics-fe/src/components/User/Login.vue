@@ -65,12 +65,11 @@
 <script>
 import { required, email, minLength } from "vuelidate/lib/validators";
 import { validationMixin } from "vuelidate";
+
 import config from "../../config/api.js";
 import http_helper from "../../lib/http";
-import axios from "axios";
-{
-  axios;
-}
+const axios = () => import(/* webpackChunkName: "axios" */ "axios");
+
 export default {
   name: "Login",
   mixins: [validationMixin],
@@ -113,34 +112,35 @@ export default {
         this.isLoading = false;
         return;
       }
-      axios
-        .post(`${config.apiPrefix}/users/login`, {
-          email: this.form.email,
-          password: this.form.password
-        })
-        .then(response => {
-          this.isLoading = false;
-          this.isFlowFailed = false;
-          this.$store.commit("set_jwt", response.data.token);
-          window.location.reload();
-          return response;
-        })
-        .catch(error => {
-          this.isFlowFailed = true;
-          const data = error.response.data;
-          this.flowFailed = {
-            http_code: error.response.code,
-            internal_code: data.code,
-            message: http_helper.get_error_message(data.code)
-          };
-          this.isLoading = false;
-        });
+      axios().then(ax =>
+        ax
+          .post(`${config.apiPrefix}/users/login`, {
+            email: this.form.email,
+            password: this.form.password
+          })
+          .then(response => {
+            this.isLoading = false;
+            this.isFlowFailed = false;
+            this.$store.commit("set_jwt", response.data.token);
+            window.location.reload();
+            return response;
+          })
+          .catch(error => {
+            this.isFlowFailed = true;
+            const data = error.response.data;
+            this.flowFailed = {
+              http_code: error.response.code,
+              internal_code: data.code,
+              message: http_helper.get_error_message(data.code)
+            };
+            this.isLoading = false;
+          })
+      );
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-@import "../../config/variables.scss";
 .ph-registration-submit-controls {
   display: flex;
   flex-direction: row-reverse;

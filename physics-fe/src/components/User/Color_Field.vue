@@ -48,8 +48,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "../../config/variables.scss";
-
 .ph-color-field {
   flex: 0 30%;
   flex-direction: column;

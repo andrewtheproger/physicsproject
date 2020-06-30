@@ -27,10 +27,7 @@
 
 <script>
 require("es6-promise").polyfill();
-import axios from "axios";
-{
-  axios;
-}
+
 export default {
   props: ["links"],
   methods: {
@@ -53,8 +50,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../config/variables.scss";
-
+@import "../../config/mixins";
 .mfu-links-import {
   display: flex;
   flex-direction: column;

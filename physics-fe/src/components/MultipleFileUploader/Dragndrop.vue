@@ -25,7 +25,7 @@
     </div>
 
     <div v-if="files.length">
-      <p>
+      <div>
         <strong>{{ fileNameMessage }}</strong>
 
         <ol>
@@ -34,43 +34,38 @@
             v-for="(file, i) in files"
             :key="`${file.name}-${i}`"
             :data-name="file.name"
-            @click="removeFile">
+            @click="removeFile"
+          >
             {{ file.name }}
           </li>
         </ol>
-      </p>
+      </div>
 
-
-      <p>
+      <div>
         <strong>{{ fileSizeMessage }}</strong>
 
         <ol>
-          <li
-            v-for="(file, i) in files"
-            :key="`size-${i}`"
-            >
+          <li v-for="(file, i) in files" :key="`size-${i}`">
             {{ bytesToSize(file.size) }}
           </li>
         </ol>
-      </p>
+      </div>
 
-      <p>
+      <div>
         <strong>{{ totalFileMessage }}</strong> {{ files.length }}
-      </p>
+      </div>
 
-      <p>
-        <strong>{{ totalUploadSizeMessage }}</strong> {{ bytesToSize(files.reduce((acc, cur) => acc + cur.size, 0)) }}
-      </p>
+      <div>
+        <strong>{{ totalUploadSizeMessage }}</strong>
+        {{ bytesToSize(files.reduce((acc, cur) => acc + cur.size, 0)) }}
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 require("es6-promise").polyfill();
-import axios from "axios";
-{
-  axios;
-}
+
 export default {
   props: {
     files: {
@@ -78,23 +73,23 @@ export default {
     },
     fileNameMessage: {
       type: String,
-      default: "Имена",
+      default: "Имена"
     },
     fileSizeMessage: {
       type: String,
-      default: "Длина",
+      default: "Длина"
     },
     totalFileMessage: {
       type: String,
-      default: "Всего файлов:",
+      default: "Всего файлов:"
     },
     totalUploadSizeMessage: {
       type: String,
-      default: "Всего данных:",
+      default: "Всего данных:"
     },
     addMoreFiles: {
       type: String,
-      default: "Добавить ещё файл",
+      default: "Добавить ещё файл"
     }
   },
   data() {
@@ -117,20 +112,19 @@ export default {
 
       const inputFilelist = e.target.files || e.dataTransfer.files;
 
-      this.$emit('file_added', inputFilelist)
+      this.$emit("file_added", inputFilelist);
     },
     removeFile(e) {
       const value = e.target.dataset.name;
 
-      this.$emit('file_removed', value)
+      this.$emit("file_removed", value);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "../../config/variables.scss";
-
+@import "../../config/mixins";
 .mfu-uploadBoxMain {
   width: 50%;
 }
@@ -143,7 +137,7 @@ export default {
 
   &:after {
     display: none;
-    content: 'X';
+    content: "X";
     font-size: 2em;
     color: var(--foreground-error-color);
     cursor: pointer;
@@ -192,7 +186,7 @@ export default {
 }
 
 .mfu-dropAreaDragging {
-  background-color: alpha(var(--background-secondary-color), 0.7)
+  background-color: alpha(var(--background-secondary-color), 0.7);
 }
 
 .mfu-animatedBorders {
@@ -206,7 +200,7 @@ export default {
   &::before,
   &::after {
     box-sizing: inherit;
-    content: '';
+    content: "";
     position: absolute;
     pointer-events: none;
 
@@ -238,19 +232,15 @@ export default {
   &:hover::before {
     border-top-color: var(--background-secondary-color);
     border-right-color: var(--background-secondary-color);
-    transition:
-      width 0.25s ease-out,
-      height 0.25s ease-out 0.25s;
+    transition: width 0.25s ease-out, height 0.25s ease-out 0.25s;
   }
 
   &:hover::after {
     border-bottom-color: var(--background-secondary-color);
     border-left-color: var(--background-secondary-color);
 
-    transition:
-      border-color 0s ease-out 0.5s,
-      width 0.25s ease-out 0.5s,
+    transition: border-color 0s ease-out 0.5s, width 0.25s ease-out 0.5s,
       height 0.25s ease-out 0.75s;
   }
-} 
+}
 </style>

@@ -1,10 +1,18 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../components/Home";
-import About from "../components/About";
-import User from "../components/User";
-import TaskUpsert from "../components/TaskUpsert";
-import Latex from "../components/Latex";
+const Home = () =>
+  import(/* webpackChunkName: "components_Home" */ "../components/Home");
+const About = () =>
+  import(/* webpackChunkName: "components_About" */ "../components/About");
+const User = () =>
+  import(/* webpackChunkName: "components_User" */ "../components/User");
+const TaskUpsert = () =>
+  import(
+    /* webpackChunkName: "components_TaskUpsert" */ "../components/TaskUpsert"
+  );
+const Latex = () =>
+  import(/* webpackChunkName: "components_Latex" */ "../components/Latex");
+
 Vue.use(VueRouter);
 
 const routes = [

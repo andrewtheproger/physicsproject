@@ -140,12 +140,12 @@
 
 <script>
 import VueMathjax from "./VueMathJax/vueMathJax";
-import config from "../config/api";
-import axios from "axios";
-{
-  axios;
-}
+
+import config from "../config/api.js";
+const axios = () => import(/* webpackChunkName: "axios" */ "axios");
+
 const latexLocalStorageKey = "ph-3800-latex-input";
+
 export default {
   name: "Latex",
   components: {
@@ -218,18 +218,22 @@ export default {
       const url = config.apiPrefix + "/users/me";
       this.$refs.aceEditor.editor.setTheme(e);
 
-      axios({
-        url: url,
-        method: "POST",
-        data: {
-          ace_theme: e
-        },
-        headers: {
-          Authorization: this.$store.getters.get_jwt
-        }
-      }).then(
-        ({ data }) => this.$store.commit("set_user", data),
-        error => console.log(error)
+      axios().then(ax =>
+        ax
+          .request({
+            url: url,
+            method: "POST",
+            data: {
+              ace_theme: e
+            },
+            headers: {
+              Authorization: this.$store.getters.get_jwt
+            }
+          })
+          .then(
+            ({ data }) => this.$store.commit("set_user", data),
+            error => console.log(error)
+          )
       );
     },
     getMathjaxStyle: function() {
@@ -336,8 +340,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "../config/variables.scss";
-
 .ph-ace-theme-editor {
   margin: 0 1em;
 }
