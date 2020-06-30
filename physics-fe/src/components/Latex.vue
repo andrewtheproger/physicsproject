@@ -144,47 +144,6 @@ import VueMathjax from "./VueMathJax/vueMathJax";
 import config from "../config/api.js";
 const axios = () => import(/* webpackChunkName: "axios" */ "axios");
 
-require("brace/ext/language_tools");
-require("brace/mode/latex");
-require("brace/snippets/latex");
-require("brace/theme/ambiance");
-require("brace/theme/chaos");
-require("brace/theme/chrome");
-require("brace/theme/clouds");
-require("brace/theme/clouds_midnight");
-require("brace/theme/cobalt");
-require("brace/theme/crimson_editor");
-require("brace/theme/dawn");
-require("brace/theme/dracula");
-require("brace/theme/dreamweaver");
-require("brace/theme/eclipse");
-require("brace/theme/github");
-require("brace/theme/gob");
-require("brace/theme/gruvbox");
-require("brace/theme/idle_fingers");
-require("brace/theme/iplastic");
-require("brace/theme/katzenmilch");
-require("brace/theme/kr_theme");
-require("brace/theme/kuroir");
-require("brace/theme/merbivore");
-require("brace/theme/merbivore_soft");
-require("brace/theme/mono_industrial");
-require("brace/theme/monokai");
-require("brace/theme/pastel_on_dark");
-require("brace/theme/solarized_dark");
-require("brace/theme/solarized_light");
-require("brace/theme/sqlserver");
-require("brace/theme/terminal");
-require("brace/theme/textmate");
-require("brace/theme/tomorrow");
-require("brace/theme/tomorrow_night");
-require("brace/theme/tomorrow_night_blue");
-require("brace/theme/tomorrow_night_bright");
-require("brace/theme/tomorrow_night_eighties");
-require("brace/theme/twilight");
-require("brace/theme/vibrant_ink");
-require("brace/theme/xcode");
-
 const latexLocalStorageKey = "ph-3800-latex-input";
 
 export default {
@@ -213,7 +172,8 @@ export default {
         min: 50,
         max: 150,
         step: 10
-      }
+      },
+      aceSettings: []
     };
   },
   created() {
@@ -233,6 +193,154 @@ export default {
     } else {
       this.body.restored = "неизвестного числа";
     }
+
+    this.aceSettings = [
+      {
+        name: "brace/ext/language_tools",
+        import: () => import("brace/ext/language_tools")
+      },
+      { name: "brace/mode/latex", import: () => import("brace/mode/latex") },
+      {
+        name: "brace/snippets/latex",
+        import: () => import("brace/snippets/latex")
+      },
+      {
+        name: "brace/theme/ambiance",
+        import: () => import("brace/theme/ambiance")
+      },
+      { name: "brace/theme/chaos", import: () => import("brace/theme/chaos") },
+      {
+        name: "brace/theme/chrome",
+        import: () => import("brace/theme/chrome")
+      },
+      {
+        name: "brace/theme/clouds",
+        import: () => import("brace/theme/clouds")
+      },
+      {
+        name: "brace/theme/clouds_midnight",
+        import: () => import("brace/theme/clouds_midnight")
+      },
+      {
+        name: "brace/theme/cobalt",
+        import: () => import("brace/theme/cobalt")
+      },
+      {
+        name: "brace/theme/crimson_editor",
+        import: () => import("brace/theme/crimson_editor")
+      },
+      { name: "brace/theme/dawn", import: () => import("brace/theme/dawn") },
+      {
+        name: "brace/theme/dracula",
+        import: () => import("brace/theme/dracula")
+      },
+      {
+        name: "brace/theme/dreamweaver",
+        import: () => import("brace/theme/dreamweaver")
+      },
+      {
+        name: "brace/theme/eclipse",
+        import: () => import("brace/theme/eclipse")
+      },
+      {
+        name: "brace/theme/github",
+        import: () => import("brace/theme/github")
+      },
+      { name: "brace/theme/gob", import: () => import("brace/theme/gob") },
+      {
+        name: "brace/theme/gruvbox",
+        import: () => import("brace/theme/gruvbox")
+      },
+      {
+        name: "brace/theme/idle_fingers",
+        import: () => import("brace/theme/idle_fingers")
+      },
+      {
+        name: "brace/theme/iplastic",
+        import: () => import("brace/theme/iplastic")
+      },
+      {
+        name: "brace/theme/katzenmilch",
+        import: () => import("brace/theme/katzenmilch")
+      },
+      {
+        name: "brace/theme/kr_theme",
+        import: () => import("brace/theme/kr_theme")
+      },
+      {
+        name: "brace/theme/kuroir",
+        import: () => import("brace/theme/kuroir")
+      },
+      {
+        name: "brace/theme/merbivore",
+        import: () => import("brace/theme/merbivore")
+      },
+      {
+        name: "brace/theme/merbivore_soft",
+        import: () => import("brace/theme/merbivore_soft")
+      },
+      {
+        name: "brace/theme/mono_industrial",
+        import: () => import("brace/theme/mono_industrial")
+      },
+      {
+        name: "brace/theme/monokai",
+        import: () => import("brace/theme/monokai")
+      },
+      {
+        name: "brace/theme/pastel_on_dark",
+        import: () => import("brace/theme/pastel_on_dark")
+      },
+      {
+        name: "brace/theme/solarized_dark",
+        import: () => import("brace/theme/solarized_dark")
+      },
+      {
+        name: "brace/theme/solarized_light",
+        import: () => import("brace/theme/solarized_light")
+      },
+      {
+        name: "brace/theme/sqlserver",
+        import: () => import("brace/theme/sqlserver")
+      },
+      {
+        name: "brace/theme/terminal",
+        import: () => import("brace/theme/terminal")
+      },
+      {
+        name: "brace/theme/textmate",
+        import: () => import("brace/theme/textmate")
+      },
+      {
+        name: "brace/theme/tomorrow",
+        import: () => import("brace/theme/tomorrow")
+      },
+      {
+        name: "brace/theme/tomorrow_night",
+        import: () => import("brace/theme/tomorrow_night")
+      },
+      {
+        name: "brace/theme/tomorrow_night_blue",
+        import: () => import("brace/theme/tomorrow_night_blue")
+      },
+      {
+        name: "brace/theme/tomorrow_night_bright",
+        import: () => import("brace/theme/tomorrow_night_bright")
+      },
+      {
+        name: "brace/theme/tomorrow_night_eighties",
+        import: () => import("brace/theme/tomorrow_night_eighties")
+      },
+      {
+        name: "brace/theme/twilight",
+        import: () => import("brace/theme/twilight")
+      },
+      {
+        name: "brace/theme/vibrant_ink",
+        import: () => import("brace/theme/vibrant_ink")
+      },
+      { name: "brace/theme/xcode", import: () => import("brace/theme/xcode") }
+    ];
   },
   mounted() {
     const theme =
@@ -257,7 +365,13 @@ export default {
   methods: {
     setColorSchema: function(e) {
       const url = config.apiPrefix + "/users/me";
-      this.$refs.aceEditor.editor.setTheme(e);
+      const availableThemes = this.aceSettings.filter(x => x.name === `br${e}`);
+
+      if (availableThemes && availableThemes.length) {
+        const theme = availableThemes[0];
+
+        theme.import().then(() => this.$refs.aceEditor.editor.setTheme(e));
+      }
 
       axios().then(ax =>
         ax
@@ -311,13 +425,17 @@ export default {
       }
     },
     editorInit: function(editor) {
+      require("brace/ext/language_tools");
+      require("brace/mode/latex");
+      require("brace/snippets/latex");
+
       editor.on("change", this.onLatexChange); // it doesn't work as @change dunno why
       editor.setOption("wrap", true);
     },
     copyLatex() {
       const setCopyStatusToNull = () => (this.copyStatus = null);
 
-      this.$copyText(this.latex).then(
+      this.$copyText(this.body.latex).then(
         () => {
           setTimeout(setCopyStatusToNull, 1000);
           return (this.copyStatus = true);

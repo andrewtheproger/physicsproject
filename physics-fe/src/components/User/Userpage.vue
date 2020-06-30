@@ -199,12 +199,9 @@
 import Message from "../Message/Message";
 import Color_Field from "./Color_Field";
 import config from "../../config/api.js";
+import colorSchema from "../../config/colorSchema";
 
 const axios = () => import(/* webpackChunkName: "axios" */ "axios");
-const colorSchema = () =>
-  import(
-    /* webpackChunkName: "config_colorSchema" */ "../../config/colorSchema"
-  );
 const Logout = () =>
   import(/* webpackChunkName: "components_Logout" */ "./Logout");
 
