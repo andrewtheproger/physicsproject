@@ -1,15 +1,10 @@
 const webpack = require("webpack");
 const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
-const CompressionPlugin = require("compression-webpack-plugin");
+// const CompressionPlugin = require("compression-webpack-plugin");
 
 module.exports = {
   configureWebpack: {
-    optimization: {
-      splitChunks: {
-        chunks: "all"
-      }
-    },
     plugins: [
       new webpack.DefinePlugin({
         // <-- key to reducing React's size
