@@ -6,30 +6,30 @@
       <md-icon v-if="this.severity === 'error'">error</md-icon>
     </div>
 
-    <span class="ph-message-content">{{text}}</span>
+    <span class="ph-message-content">{{ text }}</span>
   </div>
 </template>
 
 <script>
-  export default {
-    name: "Message",
-    props: ["text", "severity"],
-    methods: {
-      getClass: function () {
-        const defaultClass = "ph-message";
-        switch (this.severity) {
-          case "success":
-            return `${defaultClass} ph-success-message`;
-          case "warning":
-            return `${defaultClass} ph-warning-message`;
-          case "error":
-            return `${defaultClass} ph-error-message`;
-          default:
-            return defaultClass;
-        }
+export default {
+  name: "Message",
+  props: ["text", "severity"],
+  methods: {
+    getClass: function() {
+      const defaultClass = "ph-message";
+      switch (this.severity) {
+        case "success":
+          return `${defaultClass} ph-success-message`;
+        case "warning":
+          return `${defaultClass} ph-warning-message`;
+        case "error":
+          return `${defaultClass} ph-error-message`;
+        default:
+          return defaultClass;
       }
     }
   }
+};
 </script>
 
 <style lang="scss" scoped>
