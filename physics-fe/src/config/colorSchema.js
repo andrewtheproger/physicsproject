@@ -27,4 +27,4 @@ export default {
     color_foreground_warning: "#333333",
     color_foreground_error: "#333333"
   }
-}
+};

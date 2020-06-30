@@ -44,7 +44,9 @@
           </md-field>
 
           <md-field>
-            <label for="color-schema-select">Изменить цветовую схему на...</label>
+            <label for="color-schema-select"
+              >Изменить цветовую схему на...</label
+            >
             <md-select
               v-model="colorSchema"
               name="color-schema-select"
@@ -167,11 +169,24 @@
             >
             </md-progress-spinner>
 
-            <md-snackbar md-position="center" :md-duration="700" :md-active.sync="!this.allowSubmit && !this.isFlowFailed" md-persistent>
+            <md-snackbar
+              md-position="center"
+              :md-duration="700"
+              :md-active.sync="!this.allowSubmit && !this.isFlowFailed"
+              md-persistent
+            >
               <Message text="Изменения сохранены" severity="success"></Message>
             </md-snackbar>
-            <md-snackbar md-position="center" :md-duration="2000" :md-active.sync="!this.allowSubmit && this.isFlowFailed" md-persistent>
-              <Message text="Произошла ошибка, и изменения не сохранились" severity="error"></Message>
+            <md-snackbar
+              md-position="center"
+              :md-duration="2000"
+              :md-active.sync="!this.allowSubmit && this.isFlowFailed"
+              md-persistent
+            >
+              <Message
+                text="Произошла ошибка, и изменения не сохранились"
+                severity="error"
+              ></Message>
             </md-snackbar>
           </div>
         </form>
@@ -186,7 +201,7 @@ import axios from "axios";
   axios;
 }
 import Logout from "./Logout";
-import Message from "../Message/Message"
+import Message from "../Message/Message";
 import Color_Field from "./Color_Field";
 import config from "../../config/api.js";
 import colorSchema from "../../config/colorSchema";
@@ -215,33 +230,57 @@ export default {
   methods: {
     setColorSchema(e) {
       switch (e) {
-        case 'dark':
-          this.user.color_background_primary = colorSchema.dark.color_background_primary;
-          this.user.color_background_secondary = colorSchema.dark.color_background_secondary;
-          this.user.color_background_action = colorSchema.dark.color_background_action;
-          this.user.color_foreground_primary = colorSchema.dark.color_foreground_primary;
-          this.user.color_foreground_secondary = colorSchema.dark.color_foreground_secondary;
-          this.user.color_foreground_action = colorSchema.dark.color_foreground_action;
-          this.user.color_background_success = colorSchema.dark.color_background_success;
-          this.user.color_background_warning = colorSchema.dark.color_background_warning;
-          this.user.color_background_error = colorSchema.dark.color_background_error;
-          this.user.color_foreground_success = colorSchema.dark.color_foreground_success;
-          this.user.color_foreground_warning = colorSchema.dark.color_foreground_warning;
-          this.user.color_foreground_error = colorSchema.dark.color_foreground_error;
+        case "dark":
+          this.user.color_background_primary =
+            colorSchema.dark.color_background_primary;
+          this.user.color_background_secondary =
+            colorSchema.dark.color_background_secondary;
+          this.user.color_background_action =
+            colorSchema.dark.color_background_action;
+          this.user.color_foreground_primary =
+            colorSchema.dark.color_foreground_primary;
+          this.user.color_foreground_secondary =
+            colorSchema.dark.color_foreground_secondary;
+          this.user.color_foreground_action =
+            colorSchema.dark.color_foreground_action;
+          this.user.color_background_success =
+            colorSchema.dark.color_background_success;
+          this.user.color_background_warning =
+            colorSchema.dark.color_background_warning;
+          this.user.color_background_error =
+            colorSchema.dark.color_background_error;
+          this.user.color_foreground_success =
+            colorSchema.dark.color_foreground_success;
+          this.user.color_foreground_warning =
+            colorSchema.dark.color_foreground_warning;
+          this.user.color_foreground_error =
+            colorSchema.dark.color_foreground_error;
           break;
-        case 'light':
-          this.user.color_background_primary = colorSchema.light.color_background_primary;
-          this.user.color_background_secondary = colorSchema.light.color_background_secondary;
-          this.user.color_background_action = colorSchema.light.color_background_action;
-          this.user.color_foreground_primary = colorSchema.light.color_foreground_primary;
-          this.user.color_foreground_secondary = colorSchema.light.color_foreground_secondary;
-          this.user.color_foreground_action = colorSchema.light.color_foreground_action;
-          this.user.color_background_success = colorSchema.light.color_background_success;
-          this.user.color_background_warning = colorSchema.light.color_background_warning;
-          this.user.color_background_error = colorSchema.light.color_background_error;
-          this.user.color_foreground_success = colorSchema.light.color_foreground_success;
-          this.user.color_foreground_warning = colorSchema.light.color_foreground_warning;
-          this.user.color_foreground_error = colorSchema.light.color_foreground_error;
+        case "light":
+          this.user.color_background_primary =
+            colorSchema.light.color_background_primary;
+          this.user.color_background_secondary =
+            colorSchema.light.color_background_secondary;
+          this.user.color_background_action =
+            colorSchema.light.color_background_action;
+          this.user.color_foreground_primary =
+            colorSchema.light.color_foreground_primary;
+          this.user.color_foreground_secondary =
+            colorSchema.light.color_foreground_secondary;
+          this.user.color_foreground_action =
+            colorSchema.light.color_foreground_action;
+          this.user.color_background_success =
+            colorSchema.light.color_background_success;
+          this.user.color_background_warning =
+            colorSchema.light.color_background_warning;
+          this.user.color_background_error =
+            colorSchema.light.color_background_error;
+          this.user.color_foreground_success =
+            colorSchema.light.color_foreground_success;
+          this.user.color_foreground_warning =
+            colorSchema.light.color_foreground_warning;
+          this.user.color_foreground_error =
+            colorSchema.light.color_foreground_error;
           break;
         default:
           break;

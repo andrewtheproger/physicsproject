@@ -23,7 +23,11 @@
 
     <md-progress-bar md-mode="indeterminate" v-if="this.sending" />
 
-    <Message v-if="this.isHttpFailed" :text="'Произошла ошибка: ' + this.httpFailed.message" severity="error"></Message>
+    <Message
+      v-if="this.isHttpFailed"
+      :text="'Произошла ошибка: ' + this.httpFailed.message"
+      severity="error"
+    ></Message>
 
     <nav v-if="page.count && !number">
       <v-pagination
@@ -35,15 +39,16 @@
     </nav>
 
     <ul class="ph-tasks" v-if="this.tasks">
-      <li
-        v-for="task in this.tasks"
-        :key="task.id"
-      >
+      <li v-for="task in this.tasks" :key="task.id">
         <Task :task="task" />
       </li>
     </ul>
 
-    <Message v-if="this.tasks && this.tasks.length === 0" text="Ничего не найдено" severity="warning"></Message>
+    <Message
+      v-if="this.tasks && this.tasks.length === 0"
+      text="Ничего не найдено"
+      severity="warning"
+    ></Message>
   </div>
 </template>
 
@@ -53,8 +58,8 @@ import config from "../config/api";
 import axios from "axios";
 import Task from "./Task";
 import http_helper from "../lib/http";
-import Message from './Message/Message'
-import BuildUrl from 'build-url'
+import Message from "./Message/Message";
+import BuildUrl from "build-url";
 
 export default {
   name: "Home",
@@ -111,9 +116,9 @@ export default {
   },
   methods: {
     async changePage(page) {
-      const  url = BuildUrl(config.apiPrefix, {
+      const url = BuildUrl(config.apiPrefix, {
         path: "tasks",
-        queryParams:{
+        queryParams: {
           page: page,
           count: this.page.itemsPerPage
         }
@@ -126,7 +131,9 @@ export default {
         result => {
           this.isHttpFailed = false;
           this.tasks = result.data;
-          this.page.count = Math.floor(this.existing_numbers.length / this.page.itemsPerPage)
+          this.page.count = Math.floor(
+            this.existing_numbers.length / this.page.itemsPerPage
+          );
         },
         error => {
           this.isHttpFailed = true;
@@ -167,8 +174,8 @@ export default {
 
         url = BuildUrl(config.apiPrefix, {
           path: "tasks",
-          queryParams:{
-            page: '0',
+          queryParams: {
+            page: "0",
             count: this.page.itemsPerPage,
             filter_by_base_number: base_number,
             filter_by_task_number: task_number
@@ -177,8 +184,8 @@ export default {
       } else {
         url = BuildUrl(config.apiPrefix, {
           path: "tasks",
-          queryParams:{
-            page: '0',
+          queryParams: {
+            page: "0",
             count: this.page.itemsPerPage
           }
         });
@@ -191,7 +198,9 @@ export default {
         result => {
           this.isHttpFailed = false;
           this.tasks = result.data;
-          this.page.count = Math.floor(this.existing_numbers.length / this.page.itemsPerPage)
+          this.page.count = Math.floor(
+            this.existing_numbers.length / this.page.itemsPerPage
+          );
           this.page.currentPage = 1;
         },
         error => {

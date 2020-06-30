@@ -22,7 +22,11 @@
       </md-tabs>
 
       <div>
-        <Message v-if="!this.isApiOk" text="Что-то не работает, мы уже чиним" severity="error"></Message>
+        <Message
+          v-if="!this.isApiOk"
+          text="Что-то не работает, мы уже чиним"
+          severity="error"
+        ></Message>
       </div>
     </header>
 
@@ -37,7 +41,7 @@ import http_helper from "./lib/http";
 import Message from "./components/Message/Message";
 export default {
   name: "App",
-  components: {Message},
+  components: { Message },
   data() {
     return {
       isApiOk: null,

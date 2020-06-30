@@ -9,9 +9,13 @@
       </ul>
 
       Содержимое сайта перелицензировано под
-        <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
-          <img alt="Лицензия Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
-        </a>
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+        <img
+          alt="Лицензия Creative Commons"
+          style="border-width:0"
+          src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"
+        />
+      </a>
     </div>
 
     <h2>
@@ -36,83 +40,81 @@
     <div class="ph-statistics">
       <div class="ph-statistic-block">
         <span>
-        <span v-if="!this.last_commit_url">Загружаю...</span>
+          <span v-if="!this.last_commit_url">Загружаю...</span>
 
-        <span v-if="this.last_commit_url">
-          Последний коммит:
-          <a :href="this.last_commit_url" target="_blank"
-          >{{ this.last_commit_datetime_string }} {{ this.ago }}
-          </a>
+          <span v-if="this.last_commit_url">
+            Последний коммит:
+            <a :href="this.last_commit_url" target="_blank"
+              >{{ this.last_commit_datetime_string }} {{ this.ago }}
+            </a>
+          </span>
         </span>
-      </span>
 
-      <ul>
-        <li>Всего пользователей: {{this.statistics.users.length}}</li>
-        <li>Всего задач: {{this.statistics.tasks.length}}</li>
-        <li>
-          Заполненность разделов:
-          <ul>
-            <li>{{this.getParagraphStatistics(1)}}</li>
-            <li>{{this.getParagraphStatistics(2)}}</li>
-            <li>{{this.getParagraphStatistics(3)}}</li>
-            <li>{{this.getParagraphStatistics(4)}}</li>
-            <li>{{this.getParagraphStatistics(5)}}</li>
-            <li>{{this.getParagraphStatistics(6)}}</li>
-            <li>{{this.getParagraphStatistics(7)}}</li>
-            <li>{{this.getParagraphStatistics(8)}}</li>
-            <li>{{this.getParagraphStatistics(9)}}</li>
-            <li>{{this.getParagraphStatistics(10)}}</li>
-            <li>{{this.getParagraphStatistics(11)}}</li>
-            <li>{{this.getParagraphStatistics(12)}}</li>
-            <li>{{this.getParagraphStatistics(13)}}</li>
-            <li>{{this.getParagraphStatistics(14)}}</li>
-            <li>{{this.getParagraphStatistics(15)}}</li>
-            <li>{{this.getParagraphStatistics(16)}}</li>
-            <li>{{this.getParagraphStatistics(17)}}</li>
-            <li>{{this.getParagraphStatistics(18)}}</li>
-            <li>{{this.getParagraphStatistics(19)}}</li>
-            <li>{{this.getParagraphStatistics(20)}}</li>
-            <li>{{this.getParagraphStatistics(21)}}</li>
-          </ul>
-        </li>
-      </ul>
-    </div>
+        <ul>
+          <li>Всего пользователей: {{ this.statistics.users.length }}</li>
+          <li>Всего задач: {{ this.formatTotalStatistics() }}</li>
+          <li>
+            Заполненность разделов:
+            <ul>
+              <li>{{ this.getParagraphStatistics(1) }}</li>
+              <li>{{ this.getParagraphStatistics(2) }}</li>
+              <li>{{ this.getParagraphStatistics(3) }}</li>
+              <li>{{ this.getParagraphStatistics(4) }}</li>
+              <li>{{ this.getParagraphStatistics(5) }}</li>
+              <li>{{ this.getParagraphStatistics(6) }}</li>
+              <li>{{ this.getParagraphStatistics(7) }}</li>
+              <li>{{ this.getParagraphStatistics(8) }}</li>
+              <li>{{ this.getParagraphStatistics(9) }}</li>
+              <li>{{ this.getParagraphStatistics(10) }}</li>
+              <li>{{ this.getParagraphStatistics(11) }}</li>
+              <li>{{ this.getParagraphStatistics(12) }}</li>
+              <li>{{ this.getParagraphStatistics(13) }}</li>
+              <li>{{ this.getParagraphStatistics(14) }}</li>
+              <li>{{ this.getParagraphStatistics(15) }}</li>
+              <li>{{ this.getParagraphStatistics(16) }}</li>
+              <li>{{ this.getParagraphStatistics(17) }}</li>
+              <li>{{ this.getParagraphStatistics(18) }}</li>
+              <li>{{ this.getParagraphStatistics(19) }}</li>
+              <li>{{ this.getParagraphStatistics(20) }}</li>
+              <li>{{ this.getParagraphStatistics(21) }}</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
 
       <div class="ph-statistic-block ph-graphics">
-      <div class="ph-graphic">
-        <span class="ph-graphics-title">
-          Количество зарегистрированных пользователей
-        </span>
+        <div class="ph-graphic">
+          <span class="ph-graphics-title">
+            Количество зарегистрированных пользователей
+          </span>
 
-        <trend
-          :data="getUsersStatistics()"
-          :gradient="['#99cc99', '#339933']"
-          auto-draw
-          smooth
-        >
-        </trend>
-      </div>
+          <trend
+            :data="getUsersStatistics()"
+            :gradient="['#99cc99', '#339933']"
+            auto-draw
+            smooth
+          >
+          </trend>
+        </div>
 
-      <div class="ph-graphic">
-        <span class="ph-graphics-title">
-          Количество созданных задач
-        </span>
+        <div class="ph-graphic">
+          <span class="ph-graphics-title">
+            Количество созданных задач
+          </span>
 
-        <trend
-          :data="getTasksStatistics()"
-          :gradient="['#99cc99', '#339933']"
-          auto-draw
-          smooth
-        >
-        </trend>
-      </div>
+          <trend
+            :data="getTasksStatistics()"
+            :gradient="['#99cc99', '#339933']"
+            auto-draw
+            smooth
+          >
+          </trend>
+        </div>
         <div>
           <span>Активность пользователей:</span>
           <ul>
-            <li
-              v-for="result in this.grouped()"
-              :key="result">
-              {{result[0].creator.name}} - {{result.filter(x => x.creator.name === result[0].creator.name).length}}
+            <li v-for="result in this.grouped()" :key="result.creatorName">
+              {{ result.creatorName }} - {{ result.count }}
             </li>
           </ul>
         </div>
@@ -120,16 +122,28 @@
 
       <ul class="ph-statistic-block ph-targets">
         <li>
-          <Message text="Создать интерфейс добавления задач" severity="success"></Message>
+          <Message
+            text="Создать интерфейс добавления задач"
+            severity="success"
+          ></Message>
         </li>
         <li>
-          <Message text="Создать интерфейс добавления подсказок к задачам" severity="error"></Message>
+          <Message
+            text="Создать интерфейс добавления подсказок к задачам"
+            severity="error"
+          ></Message>
         </li>
         <li>
-          <Message text="Перенести все задачи из 3800 к нам (~ 800/3800)" severity="warning"></Message>
+          <Message
+            text="Перенести все задачи из 3800 к нам (~ 800/3800)"
+            severity="warning"
+          ></Message>
         </li>
         <li>
-          <Message text="Сопроводить каждую задачу ответом и подсказкой" severity="error"></Message>
+          <Message
+            text="Сопроводить каждую задачу ответом и подсказкой"
+            severity="error"
+          ></Message>
         </li>
       </ul>
     </div>
@@ -196,7 +210,10 @@
         </a>
       </li>
       <li>
-        <a href="https://github.com/andrewtheproger/physicsproject/blob/master/PATCHNOTES.md" target="_blank">
+        <a
+          href="https://github.com/andrewtheproger/physicsproject/blob/master/PATCHNOTES.md"
+          target="_blank"
+        >
           История разработки
         </a>
       </li>
@@ -207,8 +224,9 @@
 <script>
 import axios from "axios";
 import config from "../config/api";
-import Message from './Message/Message';
-import Trend from "vuetrend"
+import Message from "./Message/Message";
+import Trend from "vuetrend";
+import paragraps from "../config/3800";
 
 export default {
   name: "About",
@@ -228,51 +246,50 @@ export default {
     };
   },
   methods: {
+    formatTotalStatistics() {
+      const currentTaskCount = this.statistics.tasks.length;
+      const totalTaskCount = Object.values(paragraps).reduce(
+        (acc, val) => acc + val.total || 0,
+        0
+      );
+      return `${currentTaskCount} / ${totalTaskCount} (${Math.round(
+        (currentTaskCount / totalTaskCount) * 100
+      )}%)`;
+    },
     grouped() {
       if (!this.statistics.tasks) {
-        return []
+        return [];
       }
 
-      return this.statistics.tasks.reduce((acc, cur) => {
-        acc[cur.creator.name] = [...acc[cur.creator.name] || [], cur];
+      const a = this.statistics.tasks.reduce((acc, cur) => {
+        acc[cur.creator.name] = [...(acc[cur.creator.name] || []), cur];
         return acc;
       }, {});
+
+      const array = Object.entries(a);
+      return array
+        .map(x => ({
+          creatorName: x[0],
+          count: x[1].length
+        }))
+        .sort((lhs, rhs) => (lhs.count < rhs.count ? 1 : -1));
     },
     getParagraphStatistics(number) {
-      const count = this.statistics.tasks.filter(x => x.base_number === number).length;
-      const paragraps = {
-        1: { title: 'Кинематика', total: 294 },
-        2: { title: 'Динамика', total: 202 },
-        3: { title: 'Работа', total: 270 },
-        4: { title: 'Статика', total: 98 },
-        5: { title: 'Гравитация', total: 82 },
-        6: { title: 'Механическое колебания и волны', total: 151 },
-        7: { title: 'Динамика ТТ', total: 42 },
-        8: { title: 'Гидростатика', total: 189 },
-        9: { title: 'МКТ', total: 232 },
-        10: { title: 'Термодинакмика', total: 365 },
+      const count = this.statistics.tasks.filter(x => x.base_number === number)
+        .length;
 
-        11: { title: 'Электростатика', total: 391 },
-        12: { title: 'Постоянный ток', total: 323 },
-        13: { title: 'Магнетизм', total: 296 },
-        14: { title: 'Электрические колебания и волны', total: 152 },
-        15: { title: 'Геометрическая оптика', total: 310 },
-        16: { title: 'Фотометрия', total: 32 },
-        17: { title: 'Волновая оптика', total: 96 },
-        18: { title: 'Теория относительности', total: 45 },
-        19: { title: 'Кванто-оптическе явления', total: 100 },
-        20: { title: 'Атомная физика', total: 71 },
-
-        21: { title: 'Ядерная физика', total: 91 },
-      };
-      return `${number}. - ${count} / ${paragraps[number].total} (${Math.round(count / paragraps[number].total * 100)}%)`
+      return `${number}. ${paragraps[number].title} - ${count} / ${
+        paragraps[number].total
+      } (${Math.round((count / paragraps[number].total) * 100)}%)`;
     },
     getTasksStatistics() {
       if (!this.statistics.tasks) {
         return [];
       }
 
-      const registrations = this.statistics.tasks.map(x => Math.round(x.created_date / (1000 * 60 * 60 * 24))); // milliseconds * seconds * minutes * hours
+      const registrations = this.statistics.tasks.map(x =>
+        Math.round(x.created_date / (1000 * 60 * 60 * 24))
+      ); // milliseconds * seconds * minutes * hours
       const startsAt = registrations[0];
       const endsAt = registrations[registrations.length - 1];
       let count = 1;
@@ -290,7 +307,9 @@ export default {
         return [];
       }
 
-      const registrations = this.statistics.users.map(x => Math.round(x.created_date / (1000 * 60 * 60 * 24))); // milliseconds * seconds * minutes * hours
+      const registrations = this.statistics.users.map(x =>
+        Math.round(x.created_date / (1000 * 60 * 60 * 24))
+      ); // milliseconds * seconds * minutes * hours
       const startsAt = registrations[0];
       const endsAt = registrations[registrations.length - 1];
       let count = 1;
@@ -338,10 +357,10 @@ export default {
       error => console.log(error)
     );
 
-    const statisticsUri = config.apiPrefix + '/statistics';
+    const statisticsUri = config.apiPrefix + "/statistics";
     axios.get(statisticsUri).then(
       result => {
-        this.statistics = result.data
+        this.statistics = result.data;
       },
       error => console.log(error)
     );
@@ -377,7 +396,6 @@ export default {
 }
 
 .ph-graphics {
-
 }
 
 .ph-graphics-title {
@@ -388,7 +406,11 @@ export default {
   border-image-slice: 1;
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  border-image-source: linear-gradient(to right, var(--foreground-primary-color), transparent);
+  border-image-source: linear-gradient(
+    to right,
+    var(--foreground-primary-color),
+    transparent
+  );
 }
 
 .ph-graphic {
@@ -399,11 +421,14 @@ export default {
   border-bottom-style: solid;
   border-top-width: 1px;
   border-top-style: solid;
-  border-image-source: linear-gradient(to right, var(--foreground-primary-color), transparent);
+  border-image-source: linear-gradient(
+    to right,
+    var(--foreground-primary-color),
+    transparent
+  );
 
   svg {
     height: initial;
   }
 }
-
 </style>
