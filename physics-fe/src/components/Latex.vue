@@ -425,9 +425,7 @@ export default {
       }
     },
     editorInit: function(editor) {
-      require("brace/ext/language_tools");
       require("brace/mode/latex");
-      require("brace/snippets/latex");
 
       editor.on("change", this.onLatexChange); // it doesn't work as @change dunno why
       editor.setOption("wrap", true);
@@ -474,7 +472,7 @@ export default {
 
     position: absolute;
     bottom: 0;
-    right: 0em;
+    right: 0;
 
     opacity: 0.3;
 

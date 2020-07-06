@@ -15,7 +15,7 @@
     </div>
     <ul class="ph-task-images">
       <li v-for="image in task.body.images" :key="image.id">
-        <img v-gallery:task-images :src="image.url" />
+        <img alt="task image" :src="image.url" />
       </li>
     </ul>
 
