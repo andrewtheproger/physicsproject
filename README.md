@@ -2,7 +2,7 @@
 
 This is a project that provide illegal access to '3800 задач по физике' book. It maintenance by school students for free. Monetization will never be allowed.
 
-The project could be viewed [here](http://ec2-3-120-108-152.eu-central-1.compute.amazonaws.com/). If you'd like to share the link, please use this page link due to the server host will be changed.
+The project could be viewed [here](http://ec2-35-157-38-27.eu-central-1.compute.amazonaws.com/). If you'd like to share the link, please use this page link due to the server host will be changed.
 
 The project provide access to its api. See postman collections files in the git root or contact dev team for information.
 
