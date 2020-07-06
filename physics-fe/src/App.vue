@@ -326,4 +326,8 @@ div.md-field.md-theme-default.md-has-value textarea.md-textarea {
   color: var(--foreground-error-color);
   -webkit-text-fill-color: var(--foreground-error-color);
 }
+
+.md-menu-content-container {
+  height: 25em;
+}
 </style>

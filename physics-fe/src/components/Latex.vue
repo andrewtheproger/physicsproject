@@ -344,11 +344,13 @@ export default {
   },
   mounted() {
     const theme =
-      this.user && this.user.ace_theme
+      (this.user && this.user.ace_theme)
         ? this.user.ace_theme
-        : "brace/theme/tomorrow_night";
-    this.$refs.aceEditor.editor.setTheme(theme);
-    this.colorSchema = theme;
+        : 'ace/theme/tomorrow_night';
+    this.aceSettings.filter(x => x.name === `br${theme}`)[0].import().then(() => {
+      this.colorSchema = theme;
+      this.$refs.aceEditor.editor.setTheme(`br${theme}`);
+    });
   },
   computed: {
     getCopyStatusClass() {
@@ -425,10 +427,19 @@ export default {
       }
     },
     editorInit: function(editor) {
-      require("brace/mode/latex");
+      const importTheme = () => import(`brace/theme/tomorrow_night`);
+      const importMode = () => import("brace/mode/latex");
 
-      editor.on("change", this.onLatexChange); // it doesn't work as @change dunno why
-      editor.setOption("wrap", true);
+      importTheme()
+        .then(() => importMode())
+        .then(() => {
+          editor.on("change", this.onLatexChange); // it doesn't work as @change dunno why
+          editor.setOptions({
+            wrap: true,
+            mode: 'brace/mode/latex',
+            theme: 'ace/theme/tomorrow_night'
+          });
+        });
     },
     copyLatex() {
       const setCopyStatusToNull = () => (this.copyStatus = null);
@@ -518,6 +529,33 @@ export default {
 
     background-color: var(--background-primary-color);
     color: var(--foreground-primary-color);
+  }
+}
+</style>
+
+<!-- ace editors -->
+<style lang="scss">
+.md-list {
+  padding: 0;
+}
+
+.md-menu-content-container {
+  .md-optgroup:first-child { // light themes
+    background-color: #ccc;
+
+    .md-subheader,
+    .md-list-item>button {
+      color: #333;
+    }
+  }
+
+  .md-optgroup:last-child { // dark themes
+    background-color: #333;
+
+    .md-subheader,
+    .md-list-item>button {
+      color: #ccc;
+    }
   }
 }
 </style>
