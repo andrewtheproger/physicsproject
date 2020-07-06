@@ -23,7 +23,7 @@
 
       <div>
         <Message
-          v-if="!this.isApiOk"
+          v-if="this.isApiOk === false"
           text="Что-то не работает, мы уже чиним"
           severity="error"
         ></Message>
