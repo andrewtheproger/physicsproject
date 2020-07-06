@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "vue-plain-pagination": "^0.3.0",
-    "vue-sliding-pagination": "^1.0.6"
-  }
-}

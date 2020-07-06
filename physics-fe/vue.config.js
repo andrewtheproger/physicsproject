@@ -1,26 +1,23 @@
-const webpack = require("webpack");
-const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
-// const CompressionPlugin = require("compression-webpack-plugin");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
 
 module.exports = {
+  productionSourceMap: false,
+
   configureWebpack: {
+    mode: 'production',
     plugins: [
-      new webpack.DefinePlugin({
-        // <-- key to reducing React's size
-        "process.env": {
-          NODE_ENV: JSON.stringify("production")
-        }
-      }),
-      new DuplicatePackageCheckerPlugin(), //dedupe similar code
-      new UglifyJsPlugin() //minify everything
-      // new CompressionPlugin({
-      //   asset: "[path].gz[query]",
-      //   algorithm: "gzip",
-      //   test: /\.js$|\.css$|\.html$/,
-      //   threshold: 10240,
-      //   minRatio: 0.8
-      // })
-    ]
-  }
+      // new BundleAnalyzerPlugin(),
+    ],
+    optimization: {
+      minimize: true,
+      namedModules: true,
+      namedChunks: true,
+      moduleIds: 'named',
+      chunkIds: 'named',
+      splitChunks: {
+        minSize: 10000,
+        maxSize: 200000,
+      },
+    }
+  },
 };

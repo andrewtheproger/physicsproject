@@ -23,7 +23,7 @@
 
       <div>
         <Message
-          v-if="!this.isApiOk"
+          v-if="this.isApiOk === false"
           text="Что-то не работает, мы уже чиним"
           severity="error"
         ></Message>
@@ -325,5 +325,9 @@ div.md-field.md-theme-default.md-has-value textarea.md-textarea {
   background-color: var(--background-error-color);
   color: var(--foreground-error-color);
   -webkit-text-fill-color: var(--foreground-error-color);
+}
+
+.md-menu-content-container {
+  height: 25em;
 }
 </style>
