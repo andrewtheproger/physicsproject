@@ -145,7 +145,6 @@ import config from "../config/api.js";
 const axios = () => import(/* webpackChunkName: "axios" */ "axios");
 
 const latexLocalStorageKey = "ph-3800-latex-input";
-const defaultTheme = 'ace/theme/chrome';
 
 export default {
   name: "Latex",
@@ -347,8 +346,7 @@ export default {
     const theme =
       (this.user && this.user.ace_theme)
         ? this.user.ace_theme
-        : defaultTheme;
-    console.log('mounted: ', theme)
+        : 'ace/theme/tomorrow_night';
     this.aceSettings.filter(x => x.name === `br${theme}`)[0].import().then(() => {
       this.colorSchema = theme;
       this.$refs.aceEditor.editor.setTheme(`br${theme}`);
@@ -429,18 +427,17 @@ export default {
       }
     },
     editorInit: function(editor) {
-      console.log('editorInit: ', defaultTheme)
-      const importTheme = () => import(`br${defaultTheme}`);
+      const importTheme = () => import(`brace/theme/tomorrow_night`);
       const importMode = () => import("brace/mode/latex");
 
       importTheme()
-        .then(importMode)
+        .then(() => importMode())
         .then(() => {
           editor.on("change", this.onLatexChange); // it doesn't work as @change dunno why
           editor.setOptions({
             wrap: true,
             mode: 'brace/mode/latex',
-            theme: defaultTheme
+            theme: 'ace/theme/tomorrow_night'
           });
         });
     },
