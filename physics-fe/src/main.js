@@ -19,7 +19,8 @@ import {
   MdList,
   MdCard,
   MdCheckbox,
-  MdSnackbar
+  MdSnackbar,
+  MdSubheader
 } from "vue-material/dist/components";
 
 Vue.use(MdTabs);
@@ -35,6 +36,7 @@ Vue.use(MdList);
 Vue.use(MdCard);
 Vue.use(MdCheckbox);
 Vue.use(MdSnackbar);
+Vue.use(MdSubheader);
 Vue.use(VueClipboard);
 
 Vue.config.productionTip = false;
