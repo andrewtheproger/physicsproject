@@ -33,6 +33,7 @@ def to_model(task):
         'creator': task.creator,
         'body': {
             'latex': task.latex,
+            'answer': task.answer,
             'images': [to_view(i) for i in task.images]
         },
         'hints': hints_helpers.to_models_list(task.hints)
@@ -47,10 +48,12 @@ def from_model(model):
     updated_date = get_or_none(model, 'updated_date')
     base_number = get_or_none(model, 'base_number')
     task_number = get_or_none(model, 'task_number')
+    creator = get_or_none(model, 'creator')
+
     body = get_or_none(model, 'body')
     latex = get_or_none(body, 'latex')
+    answer = get_or_none(body, 'answer')
     image_ids = get_or_none(body, 'image_ids')
-    creator = get_or_none(body, 'creator')
 
     return Task(id=id,
                 created_date=created_date,
@@ -58,6 +61,7 @@ def from_model(model):
                 base_number=base_number,
                 task_number=task_number,
                 latex=latex,
+                answer=answer,
                 image_ids_json=json.dumps(image_ids),
                 creator=creator)
 
