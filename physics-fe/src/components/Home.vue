@@ -4,6 +4,7 @@
       <md-autocomplete
         v-model="number"
         :md-options="existing_numbers"
+        @md-selected="submit"
         md-dense
         :disabled="this.sending"
       >
