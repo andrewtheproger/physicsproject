@@ -151,10 +151,16 @@ export default {
     editor: require("vue2-ace-editor")
   },
   props: ['localStorageKey', 'initial_latex', 'created_date'],
+  watch: {
+    initial_latex:function(newValue) {
+      this.body.latex = newValue;
+    }
+  },
   data() {
     return {
       body: {
         latex: null,
+        created_date: this.created_date,
       },
       copyStatus: null,
       colorSchema: null,
@@ -174,7 +180,7 @@ export default {
     };
   },
   created() {
-    this.body.latex = this.initial_latex || '';
+    this.restoreLatex();
 
     if (this.body.created_date) {
       this.body.restored = new Date(this.body.created_date).toLocaleDateString(
@@ -449,12 +455,29 @@ export default {
         }
       );
     },
+    restoreLatex() {
+      if (this.initial_latex) {
+        this.body.latex = this.initial_latex;
+        return;
+      }
+
+      const candidate = localStorage.getItem(this.localStorageKey);
+
+      if (!candidate) {
+        return;
+      }
+
+      const item = JSON.parse(candidate);
+      this.body.latex = item.latex;
+      this.body.created_date = item.created_date;
+    },
     onLatexChange() {
       const json = JSON.stringify({
         latex: this.body.latex || "",
         created_date: Date.now()
       });
       localStorage.setItem(this.localStorageKey, json);
+      this.$emit('onLatexChange', this.body.latex)
     }
   }
 };
