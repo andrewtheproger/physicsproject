@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@babel/plugin-proposal-throw-expressions": "^7.10.4",
     "axios": "^0.19.2",
     "brace": "^0.11.1",
     "build-url": "^2.0.0",

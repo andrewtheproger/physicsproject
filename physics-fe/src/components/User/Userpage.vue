@@ -163,7 +163,7 @@
           ></color-field>
           <div class="ph-user-submit-controls">
             <md-progress-spinner
-              v-if="!this.allowSubmit"
+              v-if="!allowSubmit"
               md-mode="indeterminate"
               :md-diameter="30"
             >
@@ -172,7 +172,7 @@
             <md-snackbar
               md-position="center"
               :md-duration="700"
-              :md-active.sync="!this.allowSubmit && !this.isFlowFailed"
+              :md-active="!allowSubmit && !isFlowFailed"
               md-persistent
             >
               <Message text="Изменения сохранены" severity="success"></Message>
@@ -180,7 +180,7 @@
             <md-snackbar
               md-position="center"
               :md-duration="2000"
-              :md-active.sync="!this.allowSubmit && this.isFlowFailed"
+              :md-active="!allowSubmit && isFlowFailed"
               md-persistent
             >
               <Message
@@ -435,7 +435,7 @@ export default {
               this.flowFailed = null; // todo
               this.allowSubmit = true;
 
-              console.log(error);
+              throw error;
             }
           )
       );
@@ -474,8 +474,14 @@ export default {
   .ph-main-info {
     display: flex;
 
+    @media (max-width: 756px) {
+      flex-direction: column;
+    }
+
     .md-field {
-      margin: 0 1em;
+      @media (min-width: 756px) {
+        margin: 0 1em;
+      }
     }
   }
 }

@@ -45,6 +45,15 @@
     <div class="ph-task-no-hints-available" v-else>
       Подсказок к решению пока нет.
     </div>
+
+    <div v-if="task.body.answer">
+      <h4>Ответ</h4>
+
+      <vue-mathjax :formula="task.body.answer"></vue-mathjax>
+    </div>
+    <div class="ph-task-no-hints-available" v-else>
+      Ответа на задачу не найдено
+    </div>
   </div>
 </template>
 

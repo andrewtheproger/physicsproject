@@ -356,7 +356,7 @@ export default {
     axios().then(ax =>
       ax.get(githubUri).then(
         result => this.get_last_change_block(result),
-        error => console.log(error)
+        error => throw error
       )
     );
 
@@ -366,7 +366,7 @@ export default {
         result => {
           this.statistics = result.data;
         },
-        error => console.log(error)
+        error => throw error
       )
     );
   }
@@ -397,6 +397,14 @@ export default {
 
   .ph-statistic-block {
     width: 30%;
+  }
+
+  @media (max-width: 756px) {
+    flex-direction: column;
+
+    .ph-statistic-block {
+      width: 100%;
+    }
   }
 }
 

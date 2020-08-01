@@ -4,6 +4,7 @@
       <md-autocomplete
         v-model="number"
         :md-options="existing_numbers"
+        @md-selected="submit"
         md-dense
         :disabled="this.sending"
       >
@@ -88,12 +89,6 @@ export default {
         currentPage: 1,
         itemsPerPage: 5,
         count: null,
-        paginationAnchorTexts: {
-          first: "Начало",
-          prev: "Пред.",
-          next: "След.",
-          last: "Конец"
-        }
       }
     };
   },
@@ -115,7 +110,7 @@ export default {
             );
           },
           error => {
-            console.log(error);
+            throw error;
           }
         )
     );
@@ -245,6 +240,16 @@ export default {
 .pagination {
   display: flex;
   list-style: none;
+
+  @media (max-width: 756px) {
+    padding: 0;
+    justify-content: center;
+  }
+
+  li:first-child,
+  li:last-child {
+    display: none;
+  }
 
   .pagination-item {
     min-width: 1.7em;

@@ -6,17 +6,17 @@
         <md-tab
           :md-disabled="this.user.is_token_expired"
           id="tab-add"
-          md-label="Добавить задачу"
+          md-icon="add"
           to="/add"
           exact
         ></md-tab>
         <md-tab
           id="tab-latex"
-          md-label="Редактор LaTeX"
+          md-icon="create"
           to="/latex"
           exact
         ></md-tab>
-        <md-tab id="tab-about" md-label="О проекте" to="/about" exact></md-tab>
+        <md-tab id="tab-about" md-icon="question_answer" to="/about" exact></md-tab>
 
         <md-tab id="tab-user" md-icon="face" to="/user" exact> </md-tab>
       </md-tabs>
@@ -156,11 +156,10 @@ export default {
           .then(
             result => {
               this.isApiOk = result.data.status === "ok";
-              console.log("api is " + this.isApiOk);
             },
             error => {
-              console.log(error);
               this.isApiOk = false;
+              throw error;
             }
           )
       );
@@ -174,11 +173,18 @@ export default {
         this.$store.commit("set_user", user);
         this.user = this.$store.getters.get_user;
       })
-      .catch(error => console.log(error));
+      .catch(error => throw error);
   }
 };
 </script>
 <style lang="scss">
+a.md-button[disabled] {
+  cursor: not-allowed;
+  opacity: 38%;
+}
+.md-tabs-navigation a.md-button {
+  min-width: 2em;
+}
 .md-tooltip.md-tooltip-bottom.md-theme-default#isbn_help {
   height: 5em;
 }
