@@ -504,8 +504,11 @@ export default {
   }
 
   .ph-task-additional-data {
-    display: flex;
     width: 100%;
+
+    @media (min-width: 756px) {
+      display: flex;
+    }
   }
 
   .ph-task-answer,

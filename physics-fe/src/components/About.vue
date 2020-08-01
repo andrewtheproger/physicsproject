@@ -398,6 +398,14 @@ export default {
   .ph-statistic-block {
     width: 30%;
   }
+
+  @media (max-width: 756px) {
+    flex-direction: column;
+
+    .ph-statistic-block {
+      width: 100%;
+    }
+  }
 }
 
 .ph-graphics {

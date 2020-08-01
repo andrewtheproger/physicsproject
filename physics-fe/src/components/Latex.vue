@@ -142,6 +142,7 @@
 import VueMathjax from "./VueMathJax/vueMathJax";
 
 import config from "../config/api.js";
+import http_helper from "../lib/http";
 const axios = () => import(/* webpackChunkName: "axios" */ "axios");
 
 export default {
@@ -389,7 +390,14 @@ export default {
             }
           })
           .then(
-            ({ data }) => this.$store.commit("set_user", data),
+            () => {
+              http_helper
+                .getMeAsUser(this.$store.getters.get_jwt)
+                .then(user => {
+                  this.$store.commit("set_user", user);
+                })
+                .catch(error => throw error);
+            },
             error => throw error
           )
       );
@@ -497,6 +505,7 @@ export default {
 
 .ph-latex {
   display: flex;
+  flex-wrap: wrap;
   padding: 1em;
   width: 100%;
   -webkit-text-fill-color: initial;
@@ -539,7 +548,7 @@ export default {
 
   .ph-mathjax,
   .ph-latex-editor {
-    min-width: 50%;
+    min-width: 100%;
     min-height: 15em;
   }
 
