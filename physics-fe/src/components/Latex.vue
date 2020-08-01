@@ -2,7 +2,7 @@
   <div class="ph-latex">
     <div class="ph-latex-editor">
       <editor
-        v-model="body.latex"
+        v-model="this.body.latex"
         @init="editorInit"
         lang="latex"
         ref="aceEditor"
@@ -144,20 +144,17 @@ import VueMathjax from "./VueMathJax/vueMathJax";
 import config from "../config/api.js";
 const axios = () => import(/* webpackChunkName: "axios" */ "axios");
 
-const latexLocalStorageKey = "ph-3800-latex-input";
-
 export default {
   name: "Latex",
   components: {
     VueMathjax,
     editor: require("vue2-ace-editor")
   },
+  props: ['localStorageKey', 'initial_latex', 'created_date'],
   data() {
     return {
       body: {
-        latex:
-          localStorage.getItem(latexLocalStorageKey) ||
-          "Привет, это текст на $ \\LaTeX $, да. "
+        latex: null,
       },
       copyStatus: null,
       colorSchema: null,
@@ -177,13 +174,7 @@ export default {
     };
   },
   created() {
-    const s = localStorage.getItem(latexLocalStorageKey);
-
-    if (s) {
-      this.body = JSON.parse(s);
-    } else {
-      this.body.latex = "Привет, это текст на $ \\LaTeX $, да. ";
-    }
+    this.body.latex = this.initial_latex || '';
 
     if (this.body.created_date) {
       this.body.restored = new Date(this.body.created_date).toLocaleDateString(
@@ -347,10 +338,14 @@ export default {
       (this.user && this.user.ace_theme)
         ? this.user.ace_theme
         : 'ace/theme/tomorrow_night';
-    this.aceSettings.filter(x => x.name === `br${theme}`)[0].import().then(() => {
-      this.colorSchema = theme;
-      this.$refs.aceEditor.editor.setTheme(`br${theme}`);
-    });
+
+      return this.aceSettings
+        .filter(x => x.name === `br${theme}`)[0]
+        .import()
+        .then(() => {
+          this.colorSchema = theme;
+          this.$refs.aceEditor.editor.setTheme(`br${theme}`);
+        });
   },
   computed: {
     getCopyStatusClass() {
@@ -427,15 +422,17 @@ export default {
       }
     },
     editorInit: function(editor) {
-      const importTheme = () => import(`brace/theme/tomorrow_night`);
-      const importMode = () => import("brace/mode/latex");
+      const requiredImports = this.aceSettings
+        .filter(x => ['brace/ext/language_tools', 'brace/mode/latex', 'brace/snippets/latex', `brace/theme/tomorrow_night`].includes(x.name))
+        .map(x => {
+          return x.import();
+        });
 
-      importTheme()
-        .then(() => importMode())
-        .then(() => {
+      Promise.all(requiredImports).then(() => {
           editor.on("change", this.onLatexChange); // it doesn't work as @change dunno why
           editor.setOptions({
             wrap: true,
+
             mode: 'brace/mode/latex',
             theme: 'ace/theme/tomorrow_night'
           });
@@ -460,7 +457,7 @@ export default {
         latex: this.body.latex || "",
         created_date: Date.now()
       });
-      localStorage.setItem(latexLocalStorageKey, json);
+      localStorage.setItem(this.localStorageKey, json);
     }
   }
 };
