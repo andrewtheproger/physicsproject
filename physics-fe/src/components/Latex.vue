@@ -2,7 +2,7 @@
   <div class="ph-latex">
     <div class="ph-latex-editor">
       <editor
-        v-model="this.body.latex"
+        v-model="body.latex"
         @init="editorInit"
         lang="latex"
         ref="aceEditor"
@@ -432,9 +432,6 @@ export default {
           editor.on("change", this.onLatexChange); // it doesn't work as @change dunno why
           editor.setOptions({
             wrap: true,
-
-            mode: 'brace/mode/latex',
-            theme: 'ace/theme/tomorrow_night'
           });
         });
     },
