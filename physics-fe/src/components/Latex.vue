@@ -142,6 +142,7 @@
 import VueMathjax from "./VueMathJax/vueMathJax";
 
 import config from "../config/api.js";
+import http_helper from "../lib/http";
 const axios = () => import(/* webpackChunkName: "axios" */ "axios");
 
 export default {
@@ -389,7 +390,14 @@ export default {
             }
           })
           .then(
-            ({ data }) => this.$store.commit("set_user", data),
+            () => {
+              http_helper
+                .getMeAsUser(this.$store.getters.get_jwt)
+                .then(user => {
+                  this.$store.commit("set_user", user);
+                })
+                .catch(error => throw error);
+            },
             error => throw error
           )
       );
