@@ -505,7 +505,11 @@ export default {
 
 .ph-latex {
   display: flex;
-  flex-wrap: wrap;
+
+  @media (max-width: 756px) {
+    flex-wrap: wrap;
+  }
+
   padding: 1em;
   width: 100%;
   -webkit-text-fill-color: initial;
@@ -550,6 +554,10 @@ export default {
   .ph-latex-editor {
     min-width: 100%;
     min-height: 15em;
+
+    @media (min-width: 756px) {
+      min-width: 50%;
+    }
   }
 
   .ph-mathjax-render {
