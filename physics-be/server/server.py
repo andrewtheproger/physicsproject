@@ -303,6 +303,9 @@ def upsert_task():
         if task.latex:
             db_task.latex = task.latex
 
+        if task.answer:
+            db_task.answer = task.answer
+
         if task.image_ids_json:
             db_task.image_ids_json = task.image_ids_json
 

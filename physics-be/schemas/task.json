@@ -38,6 +38,10 @@
             "type": "string",
             "maxLength": 4096
           },
+          "answer": {
+            "type": "string",
+            "maxLength": 4096
+          },
           "image_ids": {
             "type": "array",
             "items":{

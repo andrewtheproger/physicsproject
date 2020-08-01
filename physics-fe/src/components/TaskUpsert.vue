@@ -30,25 +30,46 @@
         </md-field>
       </div>
 
+      <h4 class="ph-task-body-header">Условие</h4>
       <md-field
         :class="getValidationClass('latex')"
         class="ph-task-upsert-latex"
       >
-        <Latex />
+        <Latex
+          @onLatexChange="this.onTaskChange"
+          localStorageKey="ph-3800-latex-task"
+          :initial_latex="form.latex"
+          :created_date="form.created_date"/>
 
-        <span class="md-error" v-if="!$v.form.latex.required"
-          >Задача должна иметь условие</span
-        >
+          <span class="md-error" v-if="!$v.form.latex.required">
+            Задача должна иметь условие
+          </span>
       </md-field>
 
-      <multiple-file-uploader
-        class="ph-filelink-input"
-        :postURL="url"
-        ref="multipleFileUploader"
-        successMessagePath=""
-        errorMessagePath=""
-        :links="this.form.images.map(x => x.url)"
-      ></multiple-file-uploader>
+      <div class="ph-task-additional-data">
+        <div class="ph-task-answer">
+          <h4>Ответ</h4>
+
+          <Latex
+            @onLatexChange="this.onAnswerChange"
+            localStorageKey="ph-3800-latex-answer"
+            :initial_latex="form.answer"
+            :created_date="form.answer_created_date"/>
+        </div>
+
+        <div class="ph-task-images">
+          <h4>Иллюстрации</h4>
+
+          <multiple-file-uploader
+            class="ph-filelink-input"
+            :postURL="url"
+            ref="multipleFileUploader"
+            successMessagePath=""
+            errorMessagePath=""
+            :links="this.form.images.map(x => x.url)"
+          ></multiple-file-uploader>
+        </div>
+      </div>
 
       <md-progress-bar
         md-mode="indeterminate"
@@ -154,6 +175,9 @@ export default {
     return {
       form: {
         latex: "Привет, это текст на $ \\LaTeX $, да. ",
+        answer: "",
+        answer_created_date: null,
+        created_date: null,
         number: null,
         isbn: null,
         images: []
@@ -210,6 +234,22 @@ export default {
     this.init();
   },
   methods: {
+    onAnswerChange(newLatex) {
+      this.form.answer = newLatex;
+    },
+    onTaskChange(newLatex) {
+      this.form.latex = newLatex;
+    },
+    restoreLatex(localStorageKey) {
+      const s = localStorage.getItem(localStorageKey);
+
+      if (s) {
+        console.log(`found ${s}`)
+        return JSON.parse(s);
+      } else {
+        return { latex: 'Сохранённой версии $ \\LaTeX $ не найдено', created_date: null  }
+      }
+    },
     onFormChange() {
       if (!this.form) {
         return;
@@ -283,9 +323,12 @@ export default {
                 const data = result.data;
 
                 this.originalData = data;
-                this.form.latex = data.body.latex;
-                this.form.number = `${data.base_number}.${data.task_number}`;
-                this.form.images = data.body.images;
+                this.form = {
+                  latex: data.body.latex,
+                  answer: data.body.answer,
+                  number: `${data.base_number}.${data.task_number}`,
+                  images: data.body.images,
+                }
               },
               error => {
                 console.log(error);
@@ -295,6 +338,7 @@ export default {
       } else {
         this.form.latex = "Привет, это текст на $ \\LaTeX $, да";
         this.form.number = null;
+        this.form.answer = "";
         this.form.images = [];
       }
     },
@@ -310,6 +354,7 @@ export default {
 
     reset() {
       this.form.latex = "";
+      this.form.answer = "";
       this.form.number = null;
       this.form.isbn = null;
       this.$v.$reset();
@@ -359,6 +404,7 @@ export default {
               base_number: base_number,
               task_number: task_number,
               body: {
+                answer: this.form.answer,
                 latex: this.form.latex,
                 image_ids: images_ids
               }
@@ -452,6 +498,26 @@ export default {
       display: flex;
       flex-direction: row;
     }
+  }
+
+  .ph-task-additional-data {
+    display: flex;
+    width: 100%;
+  }
+
+  .ph-task-answer,
+  .ph-task-images {
+    width: 100%;
+  }
+
+  .ph-task-answer {
+    h4 {
+      margin-left: 1em;
+    }
+  }
+
+  .ph-task-body-header {
+    margin-left: 1em;
   }
 }
 </style>

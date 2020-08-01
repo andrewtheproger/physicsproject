@@ -23,6 +23,7 @@ class Task(db.Model):
     base_number = db.Column(db.String(16))
     task_number = db.Column(db.String(16))
     latex = db.Column(db.String(4096))
+    answer = db.Column(db.String(4096))
     hints = db.relationship('Hint', backref='task', lazy='dynamic')
     image_ids_json = db.Column(db.String(4096))
     images = db.relationship('Image', lazy=True)
