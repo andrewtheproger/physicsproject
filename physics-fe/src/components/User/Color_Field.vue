@@ -54,6 +54,10 @@ export default {
   display: flex;
   align-items: center;
 
+  @media (max-width: 756px) {
+    flex: 0 100%;
+  }
+
   background-color: var(--background-secondary-color);
   color: var(--foreground-primary-color);
 
