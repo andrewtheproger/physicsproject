@@ -441,8 +441,7 @@ export default {
           [
             "brace/ext/language_tools",
             "brace/mode/latex",
-            "brace/snippets/latex",
-            `brace/theme/tomorrow_night`
+            "brace/snippets/latex"
           ].includes(x.name)
         )
         .map(x => {
@@ -452,7 +451,10 @@ export default {
       Promise.all(requiredImports).then(() => {
         editor.on("change", this.onLatexChange); // it doesn't work as @change dunno why
         editor.setOptions({
-          wrap: true
+          wrap: true,
+          enableBasicAutocompletion: true,
+          enableSnippets: true,
+          enableLiveAutocompletion: true,
         });
       });
     },
