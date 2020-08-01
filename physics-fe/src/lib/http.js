@@ -5,17 +5,19 @@ export default {
   predicate_numbers() {
     const url = config.apiPrefix + "/tasks/predicate_numbers";
 
-    return axios({
-      url: url,
-      method: "GET"
-    }).then(
-      result => {
-        return result.data;
-      },
-      error => {
-        throw error;
-      }
-    );
+    return axios().then(ax =>
+      ax
+        .request({
+          url: url,
+          method: "GET"
+        }).then(
+        result => {
+          return result.data;
+        },
+        error => {
+          throw error;
+        }
+      ));
   },
   get_error_message(code) {
     switch (code) {
