@@ -39,11 +39,12 @@
           @onLatexChange="this.onTaskChange"
           localStorageKey="ph-3800-latex-task"
           :initial_latex="form.latex"
-          :created_date="form.created_date"/>
+          :created_date="form.created_date"
+        />
 
-          <span class="md-error" v-if="!$v.form.latex.required">
-            Задача должна иметь условие
-          </span>
+        <span class="md-error" v-if="!$v.form.latex.required">
+          Задача должна иметь условие
+        </span>
       </md-field>
 
       <div class="ph-task-additional-data">
@@ -54,7 +55,8 @@
             @onLatexChange="this.onAnswerChange"
             localStorageKey="ph-3800-latex-answer"
             :initial_latex="form.answer"
-            :created_date="form.answer_created_date"/>
+            :created_date="form.answer_created_date"
+          />
         </div>
 
         <div class="ph-task-images">
@@ -244,10 +246,12 @@ export default {
       const s = localStorage.getItem(localStorageKey);
 
       if (s) {
-        console.log(`found ${s}`)
         return JSON.parse(s);
       } else {
-        return { latex: 'Сохранённой версии $ \\LaTeX $ не найдено', created_date: null  }
+        return {
+          latex: "Сохранённой версии $ \\LaTeX $ не найдено",
+          created_date: null
+        };
       }
     },
     onFormChange() {
@@ -286,10 +290,9 @@ export default {
               this.isFlowFailed = false;
             },
             error => {
-              console.log(error);
-
               this.isLoading = false;
               this.isFlowFailed = true;
+              throw error;
             }
           )
       );
@@ -307,7 +310,7 @@ export default {
             x => x.base_number + "." + x.task_number
           );
         })
-        .catch(error => console.log(error));
+        .catch(error => throw error);
 
       if (this.$route.params.id) {
         const url = config.apiPrefix + "/tasks/" + this.$route.params.id;
@@ -327,11 +330,11 @@ export default {
                   latex: data.body.latex,
                   answer: data.body.answer,
                   number: `${data.base_number}.${data.task_number}`,
-                  images: data.body.images,
-                }
+                  images: data.body.images
+                };
               },
               error => {
-                console.log(error);
+                throw error;
               }
             )
         );

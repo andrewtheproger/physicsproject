@@ -13,7 +13,7 @@ export default {
         return result.data;
       },
       error => {
-        console.log(error);
+        throw error;
       }
     );
   },
@@ -104,7 +104,7 @@ export default {
             };
           },
           error => {
-            console.log(error);
+            throw error;
           }
         )
     );

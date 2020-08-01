@@ -1,10 +1,10 @@
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
+// const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 module.exports = {
   productionSourceMap: false,
 
   configureWebpack: {
-    mode: 'production',
+    mode: "production",
     plugins: [
       // new BundleAnalyzerPlugin(),
     ],
@@ -12,12 +12,12 @@ module.exports = {
       minimize: true,
       namedModules: true,
       namedChunks: true,
-      moduleIds: 'named',
-      chunkIds: 'named',
+      moduleIds: "named",
+      chunkIds: "named",
       splitChunks: {
         minSize: 10000,
-        maxSize: 200000,
-      },
+        maxSize: 200000
+      }
     }
-  },
+  }
 };

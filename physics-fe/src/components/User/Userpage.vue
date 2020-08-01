@@ -435,7 +435,7 @@ export default {
               this.flowFailed = null; // todo
               this.allowSubmit = true;
 
-              console.log(error);
+              throw error;
             }
           )
       );

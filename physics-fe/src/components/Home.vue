@@ -115,7 +115,7 @@ export default {
             );
           },
           error => {
-            console.log(error);
+            throw error;
           }
         )
     );

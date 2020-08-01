@@ -46,7 +46,7 @@ const routes = [
     name: "latex",
     component: Latex,
     props: {
-      localStorageKey: 'ph-3800-latex-live-editor'
+      localStorageKey: "ph-3800-latex-live-editor"
     }
   }
 ];

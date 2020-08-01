@@ -150,9 +150,9 @@ export default {
     VueMathjax,
     editor: require("vue2-ace-editor")
   },
-  props: ['localStorageKey', 'initial_latex', 'created_date'],
+  props: ["localStorageKey", "initial_latex", "created_date"],
   watch: {
-    initial_latex:function(newValue) {
+    initial_latex: function(newValue) {
       this.body.latex = newValue;
     }
   },
@@ -160,7 +160,7 @@ export default {
     return {
       body: {
         latex: null,
-        created_date: this.created_date,
+        created_date: this.created_date
       },
       copyStatus: null,
       colorSchema: null,
@@ -341,17 +341,17 @@ export default {
   },
   mounted() {
     const theme =
-      (this.user && this.user.ace_theme)
+      this.user && this.user.ace_theme
         ? this.user.ace_theme
-        : 'ace/theme/tomorrow_night';
+        : "ace/theme/tomorrow_night";
 
-      return this.aceSettings
-        .filter(x => x.name === `br${theme}`)[0]
-        .import()
-        .then(() => {
-          this.colorSchema = theme;
-          this.$refs.aceEditor.editor.setTheme(`br${theme}`);
-        });
+    return this.aceSettings
+      .filter(x => x.name === `br${theme}`)[0]
+      .import()
+      .then(() => {
+        this.colorSchema = theme;
+        this.$refs.aceEditor.editor.setTheme(`br${theme}`);
+      });
   },
   computed: {
     getCopyStatusClass() {
@@ -390,7 +390,7 @@ export default {
           })
           .then(
             ({ data }) => this.$store.commit("set_user", data),
-            error => console.log(error)
+            error => throw error
           )
       );
     },
@@ -429,17 +429,24 @@ export default {
     },
     editorInit: function(editor) {
       const requiredImports = this.aceSettings
-        .filter(x => ['brace/ext/language_tools', 'brace/mode/latex', 'brace/snippets/latex', `brace/theme/tomorrow_night`].includes(x.name))
+        .filter(x =>
+          [
+            "brace/ext/language_tools",
+            "brace/mode/latex",
+            "brace/snippets/latex",
+            `brace/theme/tomorrow_night`
+          ].includes(x.name)
+        )
         .map(x => {
           return x.import();
         });
 
       Promise.all(requiredImports).then(() => {
-          editor.on("change", this.onLatexChange); // it doesn't work as @change dunno why
-          editor.setOptions({
-            wrap: true,
-          });
+        editor.on("change", this.onLatexChange); // it doesn't work as @change dunno why
+        editor.setOptions({
+          wrap: true
         });
+      });
     },
     copyLatex() {
       const setCopyStatusToNull = () => (this.copyStatus = null);
@@ -477,7 +484,7 @@ export default {
         created_date: Date.now()
       });
       localStorage.setItem(this.localStorageKey, json);
-      this.$emit('onLatexChange', this.body.latex)
+      this.$emit("onLatexChange", this.body.latex);
     }
   }
 };
@@ -557,20 +564,22 @@ export default {
 }
 
 .md-menu-content-container {
-  .md-optgroup:first-child { // light themes
+  .md-optgroup:first-child {
+    // light themes
     background-color: #ccc;
 
     .md-subheader,
-    .md-list-item>button {
+    .md-list-item > button {
       color: #333;
     }
   }
 
-  .md-optgroup:last-child { // dark themes
+  .md-optgroup:last-child {
+    // dark themes
     background-color: #333;
 
     .md-subheader,
-    .md-list-item>button {
+    .md-list-item > button {
       color: #ccc;
     }
   }

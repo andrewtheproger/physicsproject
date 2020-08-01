@@ -49,9 +49,7 @@
     <div v-if="task.body.answer">
       <h4>Ответ</h4>
 
-      <vue-mathjax
-        :formula="task.body.answer"
-      ></vue-mathjax>
+      <vue-mathjax :formula="task.body.answer"></vue-mathjax>
     </div>
     <div class="ph-task-no-hints-available" v-else>
       Ответа на задачу не найдено
@@ -70,7 +68,6 @@ export default {
   props: ["task"],
   computed: {
     user() {
-      console.log(this.task.body.answer);
       return this.$store.getters.get_user;
     }
   }

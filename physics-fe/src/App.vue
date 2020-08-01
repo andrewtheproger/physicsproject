@@ -156,11 +156,10 @@ export default {
           .then(
             result => {
               this.isApiOk = result.data.status === "ok";
-              console.log("api is " + this.isApiOk);
             },
             error => {
-              console.log(error);
               this.isApiOk = false;
+              throw error;
             }
           )
       );
@@ -174,7 +173,7 @@ export default {
         this.$store.commit("set_user", user);
         this.user = this.$store.getters.get_user;
       })
-      .catch(error => console.log(error));
+      .catch(error => throw error);
   }
 };
 </script>
