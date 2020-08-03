@@ -287,6 +287,7 @@ div.md-field.md-theme-default.md-has-value textarea.md-textarea {
 
   .md-input,
   label {
+    min-width: 1em;
     color: var(--foreground-primary-color);
     -webkit-text-fill-color: var(--foreground-primary-color);
   }

@@ -379,6 +379,7 @@ export default {
 
   .ph-targets {
     display: flex;
+    padding: 0;
     li {
       margin: 0 1em;
       list-style: none;
@@ -387,6 +388,13 @@ export default {
 
   @media (max-width: 756px) {
     flex-direction: column;
+
+    .ph-targets {
+      flex-direction: column;
+      li {
+        margin: 1em 0;
+      }
+    }
 
     .ph-targets,
     .ph-statistic-block,
