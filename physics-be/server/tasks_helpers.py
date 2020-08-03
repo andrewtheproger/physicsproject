@@ -14,8 +14,12 @@ def to_predicate_model(task):
         'task_number': task.task_number
     }
 
-def to_models_list(tasks):
-    return [to_model(t) for t in tasks]
+
+def to_models_list(tasks, total):
+    return {
+        'total': total,
+        'items': [to_model(t) for t in tasks]
+    }
 
 
 def to_model(task):

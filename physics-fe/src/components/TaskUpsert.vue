@@ -82,7 +82,7 @@
         <md-button
           type="submit"
           class="md-raised md-primary "
-          :disabled="this.isLoading"
+          :disabled="isLoading"
         >
           Добавить
         </md-button>
@@ -90,11 +90,11 @@
         <md-snackbar
           md-position="center"
           :md-duration="700"
-          :md-active.sync="this.isFlowFailed === false"
+          :md-active="isFlowFailed === false"
           md-persistent
         >
           <Message
-            v-if="!this.isFlowFailed"
+            v-if="!isFlowFailed"
             text="Задача добавлена, спасибо"
             severity="success"
           ></Message>
@@ -103,17 +103,17 @@
         <md-snackbar
           md-position="center"
           :md-duration="700"
-          :md-active.sync="this.isFlowFailed === true"
+          :md-active="isFlowFailed === true"
           md-persistent
         >
           <Message
-            v-if="this.isFlowFailed"
+            v-if="isFlowFailed"
             :text="
-              (this.flowFailed.http_code
+              (flowFailed.http_code
                 ? 'Произошла ошибка на стороне сервера'
                 : 'Вы ошиблись') +
                 ' : ' +
-                this.flowFailed.message
+                flowFailed.message
             "
             severity="success"
           ></Message>
@@ -126,7 +126,7 @@
         <md-button
           type="submit"
           class="md-raised md-primary"
-          :disabled="this.isLoading"
+          :disabled="isLoading"
         >
           Сохранить
         </md-button>
