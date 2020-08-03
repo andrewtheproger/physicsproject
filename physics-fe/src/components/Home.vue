@@ -5,7 +5,7 @@
         <md-field>
           <label for="ph-base-number">Раздел</label>
           <md-select id="ph-base-number" v-model="selectedBase" @md-selected="submitByBase">
-            <md-option value=""></md-option>
+            <md-option value="">[ не выбран ]</md-option>
             <md-option value="1">1. Кинематика</md-option>
             <md-option value="2">2. Динамика</md-option>
             <md-option value="3">3. Работа</md-option>
