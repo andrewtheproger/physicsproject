@@ -169,8 +169,6 @@ export default {
       this.files = this.files.filter(x => x.name !== $event);
     },
     onSubmit() {
-      debugger;
-
       if (this.filelist.length === 0) {
         return Promise.resolve({status: 200, data: {ids: []}});
       }

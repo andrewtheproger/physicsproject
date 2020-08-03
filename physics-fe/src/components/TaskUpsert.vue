@@ -36,7 +36,7 @@
         class="ph-task-upsert-latex"
       >
         <Latex
-          @onLatexChange="this.onTaskChange"
+          @onLatexChange="onTaskChange"
           localStorageKey="ph-3800-latex-task"
           :initial_latex="form.latex"
           :created_date="form.created_date"
@@ -52,7 +52,7 @@
           <h4>Ответ</h4>
 
           <Latex
-            @onLatexChange="this.onAnswerChange"
+            @onLatexChange="onAnswerChange"
             localStorageKey="ph-3800-latex-answer"
             :initial_latex="form.answer"
             :created_date="form.answer_created_date"
@@ -68,17 +68,17 @@
             ref="multipleFileUploader"
             successMessagePath=""
             errorMessagePath=""
-            :links="this.form.images.map(x => x.url)"
+            :links="form.images.map(x => x.url)"
           ></multiple-file-uploader>
         </div>
       </div>
 
       <md-progress-bar
         md-mode="indeterminate"
-        v-if="this.isLoading"
+        v-if="isLoading"
       ></md-progress-bar>
 
-      <div v-if="!this.$route.params.id" class="ph-task-upsert-submit-controls">
+      <div v-if="!$route.params.id" class="ph-task-upsert-submit-controls">
         <md-button
           type="submit"
           class="md-raised md-primary "
@@ -122,7 +122,7 @@
         <div class="ph-failure" v-if="isFlowFailed === true"></div>
       </div>
 
-      <div v-if="this.$route.params.id" class="ph-task-upsert-submit-controls">
+      <div v-if="$route.params.id" class="ph-task-upsert-submit-controls">
         <md-button
           type="submit"
           class="md-raised md-primary"
@@ -135,7 +135,7 @@
           type="button"
           @click="remove"
           class="md-raised md-accent"
-          :disabled="this.isLoading"
+          :disabled="isLoading"
         >
           Удалить
         </md-button>
@@ -146,10 +146,10 @@
 
         <div class="ph-failure" v-if="isFlowFailed === true">
           {{
-            this.flowFailed.http_code
+            flowFailed.http_code
               ? "Произошла ошибка на стороне сервера"
               : "Вы ошиблись"
-          }}: {{ this.flowFailed.message }}
+          }}: {{ flowFailed.message }}
         </div>
       </div>
     </form>
@@ -425,10 +425,16 @@ export default {
 
       const data = error.response.data;
 
+      let message = "подробности неизвестны";
+
+      if (data && data.code) {
+        message = http_helper.get_error_message(data.code);
+      }
+
       this.flowFailed = {
         http_code: error.response.status,
-        internal_code: data.code,
-        message: http_helper.get_error_message(data.code)
+        internal_code: data && data.code,
+        message: message,
       };
 
       this.isLoading = false;

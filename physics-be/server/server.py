@@ -65,7 +65,7 @@ errors = {
 def http_error(e):
     return jsonify({
         'message': str(e),
-        'code': e.description
+        'description': e.description
     }), e.code
 
 
@@ -83,7 +83,7 @@ def get_user_from_request(request):
 
     user = db.session.query(User).filter_by(auth_token=f'{bearer_value}').first()
 
-    return user;
+    return user
 
 
 def is_in_active_role(request, roles):
