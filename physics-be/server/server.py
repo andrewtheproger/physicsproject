@@ -4,6 +4,7 @@ import time
 import requests
 import os
 import urllib.request
+import cloudinary
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 import json
@@ -28,6 +29,12 @@ app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_MIGRATE_REPO"] = SQLALCHEMY_MIGRATE_REPO
 app.config['SECRET_JWT_KEY'] = SECRET_JWT_KEY
 app.config['SECURITY_PASSWORD_SALT'] = SECURITY_PASSWORD_SALT
+
+cloudinary.config(
+    cloud_name="du95usvl0",
+    api_key="738462148762527",
+    api_secret="t9Jri_atBqGG7yJkmqHmTmKY_V4"
+)
 
 db.init_app(app)
 migrate = Migrate(app, db)

@@ -56,56 +56,60 @@ export default {
   flex-direction: column;
   width: 50%;
 
-  .mfu-previews span {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+  .mfu-previews {
+    padding: 0;
 
-    .slide-fade-enter-active {
-      transition: all 0.3s ease;
-    }
+    span {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
 
-    .slide-fade-leave-active {
-      transition: all 0.3s ease;
-    }
-
-    .slide-fade-enter {
-      transform: translateY(-100px);
-      opacity: 0;
-    }
-
-    .slide-fade-leave-to {
-      transform: translateY(100px);
-      opacity: 0;
-    }
-
-    .mfu-preview {
-      margin: 3px;
-      width: 30%;
-      position: relative;
-      transition: all 0.2s ease-out;
-
-      &:after {
-        display: none;
-        content: "X";
-        font-size: 3em;
-        color: var(--foreground-error-color);
-        cursor: pointer;
-
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-
-        background-color: alpha(var(--background-primary-color), 0.3);
+      .slide-fade-enter-active {
+        transition: all 0.3s ease;
       }
 
-      &:hover:after {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+      .slide-fade-leave-active {
+        transition: all 0.3s ease;
+      }
+
+      .slide-fade-enter {
+        transform: translateY(-100px);
+        opacity: 0;
+      }
+
+      .slide-fade-leave-to {
+        transform: translateY(100px);
+        opacity: 0;
+      }
+
+      .mfu-preview {
+        margin: 3px;
+        width: 30%;
+        position: relative;
+        transition: all 0.2s ease-out;
+
+        &:after {
+          display: none;
+          content: "X";
+          font-size: 3em;
+          color: var(--foreground-error-color);
+          cursor: pointer;
+
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+
+          background-color: alpha(var(--background-primary-color), 0.3);
+        }
+
+        &:hover:after {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
       }
     }
   }

@@ -7,11 +7,11 @@
         @file_removed="file_removed"
       />
 
-      <LinksImport
-        :links="this.links"
-        @link_added="link_added"
-        @link_removed="link_removed"
-      />
+<!--      <LinksImport-->
+<!--        :links="this.links"-->
+<!--        @link_added="link_added"-->
+<!--        @link_removed="link_removed"-->
+<!--      />-->
     </div>
   </div>
 </template>
@@ -19,7 +19,7 @@
 <script>
 require("es6-promise").polyfill();
 import Dragndrop from "./Dragndrop";
-import LinksImport from "./LinksImport";
+// import LinksImport from "./LinksImport";
 const axios = () => import(/* webpackChunkName: "axios" */ "axios");
 
 export default {
@@ -144,7 +144,7 @@ export default {
   },
   components: {
     Dragndrop,
-    LinksImport
+    // LinksImport
   },
   methods: {
     removefiles() {
@@ -169,8 +169,10 @@ export default {
       this.files = this.files.filter(x => x.name !== $event);
     },
     onSubmit() {
+      debugger;
+
       if (this.filelist.length === 0) {
-        return Promise.resolve({ status: 200, data: { ids: [] } });
+        return Promise.resolve({status: 200, data: {ids: []}});
       }
 
       const formData = new FormData();
@@ -213,12 +215,14 @@ export default {
         return;
       }
 
-      return axios({
-        method: this.method,
-        url: this.postURL,
-        data: formData,
-        headers: this.postHeader
-      })
+      return axios().then(
+        ax =>
+          ax.request({
+            method: this.method,
+            url: this.postURL,
+            data: formData,
+            headers: this.postHeader
+          }))
         .then(response => {
           if (this.showHttpMessages) {
             this.successMsg = response + "." + this.successMessagePath;

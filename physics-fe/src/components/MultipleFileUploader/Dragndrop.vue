@@ -144,7 +144,7 @@ export default {
 
     position: absolute;
     top: 0;
-    right: -1em;
+    right: 1em;
     bottom: 0;
     left: 0;
 
