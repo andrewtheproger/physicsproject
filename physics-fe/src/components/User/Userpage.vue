@@ -474,12 +474,12 @@ export default {
   .ph-main-info {
     display: flex;
 
-    @media (max-width: 756px) {
+    @media (max-width: 1024px) {
       flex-direction: column;
     }
 
     .md-field {
-      @media (min-width: 756px) {
+      @media (min-width: 1024px) {
         margin: 0 1em;
       }
     }
@@ -495,6 +495,9 @@ export default {
   .ph-message,
   .ph-color-field {
     width: 30%;
+    @media (max-width: 1024px) {
+      width: 100%;
+    }
   }
 }
 

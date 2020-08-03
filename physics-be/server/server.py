@@ -207,22 +207,24 @@ def get_tasks():
     query_parameters = get_query_parameters(request)
     filter_base_number = request.args.get('filter_by_base_number')
     filter_task_number = request.args.get('filter_by_task_number')
-    tasks = db.session.query(Task) \
+    query = db.session.query(Task) \
         .outerjoin(Image, Task.id == Image.task_id)
     # .add_columns()
 
     if filter_base_number:
-        tasks = tasks.filter(Task.base_number == filter_base_number)
+        query = query.filter(Task.base_number == filter_base_number)
 
     if filter_task_number:
-        tasks = tasks.filter(Task.task_number == filter_task_number)
+        query = query.filter(Task.task_number == filter_task_number)
 
-    tasks = tasks \
+    tasks = query \
         .order_by(text(f"{query_parameters['order']} {query_parameters['order_direction']}")) \
         .paginate(query_parameters['page'], query_parameters['count'], False) \
         .items
 
-    return jsonify(tasks_helpers.to_models_list(tasks))
+    total = query.count()
+
+    return jsonify(tasks_helpers.to_models_list(tasks, total))
 
 
 @app.route('/api/tasks/<int:task_id>', methods=['GET'])

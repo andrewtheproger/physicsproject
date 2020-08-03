@@ -1,32 +1,64 @@
 <template>
   <div>
-    <form class="ph-search-form" v-on:submit.prevent="submit">
-      <md-autocomplete
-        v-model="number"
-        :md-options="existing_numbers"
-        @md-selected="submit"
-        md-dense
-        :disabled="this.sending"
-      >
-        <transition name="slide-fade" mode="out-in">
-          <label :key="numberExample">{{ numberExample }}</label>
-        </transition>
-      </md-autocomplete>
+    <div class="ph-search-controls">
+      <form class="ph-search-by-base-form" v-on:submit.prevent="submitByBase">
+        <md-field>
+          <label for="ph-base-number">Раздел</label>
+          <md-select id="ph-base-number" v-model="selectedBase" @md-selected="submitByBase">
+            <md-option value=""></md-option>
+            <md-option value="1">1. Кинематика</md-option>
+            <md-option value="2">2. Динамика</md-option>
+            <md-option value="3">3. Работа</md-option>
+            <md-option value="4">4. Статика</md-option>
+            <md-option value="5">5. Гравитация</md-option>
+            <md-option value="6">6. Механическое колебания и волны</md-option>
+            <md-option value="7">7. Динамика ТТ</md-option>
+            <md-option value="8">8. Гидростатика</md-option>
+            <md-option value="9">9. МКТ</md-option>
+            <md-option value="10">10. Термодинакмика</md-option>
+            <md-option value="11">11. Электростатика</md-option>
+            <md-option value="12">12. Постоянный ток</md-option>
+            <md-option value="13">13. Магнетизм</md-option>
+            <md-option value="14">14. Электрические колебания и волны</md-option>
+            <md-option value="15">15. Геометрическая оптика</md-option>
+            <md-option value="16">16. Фотометрия</md-option>
+            <md-option value="17">17. Волновая оптика</md-option>
+            <md-option value="18">18. Теория относительности</md-option>
+            <md-option value="19">19. Квант</md-option>
+            <md-option value="20">20. Атомная физика</md-option>
+            <md-option value="21">21. Ядерная физика</md-option>
+          </md-select>
+        </md-field>
+      </form>
 
-      <md-button
-        type="submit"
-        class="md-icon-button md-primary"
-        :disabled="this.sending"
-      >
-        <md-icon>search</md-icon>
-      </md-button>
-    </form>
+      <form class="ph-search-form" v-on:submit.prevent="submitByNumber">
+        <md-autocomplete
+          v-model="number"
+          :md-options="existing_numbers"
+          @md-selected="submitByNumber"
+          md-dense
+          :disabled="sending"
+        >
+          <transition name="slide-fade" mode="out-in">
+            <label :key="numberExample">{{ numberExample }}</label>
+          </transition>
+        </md-autocomplete>
 
-    <md-progress-bar md-mode="indeterminate" v-if="this.sending" />
+        <md-button
+          type="submit"
+          class="md-icon-button md-primary"
+          :disabled="sending"
+        >
+          <md-icon>search</md-icon>
+        </md-button>
+      </form>
+
+      <md-progress-bar md-mode="indeterminate" v-if="sending" />
+    </div>
 
     <Message
-      v-if="this.isHttpFailed"
-      :text="'Произошла ошибка: ' + this.httpFailed.message"
+      v-if="isHttpFailed"
+      :text="'Произошла ошибка: ' + httpFailed.message"
       severity="error"
     ></Message>
 
@@ -34,19 +66,18 @@
       <v-pagination
         v-model="page.currentPage"
         :page-count="page.count"
-        :labels="page.paginationAnchorTexts"
         @input="changePage"
       ></v-pagination>
     </nav>
 
-    <ul class="ph-tasks" v-if="this.tasks">
-      <li v-for="task in this.tasks" :key="task.id">
+    <ul class="ph-tasks" v-if="tasks">
+      <li v-for="task in tasks" :key="task.id">
         <Task :task="task" />
       </li>
     </ul>
 
     <Message
-      v-if="this.tasks && this.tasks.length === 0"
+      v-if="tasks && tasks.length === 0"
       text="Ничего не найдено"
       severity="warning"
     ></Message>
@@ -85,6 +116,7 @@ export default {
       existing_numbers: [],
       isHttpFailed: false,
       httpFailed: null,
+      selectedBase: null,
       page: {
         currentPage: 1,
         itemsPerPage: 5,
@@ -120,14 +152,75 @@ export default {
   },
   methods: {
     async changePage(page) {
+      let url;
+
+      if (this.selectedBase) {
+        url = BuildUrl(config.apiPrefix, {
+          path: "tasks",
+          queryParams: {
+            page: page,
+            count: this.page.itemsPerPage.toString(),
+            filter_by_base_number: this.selectedBase
+          }
+        });
+      } else {
+        url = BuildUrl(config.apiPrefix, {
+          path: "tasks",
+          queryParams: {
+            page: page,
+            count: this.page.itemsPerPage.toString()
+          }
+        });
+      }
+
+      await this.getTasksByUrl(url);
+    },
+
+    getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min) + min);
+    },
+
+    setNewNumberExample() {
+      const lhs = this.getRandomInt(1, 12);
+      const rhs = this.getRandomInt(1, 200);
+      this.numberExample = lhs + "." + rhs + "...";
+    },
+
+    async submitByBase() {
+      this.sending = true;
+
+      // russian up call from @md-selected on md-select that is triggered by setting this.selectedBase to null in submitByNumber method
+      if (this.selectedBase === "") {
+        this.sending = false;
+        return;
+      }
+
+      await this.getTaskByBase(this.selectedBase);
+      this.sending = false;
+      this.number = "";
+    },
+
+    async submitByNumber() {
+      this.sending = true;
+      await this.getTaskByNumber(this.number);
+      this.sending = false;
+      this.selectedBase = "";
+    },
+
+    async getTaskByBase(base) {
       const url = BuildUrl(config.apiPrefix, {
         path: "tasks",
         queryParams: {
-          page: page,
-          count: this.page.itemsPerPage.toString()
+          page: "0",
+          count: this.page.itemsPerPage,
+          filter_by_base_number: base
         }
       });
 
+      await this.getTasksByUrl(url);
+    },
+
+    async getTasksByUrl(url) {
       axios().then(ax =>
         ax
           .request({
@@ -137,10 +230,11 @@ export default {
           .then(
             result => {
               this.isHttpFailed = false;
-              this.tasks = result.data;
+              this.tasks = result.data.items;
               this.page.count = Math.floor(
-                this.existing_numbers.length / this.page.itemsPerPage
+                result.data.total / this.page.itemsPerPage
               );
+              this.page.currentPage = 1;
             },
             error => {
               this.isHttpFailed = true;
@@ -156,22 +250,6 @@ export default {
             }
           )
       );
-    },
-
-    getRandomInt(min, max) {
-      return Math.floor(Math.random() * (max - min) + min);
-    },
-
-    setNewNumberExample() {
-      const lhs = this.getRandomInt(1, 12);
-      const rhs = this.getRandomInt(1, 200);
-      this.numberExample = lhs + "." + rhs + "...";
-    },
-
-    async submit() {
-      this.sending = true;
-      await this.getTaskByNumber(this.number);
-      this.sending = false;
     },
 
     async getTaskByNumber(number) {
@@ -199,35 +277,7 @@ export default {
         });
       }
 
-      axios().then(ax =>
-        ax
-          .request({
-            url: url,
-            method: "GET"
-          })
-          .then(
-            result => {
-              this.isHttpFailed = false;
-              this.tasks = result.data;
-              this.page.count = Math.floor(
-                this.existing_numbers.length / this.page.itemsPerPage
-              );
-              this.page.currentPage = 1;
-            },
-            error => {
-              this.isHttpFailed = true;
-
-              const data = error.response.data;
-
-              this.httpFailed = {
-                http_code: error.response.code,
-                internal_code: data.code,
-                message: http_helper.get_error_message(data.code)
-              };
-              this.tasks = [];
-            }
-          )
-      );
+      await this.getTasksByUrl(url);
     }
   }
 };
@@ -331,9 +381,23 @@ export default {
   margin: 0 1em;
 }
 
-.ph-search-form {
-  margin: 2em 1em 0 1em;
+.ph-search-controls {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  margin: 2em 1em 0 1em;
+}
+
+.ph-search-by-base-form,
+.ph-search-form {
+  padding: 1em;
+  width: 45%;
+}
+
+.ph-search-form {
+  display: flex;
+  align-items: baseline;
 
   .md-field,
   .md-field.md-theme-default.md-focused,
