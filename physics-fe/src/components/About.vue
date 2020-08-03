@@ -25,19 +25,31 @@
         class="ph-github-icon"
         href="https://github.com/andrewtheproger/physicsproject"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1000 1000"
-          width="2em"
-          height="2em"
-        >
-          <path
-            d="M512 0C229.25 0 0 229.25 0 512c0 226.25 146.69 418.13 350.16 485.81 25.59 4.69 34.94-11.12 34.94-24.62 0-12.19-.47-52.56-.72-95.31C242 908.81 211.91 817.5 211.91 817.5c-23.31-59.12-56.84-74.87-56.84-74.87-46.53-31.75 3.53-31.12 3.53-31.12 51.41 3.56 78.47 52.75 78.47 52.75 45.69 78.25 119.88 55.63 149 42.5 4.65-33 17.9-55.62 32.5-68.37-113.66-12.95-233.23-56.89-233.23-253.08 0-55.94 19.97-101.56 52.66-137.41-5.22-13-22.84-65.09 5.06-135.56 0 0 42.94-13.75 140.81 52.5 40.81-11.41 84.59-17.03 128.13-17.22 43.5.19 87.31 5.88 128.19 17.28 97.69-66.31 140.69-52.5 140.69-52.5 28 70.53 10.38 122.56 5.13 135.5 32.81 35.84 52.63 81.47 52.63 137.41 0 196.69-119.75 240-233.81 252.69 18.44 15.88 34.75 47 34.75 94.75 0 68.44-.69 123.63-.69 140.5 0 13.63 9.31 29.56 35.25 24.56C877.44 930 1024 738.13 1024 512 1024 229.25 794.75 0 512 0z"
-          ></path>
-        </svg>
+        <img src="/github.svg" alt="github project link"/>
       </a>
     </h2>
     <div class="ph-statistics">
+      <ul class="ph-targets">
+        <li>
+          <Message
+            text="Дать возможность добавлять и изменять задачи"
+            severity="success"
+          ></Message>
+        </li>
+        <li>
+          <Message
+            :text="`Перенести все задачи из 3800 к нам (${this.formatTotalStatistics()})`"
+            severity="warning"
+          ></Message>
+        </li>
+        <li>
+          <Message
+            text="Сопроводить каждую задачу ответом и подсказкой"
+            severity="error"
+          ></Message>
+        </li>
+      </ul>
+
       <div class="ph-statistic-block">
         <span>
           <span v-if="!this.last_commit_url">Загружаю...</span>
@@ -82,7 +94,7 @@
         </ul>
       </div>
 
-      <div class="ph-statistic-block ph-graphics">
+      <div class="ph-graphics">
         <div class="ph-graphic">
           <span class="ph-graphics-title">
             Количество зарегистрированных пользователей
@@ -119,33 +131,6 @@
           </ul>
         </div>
       </div>
-
-      <ul class="ph-statistic-block ph-targets">
-        <li>
-          <Message
-            text="Создать интерфейс добавления задач"
-            severity="success"
-          ></Message>
-        </li>
-        <li>
-          <Message
-            text="Создать интерфейс добавления подсказок к задачам"
-            severity="error"
-          ></Message>
-        </li>
-        <li>
-          <Message
-            text="Перенести все задачи из 3800 к нам (~ 800/3800)"
-            severity="warning"
-          ></Message>
-        </li>
-        <li>
-          <Message
-            text="Сопроводить каждую задачу ответом и подсказкой"
-            severity="error"
-          ></Message>
-        </li>
-      </ul>
     </div>
 
     <h2>Как помочь проекту</h2>
@@ -379,30 +364,33 @@ export default {
   color: var(--foreground-primary-color);
 
   .ph-github-icon {
-    filter: invert(100%);
     padding-right: 1em;
-  }
-
-  .ph-targets {
-    list-style: none;
-
-    li {
-      margin: 0.5em 0;
-    }
   }
 }
 
 .ph-statistics {
   display: flex;
+  flex-wrap: wrap;
 
-  .ph-statistic-block {
-    width: 30%;
+  .ph-statistic-block,
+  .ph-graphics {
+    width: 50%;
+  }
+
+  .ph-targets {
+    display: flex;
+    li {
+      margin: 0 1em;
+      list-style: none;
+    }
   }
 
   @media (max-width: 756px) {
     flex-direction: column;
 
-    .ph-statistic-block {
+    .ph-targets,
+    .ph-statistic-block,
+    .ph-graphics {
       width: 100%;
     }
   }

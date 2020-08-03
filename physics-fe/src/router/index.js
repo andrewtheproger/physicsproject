@@ -48,6 +48,14 @@ const routes = [
     props: {
       localStorageKey: "ph-3800-latex-live-editor"
     }
+  },
+  {
+    path: '/github',
+    name: 'github',
+    component: () => { window.open(
+      'https://github.com/andrewtheproger/physicsproject',
+      '_blank'
+    ); return null; }
   }
 ];
 

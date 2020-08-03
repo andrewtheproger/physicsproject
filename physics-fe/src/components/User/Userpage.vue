@@ -284,6 +284,8 @@ export default {
         default:
           break;
       }
+
+      this.onSubmit();
     },
     formatDate(timestamp) {
       const date = new Date(timestamp);

@@ -18,6 +18,8 @@
         ></md-tab>
         <md-tab id="tab-about" md-icon="question_answer" to="/about" exact></md-tab>
 
+
+        <md-tab id="tab-github" md-icon="/github.svg" to="/github"></md-tab>
         <md-tab id="tab-user" md-icon="face" to="/user" exact> </md-tab>
       </md-tabs>
 
@@ -224,7 +226,7 @@ div.md-tabs.md-theme-default {
   justify-content: space-between;
   font-size: 150%;
   .md-tabs-navigation {
-    a:last-of-type {
+    a:nth-last-of-type(2) {
       margin-left: auto;
     }
     background-color: var(--background-secondary-color);
