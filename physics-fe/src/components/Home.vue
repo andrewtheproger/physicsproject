@@ -151,31 +151,6 @@ export default {
     clearInterval(this.numberExampleInterval);
   },
   methods: {
-    async changePage(page) {
-      let url;
-
-      if (this.selectedBase) {
-        url = BuildUrl(config.apiPrefix, {
-          path: "tasks",
-          queryParams: {
-            page: page,
-            count: this.page.itemsPerPage.toString(),
-            filter_by_base_number: this.selectedBase
-          }
-        });
-      } else {
-        url = BuildUrl(config.apiPrefix, {
-          path: "tasks",
-          queryParams: {
-            page: page,
-            count: this.page.itemsPerPage.toString()
-          }
-        });
-      }
-
-      await this.getTasksByUrl(url);
-    },
-
     getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min) + min);
     },
@@ -187,24 +162,51 @@ export default {
     },
 
     async submitByBase() {
-      this.sending = true;
-
       // russian up call from @md-selected on md-select that is triggered by setting this.selectedBase to null in submitByNumber method
       if (this.selectedBase === "") {
-        this.sending = false;
         return;
       }
 
-      await this.getTaskByBase(this.selectedBase);
-      this.sending = false;
-      this.number = "";
+      this.sending = true;
+      await this.getTaskByBase(this.selectedBase).then(() => {
+        this.sending = false;
+        this.number = "";
+        this.page.currentPage = 1;
+      });
     },
 
     async submitByNumber() {
       this.sending = true;
-      await this.getTaskByNumber(this.number);
-      this.sending = false;
-      this.selectedBase = "";
+      this.getTaskByNumber(this.number).then(() => {
+        this.sending = false;
+        this.page.currentPage = 1;
+        this.selectedBase = "";
+      });
+    },
+
+    async changePage(page) {
+      let url;
+
+      if (this.selectedBase) {
+        url = BuildUrl(config.apiPrefix, {
+          path: "tasks",
+          queryParams: {
+            page: page - 1,
+            count: this.page.itemsPerPage.toString(),
+            filter_by_base_number: this.selectedBase
+          }
+        });
+      } else {
+        url = BuildUrl(config.apiPrefix, {
+          path: "tasks",
+          queryParams: {
+            page: page - 1,
+            count: this.page.itemsPerPage.toString()
+          }
+        });
+      }
+
+      await this.getTasksByUrl(url);
     },
 
     async getTaskByBase(base) {
@@ -234,7 +236,6 @@ export default {
               this.page.count = Math.floor(
                 result.data.total / this.page.itemsPerPage
               );
-              this.page.currentPage = 1;
             },
             error => {
               this.isHttpFailed = true;
