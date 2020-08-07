@@ -1,6 +1,6 @@
 export default {
   apiPrefix:
-  "http://ec2-35-157-38-27.eu-central-1.compute.amazonaws.com:5000/api",
+  "https://las3832.ru/api",
   // "http://127.0.0.1:5000/api",
   defaultUser: {
     is_token_expired: true,

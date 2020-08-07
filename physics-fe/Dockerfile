@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM node:lts-alpine as build-stage
 
 RUN npm install -g http-server
 WORKDIR /app
@@ -8,7 +8,12 @@ RUN yarn install
 
 COPY . .
 
-RUN yarn run build --modern
+RUN yarn run build --https --modern
 
+FROM nginx:stable-alpine as production-stage
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+RUN rm etc/nginx/conf.d/*
+RUN mkdir -p /etc/nginx/conf.d/
+RUN echo 'server { listen 8080; root /usr/share/nginx/html; }' > /etc/nginx/conf.d/nginx.conf
 EXPOSE 8080
-CMD [ "http-server", "dist" ]
+CMD [ "nginx", "-g", "daemon off;" ]

@@ -20,7 +20,7 @@ To run the site locally you should run `snowinmars/3800fe` and `snowinmars/3800b
 
 cd /physics-fe
 docker build -t snowinmars/3800fe .
-docker run -p 80:8080 snowinmars/3800fe
+docker run -p 8080:8080 snowinmars/3800fe
 ```
 
 On this step you should be able to see the frontend page on `http://localhost:80` with the 'api is dead' warning.
@@ -52,6 +52,17 @@ To run backend you should create a database. It could not be automatically creat
 cd /physics-be
 docker build -t snowinmars/3800be .
 docker run -v 3800be:/app/server/vol -p 0.0.0.0:5000:5000 snowinmars/3800be
+```
+
+## Nginx
+
+Nginx is responsable for proxing requests and valicating ssl certificates.
+
+Run
+```
+cd /nginx
+docker buils -t snowinmars/3800ngx .
+docker run -p 80:80 snowinmars/3800ngx
 ```
 
 ## How to start developing
@@ -104,6 +115,16 @@ yarn run serve
 1. Run `flask run --host 0.0.0.0 --port 5000`
 
     Interface `0.0.0.0` is required due to Flask server stuff. If the interface will be mismatched you will not be able to communicate with docker container (it will looks like 404). For local runs I prefer to use `0.0.0.0` anyway.
+
+## SSL host setup
+
+* ssh to host
+* instal `certbot`
+* run
+```
+mkdir -p /var/www/html
+certbot -i nginx -a webroot certonly -w /var/www/html -d las3832.ru
+```
 
 ## FAQ
 
