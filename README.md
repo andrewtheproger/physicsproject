@@ -119,6 +119,7 @@ yarn run serve
 ## SSL host setup
 
 * ssh to host
+* enter inside nginx containter
 * instal `certbot`
 * run
 ```

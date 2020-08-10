@@ -11,7 +11,8 @@ def check_is_token_expired(user, secret):
     try:
         payload = user.decode_auth_token(user.auth_token, secret)
         now = int(time.time())  # sec
-        return payload['exp'] < now
+        # return payload['exp'] < now
+        return False # no timeout dislogin due to site has https
     except jwt.ExpiredSignatureError:
         return True
     except jwt.InvalidTokenError:
