@@ -1,6 +1,6 @@
 # 3800 las project
 
-This is a project that provide illegal access to '3800 задач по физике' book. It maintenance by school students for free. Monetization will never be allowed.
+This is a project that provide illegal access to physics tasks. It maintenance by school students for free. Monetization will never be allowed.
 
 The project could be viewed [here](http://ec2-35-157-38-27.eu-central-1.compute.amazonaws.com/). If you'd like to share the link, please use this page link due to the server host will be changed.
 
